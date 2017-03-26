@@ -2,18 +2,17 @@
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using AutoMapper;
-using JezekT.AspNetCore.DataTables.Data;
 using JezekT.AspNetCore.Mvc.Extensions;
 using JezekT.NetStandard.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JezekT.AspNetCore.Mvc.Controllers
 {
-    public abstract class ControllerBase<T, TViewModel, TId> : Controller 
+    public abstract class CrudControllerBase<T, TViewModel, TId> : Controller
         where T : class
-        where TViewModel : class 
+        where TViewModel : class
     {
-        protected ITableCrudService<T, TId> Service { get; }
+        protected ICrudService<T, TId> Service { get; }
         protected IMapper Mapper { get; }
 
 
@@ -98,14 +97,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         }
 
 
-        public virtual async Task<IActionResult> GetTableDataJsonAsync(int draw, string term, int start, int pageSize, string orderField, string orderDirection)
-        {
-            var paginationData = await Service.GetPaginationDataAsync(term, start, pageSize, orderField, orderDirection);
-            return Json(new DataTableDataResponse(paginationData, draw).ResponseData);
-        }
-
-
-        protected ControllerBase(ITableCrudService<T, TId> service, IMapper mapper)
+        protected CrudControllerBase(ICrudService<T, TId> service, IMapper mapper)
         {
             if (service == null || mapper == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
@@ -113,5 +105,6 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             Service = service;
             Mapper = mapper;
         }
+
     }
 }

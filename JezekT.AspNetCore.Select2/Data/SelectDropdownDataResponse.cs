@@ -2,32 +2,32 @@
 using System.Diagnostics.Contracts;
 using JezekT.NetStandard.Pagination;
 
-namespace JezekT.AspNetCore.DataTables.Data
+namespace JezekT.AspNetCore.Select2.Data
 {
-    public class DataTableDataResponse<T> : IPaginationData<T>
-        where T : class 
+    public class SelectDropdownDataResponse : IPaginationData<object>
     {
-        public int Draw { get; set; }
-        public T[] Items { get; set; }
+        public object[] Items { get; set; }
         public int RecordsTotal { get; set; }
         public int RecordsFiltered { get; set; }
+        public bool MorePages { get; set; }
 
-        public object ResponseData => new {draw = Draw, data = Items, recordsTotal = RecordsTotal, recordsFiltered = RecordsFiltered};
+        public object ResponseData => new { items = Items, more = MorePages };
 
 
-        public DataTableDataResponse()
+        public SelectDropdownDataResponse()
         {
         }
 
-        public DataTableDataResponse(IPaginationData<T> paginationData, int draw)
+        public SelectDropdownDataResponse(IPaginationData<object> paginationData, int start, int pageSize)
         {
             if (paginationData == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
-            Draw = draw;
             Items = paginationData.Items;
             RecordsTotal = paginationData.RecordsTotal;
             RecordsFiltered = paginationData.RecordsFiltered;
+            MorePages = (start + pageSize) < RecordsFiltered;
         }
+
     }
 }

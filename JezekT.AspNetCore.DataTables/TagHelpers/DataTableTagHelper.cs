@@ -237,7 +237,7 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
                 }
                 return sb.Remove(sb.Length - 1, 1).ToString();
             }
-            return null;
+            return "*";
         }
 
         private ModelExplorer GetModelExplorer(Type modelType)

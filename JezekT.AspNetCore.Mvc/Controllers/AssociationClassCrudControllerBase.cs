@@ -3,17 +3,17 @@ using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using AutoMapper;
 using JezekT.AspNetCore.Mvc.Extensions;
-using JezekT.NetStandard.Services;
+using JezekT.NetStandard.Data;
 using JezekT.NetStandard.Services.EntityOperations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JezekT.AspNetCore.Mvc.Controllers
 {
-    public abstract class CrudControllerBase<T, TViewModel, TId> : Controller
-        where T : class
+    public abstract class AssociationClassCrudControllerBase<T, TViewModel, FirstId, SecondId> : Controller
+        where T : class, IAssociationClass<FirstId, SecondId>
         where TViewModel : class
     {
-        protected ICrudService<T, TId> Service { get; }
+        protected IAssociationClassCrudService<T, FirstId, SecondId> Service { get; }
         protected IMapper Mapper { get; }
 
 
@@ -22,20 +22,16 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             return View();
         }
 
-        public virtual async Task<T> GetEntity(TId id)
-        {
-            return await Service.GetByIdAsync(id);
-        }
 
-        public virtual async Task<IActionResult> Details(TId id)
+        public virtual async Task<IActionResult> Details(FirstId firstObjId, SecondId secondObjId)
         {
-            var obj = await GetEntity(id);
+            var obj = await Service.GetByIdsAsync(firstObjId, secondObjId);
             if (obj == null)
             {
                 return NotFound();
             }
 
-            return View(GetViewModel(obj));
+            return View(Mapper.Map<T, TViewModel>(obj));
         }
 
 
@@ -46,69 +42,63 @@ namespace JezekT.AspNetCore.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<IActionResult> Create(TViewModel objVm)
+        public virtual async Task<IActionResult> Create(TViewModel objVm, string redirectUrl = null)
         {
             if (ModelState.IsValid && await Service.CreateAsync(Mapper.Map<TViewModel, T>(objVm)))
             {
-                return RedirectToAction("Index");
+                return Redirect(redirectUrl);
             }
             Service.ResolveErrors(ModelState, ViewData);
             return View(objVm);
         }
 
-        public virtual async Task<IActionResult> Edit(TId id)
+        public virtual async Task<IActionResult> Edit(FirstId firstObjId, SecondId secondObjId)
         {
-            var obj = await GetEntity(id);
+            var obj = await Service.GetByIdsAsync(firstObjId, secondObjId);
             if (obj == null)
             {
                 return NotFound();
             }
-            return View(GetViewModel(obj));
+            return View(Mapper.Map<T, TViewModel>(obj));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<IActionResult> Edit(TViewModel objVm)
+        public virtual async Task<IActionResult> Edit(TViewModel objVm, string redirectUrl = null)
         {
             if (ModelState.IsValid && await Service.UpdateAsync(Mapper.Map<TViewModel, T>(objVm)))
             {
-                return RedirectToAction("Index");
+                return Redirect(redirectUrl);
             }
             Service.ResolveErrors(ModelState, ViewData);
             return View(objVm);
         }
 
-
-        public virtual async Task<IActionResult> Delete(TId id)
+        [HttpGet]
+        public virtual async Task<IActionResult> Delete(FirstId firstObjId, SecondId secondObjId)
         {
-            var obj = await GetEntity(id);
+            var obj = await Service.GetByIdsAsync(firstObjId, secondObjId);
             if (obj == null)
             {
                 return NotFound();
             }
-            return View(GetViewModel(obj));
+            return View(Mapper.Map<T, TViewModel>(obj));
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public virtual async Task<IActionResult> DeleteConfirmed(TId id)
+        public virtual async Task<IActionResult> DeleteConfirmed(FirstId firstObjId, SecondId secondObjId, string redirectUrl = null)
         {
-            if (await Service.DeleteByIdAsync(id))
+            if (await Service.DeleteByIdsAsync(firstObjId, secondObjId))
             {
-                return RedirectToAction("Index");
+                return Redirect(redirectUrl);
             }
             Service.ResolveErrors(ModelState, ViewData);
-            return View(GetViewModel(await Service.GetByIdAsync(id)));
+            return View(Mapper.Map<T, TViewModel>(await Service.GetByIdsAsync(firstObjId, secondObjId)));
         }
 
 
-        protected virtual TViewModel GetViewModel(T obj)
-        {
-            return Mapper.Map<T, TViewModel>(obj);
-        }
-
-
-        protected CrudControllerBase(ICrudService<T, TId> service, IMapper mapper)
+        protected AssociationClassCrudControllerBase(IAssociationClassCrudService<T, FirstId, SecondId> service, IMapper mapper)
         {
             if (service == null || mapper == null) throw new ArgumentNullException();
             Contract.EndContractBlock();

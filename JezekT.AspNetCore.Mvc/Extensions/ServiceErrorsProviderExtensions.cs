@@ -8,8 +8,6 @@ namespace JezekT.AspNetCore.Mvc.Extensions
 {
     public static class ServiceErrorsProviderExtensions
     {
-        public static string MessageErrorKey = "MessageError";
-
         public static void ResolveErrors(this IServiceErrorsProvider serviceErrorsProvider, ModelStateDictionary modelState, ViewDataDictionary viewData)
         {
             if (modelState == null) throw new ArgumentNullException();
@@ -23,10 +21,9 @@ namespace JezekT.AspNetCore.Mvc.Extensions
                     modelState.AddModelError(error.Key, error.Value);
                 }
             }
-
             if (!string.IsNullOrEmpty(serviceErrorsProvider.ExceptionMessage))
             {
-                viewData[MessageErrorKey] = serviceErrorsProvider.ExceptionMessage;
+                modelState.AddModelError("Exception", serviceErrorsProvider.ExceptionMessage);
             }
         }
     }

@@ -82,7 +82,14 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
                     classes = $"{classes} {classTag.Value}";
                 }
 
-                selectBuilder.Attributes.Add("class", classes);
+                if (selectBuilder.Attributes.ContainsKey("class"))
+                {
+                    selectBuilder.Attributes["class"] = $"{selectBuilder.Attributes["class"]} {classes}";
+                }
+                else
+                {
+                    selectBuilder.Attributes.Add("class", classes);
+                }
                 output.Content.AppendHtml(selectBuilder);
             }
 

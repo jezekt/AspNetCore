@@ -16,15 +16,22 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         protected IMapper Mapper { get; }
 
 
+        protected virtual async Task<T> GetEntity(TId id)
+        {
+            return await Service.GetByIdAsync(id);
+        }
+
+        protected virtual TViewModel GetViewModel(T obj)
+        {
+            return Mapper.Map<T, TViewModel>(obj);
+        }
+
+
         public virtual ActionResult Index()
         {
             return View();
         }
 
-        public virtual async Task<T> GetEntity(TId id)
-        {
-            return await Service.GetByIdAsync(id);
-        }
 
         public virtual async Task<IActionResult> Details(TId id)
         {
@@ -100,13 +107,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             return View(GetViewModel(await Service.GetByIdAsync(id)));
         }
 
-
-        protected virtual TViewModel GetViewModel(T obj)
-        {
-            return Mapper.Map<T, TViewModel>(obj);
-        }
-
-
+        
         protected CrudControllerBase(ICrudService<T, TId> service, IMapper mapper)
         {
             if (service == null || mapper == null) throw new ArgumentNullException();

@@ -24,7 +24,7 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
         private const string ThemeName = "theme";
         private const string InputLengthMinName = "input-length-min";
         private const string InputLengthMaxName = "input-length-max";
-        private const string RestrictIdsName = "restrict-ids";
+        private const string FilterIdsName = "filter-ids";
 
         private readonly IHtmlGenerator _generator;
 
@@ -48,8 +48,8 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
         public int InputLengthMin { get; set; } = 1;
         [HtmlAttributeName(InputLengthMaxName)]
         public int InputLengthMax { get; set; } = 20;
-        [HtmlAttributeName(RestrictIdsName)]
-        public string RestrictIds { get; set; }
+        [HtmlAttributeName(FilterIdsName)]
+        public string FilterIds { get; set; }
 
 
         [HtmlAttributeNotBound]
@@ -143,9 +143,9 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
                         sb.AppendLine("data: function(params) { return {");
                         sb.AppendLine("term: params.term || \"\",");
                         sb.AppendLine("page: params.page || 1,");
-                        if (!string.IsNullOrEmpty(RestrictIds))
+                        if (!string.IsNullOrEmpty(FilterIds))
                         {
-                            sb.AppendLine("restrictIds: '" + RestrictIds + "',");
+                            sb.AppendLine("filterIds: '" + FilterIds + "',");
                         }
                         sb.AppendLine("pageSize:" + PageSize);
                     sb.AppendLine("};},");

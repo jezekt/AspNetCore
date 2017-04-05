@@ -135,6 +135,7 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
 
             sb.AppendLine("function " + functionName + "(){");
                 sb.AppendLine("var select = $(\"." + className + "\").select2({");
+                    sb.Append("width:\"100%\",");
                     sb.AppendLine("ajax: {");
                         sb.AppendLine("url: \"" + AllDataUrl + "\",");
                         sb.AppendLine("dataType: 'json',");

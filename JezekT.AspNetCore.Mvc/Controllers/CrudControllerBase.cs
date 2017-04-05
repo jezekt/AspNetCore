@@ -58,7 +58,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             {
                 return RedirectToAction("Index");
             }
-            Service.ResolveErrors(ModelState, ViewData);
+            Service.ResolveErrors(ModelState);
             return View(objVm);
         }
 
@@ -80,7 +80,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             {
                 return RedirectToAction("Index");
             }
-            Service.ResolveErrors(ModelState, ViewData);
+            Service.ResolveErrors(ModelState);
             return View(objVm);
         }
 
@@ -103,7 +103,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             {
                 return RedirectToAction("Index");
             }
-            Service.ResolveErrors(ModelState, ViewData);
+            Service.ResolveErrors(ModelState);
             return View(GetViewModel(await Service.GetByIdAsync(id)));
         }
 

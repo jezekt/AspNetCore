@@ -48,7 +48,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             {
                 return Redirect(redirectUrl);
             }
-            Service.ResolveErrors(ModelState, ViewData);
+            Service.ResolveErrors(ModelState);
             return View(objVm);
         }
 
@@ -70,7 +70,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             {
                 return Redirect(redirectUrl);
             }
-            Service.ResolveErrors(ModelState, ViewData);
+            Service.ResolveErrors(ModelState);
             return View(objVm);
         }
 
@@ -93,7 +93,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             {
                 return Redirect(redirectUrl);
             }
-            Service.ResolveErrors(ModelState, ViewData);
+            Service.ResolveErrors(ModelState);
             return View(Mapper.Map<T, TViewModel>(await Service.GetByIdsAsync(firstObjId, secondObjId)));
         }
 

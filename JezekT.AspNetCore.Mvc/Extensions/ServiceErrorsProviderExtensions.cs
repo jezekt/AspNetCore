@@ -2,13 +2,12 @@
 using System.Diagnostics.Contracts;
 using JezekT.NetStandard.Services;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace JezekT.AspNetCore.Mvc.Extensions
 {
     public static class ServiceErrorsProviderExtensions
     {
-        public static void ResolveErrors(this IServiceErrorsProvider serviceErrorsProvider, ModelStateDictionary modelState, ViewDataDictionary viewData)
+        public static void ResolveErrors(this IServiceErrorsProvider serviceErrorsProvider, ModelStateDictionary modelState)
         {
             if (modelState == null) throw new ArgumentNullException();
             Contract.EndContractBlock();

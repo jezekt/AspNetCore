@@ -3,7 +3,6 @@ using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using AutoMapper;
 using JezekT.AspNetCore.Mvc.Extensions;
-using JezekT.NetStandard.Services;
 using JezekT.NetStandard.Services.EntityOperations;
 using Microsoft.AspNetCore.Mvc;
 

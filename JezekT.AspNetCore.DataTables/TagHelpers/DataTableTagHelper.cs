@@ -34,7 +34,7 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
         [HtmlAttributeName(SearchDelayName)]
         public int SearchDelay { get; set; } = 1000;
         [HtmlAttributeName(QueryIdsName)]
-        public int[] QueryIds { get; set; }
+        public string QueryIds { get; set; }
         [HtmlAttributeName(ModelTypeName)]
         public Type ModelType { get; set; }
         [HtmlAttributeName(TableIdName)]
@@ -80,7 +80,7 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
                 sb.AppendLine("orderDirection: params.order[0].dir,");
                 if (QueryIds != null)
                 {
-                    sb.AppendLine($"queryIds: \"{GetQueryIdsString(QueryIds)}\",");
+                    sb.AppendLine($"queryIds: \"{QueryIds}\",");
                 }
                 sb.AppendLine("};},},");
                 sb.AppendLine("columns: [");
@@ -221,23 +221,6 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
             sb.Append("return action;");
             sb.Append("}}");
             return sb.ToString();
-        }
-
-        private string GetQueryIdsString(int[] filterIds)
-        {
-            Contract.Requires(filterIds != null);
-
-            var sb = new StringBuilder();
-
-            if (filterIds.Any())
-            {
-                foreach (var filterId in filterIds)
-                {
-                    sb.Append($"{filterId},");
-                }
-                return sb.Remove(sb.Length - 1, 1).ToString();
-            }
-            return "*";
         }
 
         private ModelExplorer GetModelExplorer(Type modelType)

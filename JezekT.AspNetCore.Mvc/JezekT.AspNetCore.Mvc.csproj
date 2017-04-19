@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\NetStandard\JezekT.NetStandard.Services\JezekT.NetStandard.Services.csproj" />
-    <ProjectReference Include="..\JezekT.AspNetCore.DataTables\JezekT.AspNetCore.DataTables.csproj" />
   </ItemGroup>
 
 </Project>

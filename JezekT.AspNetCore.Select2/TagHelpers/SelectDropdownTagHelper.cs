@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using JezekT.AspNetCore.Select2.Settings;
@@ -98,6 +99,8 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
             output.TagName = "";
 
             var sb = new StringBuilder();
+            AppendLocalizationScript(sb);
+
             var initializeFunctionName = "initializeFunction";
             sb.AppendLine("<script type=\"text/javascript\">");
 
@@ -173,7 +176,7 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
                 sb.AppendLine("function formatResult(item) { if (item.loading) return \"" + SelectDropdownSettings.Loading + "\"; return item.text; }");
                 sb.AppendLine("function formatSelection(item) { return item.text; }");
 
-                if (SelectedIdProperty?.Model != null)
+                if (SelectedIdProperty?.Model != null && !HasDefaultValue(SelectedIdProperty.Model))
                 {
                     sb.AppendLine("var option = $('<option selected>" + SelectDropdownSettings.Loading + "</option>').val(" + SelectedIdProperty.Model + ");");
                     sb.AppendLine("select.append(option).trigger('change');");
@@ -198,6 +201,27 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
                 sb.AppendLine("data: [" + dataString + "]");
                 sb.AppendLine("});");
             sb.AppendLine("}");
+        }
+
+        private void AppendLocalizationScript(StringBuilder sb)
+        {
+            Contract.Requires(sb != null);
+
+            if (!string.IsNullOrEmpty(SelectDropdownSettings.LocalizationUrl))
+            {
+                sb.AppendLine($"<script src=\"{SelectDropdownSettings.LocalizationUrl}\" type=\"text/javascript\"></script>");
+            }
+        }
+
+        private bool HasDefaultValue(object model)
+        {
+            var type = model.GetType();
+            var typeInfo = type?.GetTypeInfo();
+            if (typeInfo != null && typeInfo.IsValueType)
+            {
+                return model.Equals(Activator.CreateInstance(type));
+            }
+            return true;
         }
     }
 }

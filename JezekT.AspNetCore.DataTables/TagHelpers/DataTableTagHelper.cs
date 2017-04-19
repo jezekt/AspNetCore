@@ -52,79 +52,88 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
 
             var sb = new StringBuilder();
             AppendTableHtml(sb, tableContext, context);
-            
-
 
             sb.AppendLine("<script type=\"text/javascript\">");
-            sb.AppendLine($"$('#{TableId}').DataTable({{");
-            if (!string.IsNullOrEmpty(DataTableSettings.LocalizationUrl))
-            {
-                sb.AppendLine($"language: {{url: \"{DataTableSettings.LocalizationUrl}\"}},");
-            }
 
-            if (ServerSide)
-            {
-                sb.AppendLine("serverSide: true,");
-                sb.AppendLine($"processing: {Processing.ToString().ToLower()},");
-                sb.AppendLine($"searchDelay: {SearchDelay},");
-                sb.AppendLine("ajax: {");
-                sb.AppendLine("contentType: \"json\",");
-                sb.AppendLine($"url:\"{DataUrl}\",");
-                sb.AppendLine("data: function (params) {");
-                sb.AppendLine("return {");
-                sb.AppendLine("draw: params.draw,");
-                sb.AppendLine("start: params.start,");
-                sb.AppendLine("pageSize: params.length,");
-                sb.AppendLine("term: params.search.value,");
-                sb.AppendLine("orderField: params.columns[params.order[0].column].data,");
-                sb.AppendLine("orderDirection: params.order[0].dir,");
-                if (QueryIds != null)
-                {
-                    sb.AppendLine($"queryIds: \"{QueryIds}\",");
-                }
-                sb.AppendLine("};},},");
-                sb.AppendLine("columns: [");
-                if (tableContext.ColumnsProperties != null)
-                {
-                    foreach (var columnProperty in tableContext.ColumnsProperties)
-                    {
-                        if (columnProperty.Metadata.ModelType == typeof(DateTime) || columnProperty.Metadata.ModelType == typeof(DateTime?))
-                        {
-                            sb.AppendLine($"{{ \"data\": \"{columnProperty.Name.ToLower()}\",");
-                            sb.AppendLine("\"render\": function(data){");
-                            sb.AppendLine("if (data == null) return data;");
-                            sb.AppendLine("var d = new Date(data);");
-                            sb.AppendLine("return d.toLocaleString();");
-                            sb.AppendLine("}},");
-                        }
-                        else if (columnProperty.Metadata.ModelType == typeof(decimal) || columnProperty.Metadata.ModelType == typeof(decimal?))
-                        {
-                            sb.AppendLine($"{{ \"data\": \"{columnProperty.Name.ToLower()}\",");
-                            sb.AppendLine("\"render\": function(data){");
-                            sb.AppendLine("return data.toLocaleString();");
-                            sb.AppendLine("}},");
-                        }
-                        else
-                        {
-                            sb.AppendLine($"{{ \"data\": \"{columnProperty.Name.ToLower()}\" }},");
-                        }
-                    }
-                }
-                if (tableContext.ActionDataSet != null && tableContext.ActionDataSet.Any())
-                {
-                    sb.AppendLine(GetColumnActionContent(tableContext.ActionDataSet));
-                }
-                sb.AppendLine("],");
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            var initializeFunctionName = "initializeFunction";
+            AppendInitializeFunction(sb, tableContext, initializeFunctionName);
 
-            sb.AppendLine("});");
+            sb.AppendLine($"{initializeFunctionName}();");
             sb.AppendLine("</script>");
 
             output.Content.AppendHtml(sb.ToString());
+        }
+
+        private void AppendInitializeFunction(StringBuilder sb, DataTableContext tableContext, string initializeFunctionName)
+        {
+            sb.AppendLine("function " + initializeFunctionName + "(){");
+                sb.AppendLine($"$('#{TableId}').DataTable({{");
+                if (!string.IsNullOrEmpty(DataTableSettings.LocalizationUrl))
+                {
+                    sb.AppendLine($"language: {{url: \"{DataTableSettings.LocalizationUrl}\"}},");
+                }
+
+                if (ServerSide)
+                {
+                    sb.AppendLine("serverSide: true,");
+                    sb.AppendLine($"processing: {Processing.ToString().ToLower()},");
+                    sb.AppendLine($"searchDelay: {SearchDelay},");
+                    sb.AppendLine("ajax: {");
+                    sb.AppendLine("contentType: \"json\",");
+                    sb.AppendLine($"url:\"{DataUrl}\",");
+                    sb.AppendLine("data: function (params) {");
+                    sb.AppendLine("return {");
+                    sb.AppendLine("draw: params.draw,");
+                    sb.AppendLine("start: params.start,");
+                    sb.AppendLine("pageSize: params.length,");
+                    sb.AppendLine("term: params.search.value,");
+                    sb.AppendLine("orderField: params.columns[params.order[0].column].data,");
+                    sb.AppendLine("orderDirection: params.order[0].dir,");
+                    if (QueryIds != null)
+                    {
+                        sb.AppendLine($"queryIds: \"{QueryIds}\",");
+                    }
+                    sb.AppendLine("};},},");
+                    sb.AppendLine("columns: [");
+                    if (tableContext.ColumnsProperties != null)
+                    {
+                        foreach (var columnProperty in tableContext.ColumnsProperties)
+                        {
+                            if (columnProperty.Metadata.ModelType == typeof(DateTime) || columnProperty.Metadata.ModelType == typeof(DateTime?))
+                            {
+                                sb.AppendLine($"{{ \"data\": \"{columnProperty.Name.ToLower()}\",");
+                                sb.AppendLine("\"render\": function(data){");
+                                sb.AppendLine("if (data == null) return data;");
+                                sb.AppendLine("var d = new Date(data);");
+                                sb.AppendLine("return d.toLocaleString();");
+                                sb.AppendLine("}},");
+                            }
+                            else if (columnProperty.Metadata.ModelType == typeof(decimal) || columnProperty.Metadata.ModelType == typeof(decimal?))
+                            {
+                                sb.AppendLine($"{{ \"data\": \"{columnProperty.Name.ToLower()}\",");
+                                sb.AppendLine("\"render\": function(data){");
+                                sb.AppendLine("return data.toLocaleString();");
+                                sb.AppendLine("}},");
+                            }
+                            else
+                            {
+                                sb.AppendLine($"{{ \"data\": \"{columnProperty.Name.ToLower()}\" }},");
+                            }
+                        }
+                    }
+                    if (tableContext.ActionDataSet != null && tableContext.ActionDataSet.Any())
+                    {
+                        sb.AppendLine(GetColumnActionContent(tableContext.ActionDataSet));
+                    }
+                    sb.AppendLine("],");
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+
+                sb.AppendLine("});");
+            sb.AppendLine("}");
         }
 
 

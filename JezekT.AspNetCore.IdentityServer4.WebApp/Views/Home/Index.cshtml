@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["ViewTitle"];
+    ViewData["AppName"] = Localizer["AppName"];
+}
+
+<div class="jumbotron">
+    <h1>@ViewData["AppName"]</h1>
+</div>
+<div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h1>@User.Identity.Name</h1>
+        <h2>User Claims</h2>
+        <dl>
+            @foreach (var claim in User.Claims)
+            {
+                <dt>@claim.Type</dt>
+                <dd>@claim.Value</dd>
+            }
+        </dl>
+
+        var authScheme = "Identity.Application";
+        if (!String.IsNullOrWhiteSpace(authScheme))
+        {
+            <h2>Cookies Properties</h2>
+            <dl>
+                @{
+                    var props = (await Context.Authentication.GetAuthenticateInfoAsync(authScheme)).Properties;
+                }
+                @foreach (var item in props.Items)
+                {
+                    <dt>@item.Key</dt>
+                    <dd>@item.Value</dd>
+                }
+            </dl>
+        }
+    }
+
+</div>
+
+
+

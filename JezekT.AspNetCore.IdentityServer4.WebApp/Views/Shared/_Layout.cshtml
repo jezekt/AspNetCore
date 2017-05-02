@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+@using JezekT.AspNetCore.IdentityServer4.WebApp.Data
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+@inject SignInManager<User> SignInManager
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Localizer["AppTitle"]</title>
+    
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.13/datatables.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.6/select2-bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.13/datatables.min.css" />
+
+    <style>
+        body {
+            padding-top: 50px;
+        }
+
+        /* buttons and links extension to use brackets: [ click me ] */
+        .btn-bracketed::before {
+            display: inline-block;
+            content: "[";
+            padding-right: 0.5em;
+        }
+
+        .btn-bracketed::after {
+            display: inline-block;
+            content: "]";
+            padding-left: 0.5em;
+        }
+    /* Set widths on the form inputs since otherwise they're 100% wide */
+        /*input,
+        select,
+        textarea {
+            max-width: 280px;
+        }*/
+    </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">@Localizer["AppTitle"]</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a></li>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li><a asp-area="" asp-controller="Users" asp-action="Index">@Localizer["Users"]</a></li>
+                        <li><a asp-area="" asp-controller="Roles" asp-action="Index">@Localizer["Roles"]</a></li>
+                    }
+                </ul>
+                @await Html.PartialAsync("_LoginPartial")
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2017 - JezekT</p>
+        </footer>
+    </div>
+@RenderSection("Scripts", required: false)
+</body>
+</html>

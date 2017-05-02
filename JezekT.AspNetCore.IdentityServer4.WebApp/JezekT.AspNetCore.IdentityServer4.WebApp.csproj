@@ -1,0 +1,178 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <UserSecretsId>aspnet-JezekT.AspNetCore.IdentityServer4.WebApp-e3d6cff3-455b-47c3-8684-5f26bfe69567</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\AccountControllerOld.cs" />
+    <Compile Remove="Controllers\ManageController.cs" />
+    <Compile Remove="Models\AccountViewModels\ResetPasswordViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\css\site.css" />
+    <Content Include="wwwroot\css\site.min.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="IdentityServer4" Version="1.5.0" />
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="1.0.1" />
+    <PackageReference Include="IdentityServer4.EntityFramework" Version="1.0.1" />
+    <PackageReference Include="JezekT.AspNetCore.DataTables" Version="1.0.0" />
+    <PackageReference Include="JezekT.AspNetCore.Mvc" Version="1.0.0" />
+    <PackageReference Include="JezekT.AspNetCore.Select2" Version="1.0.0" />
+    <PackageReference Include="JezekT.NetStandard.Pagination.EntityFrameworkCore" Version="1.0.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel.Https" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.1.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\Controllers\SharedResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SharedResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\AccountViewModels\LoginViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>LoginViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\RoleViewModels\RoleViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RoleViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\Shared\ViewModelsShared.designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ViewModelsShared.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\UserClaimViewModels\UserClaimViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UserClaimViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\UserViewModels\UserRoleViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UserRoleViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\UserViewModels\UserViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UserViewModel.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Controllers\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Controllers\SharedResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SharedResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\AccountViewModels\LoginViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\AccountViewModels\LoginViewModel.resx">
+      <LastGenOutput>LoginViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\Shared\ViewModelsShared.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\Shared\ViewModelsShared.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewModelsShared.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\RoleViewModels\RoleViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\RoleViewModels\RoleViewModel.resx">
+      <LastGenOutput>RoleViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\UserClaimViewModels\UserClaimViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\UserClaimViewModels\UserClaimViewModel.resx">
+      <LastGenOutput>UserClaimViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\UserViewModels\UserRoleViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\UserViewModels\UserRoleViewModel.resx">
+      <LastGenOutput>UserRoleViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\UserViewModels\UserViewModel.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UserViewModel.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\UserViewModels\UserViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\Account\AccessDenied.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\Account\Login.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\Home\Index.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\Shared\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\Shared\_Layout.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\Roles\Index.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\UserClaims\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\Roles\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\Users\Index.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\Users\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Migrations\IdentityServerDb\" />
+    <Folder Include="Data\Migrations\IdentityServerDb\" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,63 @@
+﻿@using System.Threading.Tasks
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@model JezekT.AspNetCore.IdentityServer4.WebApp.Models.UserViewModels.CreateUserViewModel
+
+@inject IViewLocalizer Localizer
+@inject IStringLocalizerFactory StringLocalizerFactory
+@{
+    var sharedLocalizer = StringLocalizerFactory.Create("Views.Shared.SharedResources", null);
+    var stringLocalizer = StringLocalizerFactory.Create("Views.Users.SharedResources", null);
+    ViewData["Title"] = sharedLocalizer["EditTitle"];
+}
+
+
+<h2>@ViewData["Title"]</h2>
+<h4>@stringLocalizer["EntityName"]</h4>
+<hr />
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <label asp-for="Username" class="col-md-2 control-label"></label>
+            <div class="col-md-4">
+                <input asp-for="Username" class="form-control" placeholder="@stringLocalizer["UsernamePlaceholder"]"/>
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Email" class="col-md-2 control-label"></label>
+            <div class="col-md-4">
+                <input asp-for="Email" class="form-control" placeholder="@stringLocalizer["EmailPlaceholder"]"/>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Password" class="col-md-2 control-label"></label>
+            <div class="col-md-4">
+                <input asp-for="Password" class="form-control"/>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PasswordConfirmation" class="col-md-2 control-label"></label>
+            <div class="col-md-4">
+                <input asp-for="PasswordConfirmation" class="form-control"/>
+                <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-4">
+                <input type="submit" value="@sharedLocalizer["Save"]" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+<div>
+    <a asp-action="Index" class="btn-bracketed">@sharedLocalizer["ToList"]</a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

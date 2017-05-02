@@ -1,10 +1,6 @@
-﻿using System;
-using System.Diagnostics.Contracts;
-using JezekT.NetStandard.Pagination;
-
-namespace JezekT.AspNetCore.Select2.Data
+﻿namespace JezekT.AspNetCore.Select2.Data
 {
-    public class SelectDropdownDataResponse : IPaginationData<object>
+    public class SelectDropdownDataResponse
     {
         public object[] Items { get; set; }
         public int RecordsTotal { get; set; }
@@ -13,19 +9,11 @@ namespace JezekT.AspNetCore.Select2.Data
 
         public object ResponseData => new { items = Items, more = MorePages };
 
-
-        public SelectDropdownDataResponse()
+        public SelectDropdownDataResponse(object[] items, int recordsTotal, int recordsFiltered, int start, int pageSize)
         {
-        }
-
-        public SelectDropdownDataResponse(IPaginationData<object> paginationData, int start, int pageSize)
-        {
-            if (paginationData == null) throw new ArgumentNullException();
-            Contract.EndContractBlock();
-
-            Items = paginationData.Items;
-            RecordsTotal = paginationData.RecordsTotal;
-            RecordsFiltered = paginationData.RecordsFiltered;
+            Items = items;
+            RecordsTotal = recordsTotal;
+            RecordsFiltered = recordsFiltered;
             MorePages = (start + pageSize) < RecordsFiltered;
         }
 

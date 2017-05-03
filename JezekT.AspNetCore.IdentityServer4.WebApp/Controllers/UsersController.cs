@@ -37,7 +37,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public async Task<IActionResult> Details(string id)
         {
-            var vm = await GetUserViewModel(id);
+            var vm = await GetUserViewModelAsync(id);
             if (vm == null)
             {
                 return NotFound();
@@ -79,7 +79,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public async Task<IActionResult> Edit(string id)
         {
-            var vm = await GetUserViewModel(id);
+            var vm = await GetUserViewModelAsync(id);
             if (vm == null)
             {
                 return NotFound();
@@ -120,7 +120,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public async Task<IActionResult> Delete(string id)
         {
-            var vm = await GetUserViewModel(id);
+            var vm = await GetUserViewModelAsync(id);
             if (vm == null)
             {
                 return NotFound();
@@ -280,7 +280,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         }
 
 
-        private async Task<UserViewModel> GetUserViewModel(string id)
+        private async Task<UserViewModel> GetUserViewModelAsync(string id)
         {
             var user = await _dbContext.Users.Where(x => x.Id == id).Include(x => x.Roles).FirstOrDefaultAsync();
             if (user != null)

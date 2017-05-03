@@ -18,7 +18,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var vm = await GetUserClaimViewModel(id);
+            var vm = await GetUserClaimViewModelAsync(id);
             if (vm == null)
             {
                 return NotFound();
@@ -63,7 +63,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var vm = await GetUserClaimViewModel(id);
+            var vm = await GetUserClaimViewModelAsync(id);
             if (vm == null)
             {
                 return NotFound();
@@ -100,7 +100,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var vm = await GetUserClaimViewModel(id);
+            var vm = await GetUserClaimViewModelAsync(id);
             if (vm == null)
             {
                 return NotFound();
@@ -140,7 +140,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         }
 
 
-        private async Task<UserClaimViewModel> GetUserClaimViewModel(int id)
+        private async Task<UserClaimViewModel> GetUserClaimViewModelAsync(int id)
         {
             var claim = await _dbContext.UserClaims.FindAsync(id);
             if (claim != null)

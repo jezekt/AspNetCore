@@ -22,23 +22,33 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
         private const string QueryIdsName = "query-ids";
         private const string ModelTypeName = "model-type";
         private const string TableIdName = "table-id";
+        private const string JsonDataName = "json-data";
 
         private readonly IModelMetadataProvider _modelMetadataProvider;
 
         [HtmlAttributeName(DataUrlName)]
         public string DataUrl { get; set; }
+
         [HtmlAttributeName(ProcessingName)]
         public bool Processing { get; set; } = true;
+
         [HtmlAttributeName(ServerSideName)]
         public bool ServerSide { get; set; } = true;
+
         [HtmlAttributeName(SearchDelayName)]
         public int SearchDelay { get; set; } = 1000;
+
         [HtmlAttributeName(QueryIdsName)]
         public string QueryIds { get; set; }
+
         [HtmlAttributeName(ModelTypeName)]
         public Type ModelType { get; set; }
+
         [HtmlAttributeName(TableIdName)]
         public string TableId { get; set; } = "dataTable";
+
+        [HtmlAttributeName(JsonDataName)]
+        public string JsonData { get; set; }
 
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -64,75 +74,33 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
             output.Content.AppendHtml(sb.ToString());
         }
 
-        private void AppendInitializeFunction(StringBuilder sb, DataTableContext tableContext, string initializeFunctionName)
+        private void AppendInitializeFunction(StringBuilder sb, DataTableContext tableContext,
+            string initializeFunctionName)
         {
             sb.AppendLine("function " + initializeFunctionName + "(){");
-                sb.AppendLine($"$('#{TableId}').DataTable({{");
-                if (!string.IsNullOrEmpty(DataTableSettings.LocalizationUrl))
-                {
-                    sb.AppendLine($"language: {{url: \"{DataTableSettings.LocalizationUrl}\"}},");
-                }
+            sb.AppendLine($"$('#{TableId}').DataTable({{");
+            if (!string.IsNullOrEmpty(DataTableSettings.LocalizationUrl))
+            {
+                sb.AppendLine($"language: {{url: \"{DataTableSettings.LocalizationUrl}\"}},");
+            }
 
-                if (ServerSide)
-                {
-                    sb.AppendLine("serverSide: true,");
-                    sb.AppendLine($"processing: {Processing.ToString().ToLower()},");
-                    sb.AppendLine($"searchDelay: {SearchDelay},");
-                    sb.AppendLine("ajax: {");
-                    sb.AppendLine("contentType: \"json\",");
-                    sb.AppendLine($"url:\"{DataUrl}\",");
-                    sb.AppendLine("data: function (params) {");
-                    sb.AppendLine("return {");
-                    sb.AppendLine("draw: params.draw,");
-                    sb.AppendLine("start: params.start,");
-                    sb.AppendLine("pageSize: params.length,");
-                    sb.AppendLine("term: params.search.value,");
-                    sb.AppendLine("orderField: params.columns[params.order[0].column].data,");
-                    sb.AppendLine("orderDirection: params.order[0].dir,");
-                    if (QueryIds != null)
-                    {
-                        sb.AppendLine($"queryIds: \"{QueryIds}\",");
-                    }
-                    sb.AppendLine("};},},");
-                    sb.AppendLine("columns: [");
-                    if (tableContext.ColumnsProperties != null)
-                    {
-                        foreach (var columnProperty in tableContext.ColumnsProperties)
-                        {
-                            if (columnProperty.Metadata.ModelType == typeof(DateTime) || columnProperty.Metadata.ModelType == typeof(DateTime?))
-                            {
-                                sb.AppendLine($"{{ \"data\": \"{columnProperty.Name.ToLower()}\",");
-                                sb.AppendLine("\"render\": function(data){");
-                                sb.AppendLine("if (data == null) return data;");
-                                sb.AppendLine("var d = new Date(data);");
-                                sb.AppendLine("return d.toLocaleString();");
-                                sb.AppendLine("}},");
-                            }
-                            else if (columnProperty.Metadata.ModelType == typeof(decimal) || columnProperty.Metadata.ModelType == typeof(decimal?))
-                            {
-                                sb.AppendLine($"{{ \"data\": \"{columnProperty.Name.ToLower()}\",");
-                                sb.AppendLine("\"render\": function(data){");
-                                sb.AppendLine("return data.toLocaleString();");
-                                sb.AppendLine("}},");
-                            }
-                            else
-                            {
-                                sb.AppendLine($"{{ \"data\": \"{columnProperty.Name.ToLower()}\" }},");
-                            }
-                        }
-                    }
-                    if (tableContext.ActionDataSet != null && tableContext.ActionDataSet.Any())
-                    {
-                        sb.AppendLine(GetColumnActionContent(tableContext.ActionDataSet));
-                    }
-                    sb.AppendLine("],");
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
+            if (ServerSide)
+            {
+                AppendServerSideProcessingData(sb);
 
-                sb.AppendLine("});");
+            }
+            else if (!string.IsNullOrEmpty(JsonData))
+            {
+                AppendData(sb);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            AppendColumns(sb, tableContext);
+
+            sb.AppendLine("});");
             sb.AppendLine("}");
         }
 
@@ -187,6 +155,81 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
             sb.AppendLine("</table>");
         }
 
+        private void AppendServerSideProcessingData(StringBuilder sb)
+        {
+            Contract.Requires(sb != null);
+
+            sb.AppendLine("serverSide: true,");
+            sb.AppendLine($"processing: {Processing.ToString().ToLower()},");
+            sb.AppendLine($"searchDelay: {SearchDelay},");
+            sb.AppendLine("ajax: {");
+            sb.AppendLine("contentType: \"json\",");
+            sb.AppendLine($"url:\"{DataUrl}\",");
+            sb.AppendLine("data: function (params) {");
+            sb.AppendLine("return {");
+            sb.AppendLine("draw: params.draw,");
+            sb.AppendLine("start: params.start,");
+            sb.AppendLine("pageSize: params.length,");
+            sb.AppendLine("term: params.search.value,");
+            sb.AppendLine("orderField: params.columns[params.order[0].column].data,");
+            sb.AppendLine("orderDirection: params.order[0].dir,");
+            if (QueryIds != null)
+            {
+                sb.AppendLine($"queryIds: \"{QueryIds}\",");
+            }
+            sb.AppendLine("};},},");
+        }
+
+        private void AppendData(StringBuilder sb)
+        {
+            Contract.Requires(sb != null);
+
+            sb.AppendLine("searching: false,");
+            sb.AppendLine("paging: false,");
+            sb.AppendLine("ordering: false,");
+            sb.AppendLine("info: false,");
+            sb.AppendLine($"aaData: {JsonData},");
+        }
+
+        private void AppendColumns(StringBuilder sb, DataTableContext tableContext)
+        {
+            Contract.Requires(sb != null && tableContext != null);
+
+            sb.AppendLine("columns: [");
+            if (tableContext.ColumnsProperties != null)
+            {
+                foreach (var columnProperty in tableContext.ColumnsProperties)
+                {
+                    var columnName = Char.ToLowerInvariant(columnProperty.Name[0]) + columnProperty.Name.Substring(1);
+                    if (columnProperty.Metadata.ModelType == typeof(DateTime) || columnProperty.Metadata.ModelType == typeof(DateTime?))
+                    {
+                        sb.AppendLine($"{{ \"data\": \"{columnName}\",");
+                        sb.AppendLine("\"render\": function(data){");
+                        sb.AppendLine("if (data == null) return data;");
+                        sb.AppendLine("var d = new Date(data);");
+                        sb.AppendLine("return d.toLocaleString();");
+                        sb.AppendLine("}},");
+                    }
+                    else if (columnProperty.Metadata.ModelType == typeof(decimal) || columnProperty.Metadata.ModelType == typeof(decimal?))
+                    {
+                        sb.AppendLine($"{{ \"data\": \"{columnName}\",");
+                        sb.AppendLine("\"render\": function(data){");
+                        sb.AppendLine("return data.toLocaleString();");
+                        sb.AppendLine("}},");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"{{ \"data\": \"{columnName}\" }},");
+                    }
+                }
+            }
+            if (tableContext.ActionDataSet != null && tableContext.ActionDataSet.Any())
+            {
+                sb.AppendLine(GetColumnActionContent(tableContext.ActionDataSet));
+            }
+            sb.AppendLine("],");
+        }
+        
         private string GetColumnActionContent(List<ActionData> actionDataSet)
         {
             Contract.Requires(actionDataSet != null);

@@ -64,7 +64,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = await _userManager.CreateAsync(new User { UserName = vm.Username, Email = vm.Email }, vm.Password);
+                var result = await _userManager.CreateAsync(new User { UserName = vm.UserName, Email = vm.Email }, vm.Password);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index");
@@ -291,7 +291,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 {
                     Id = id,
                     Email = user.Email,
-                    Username = user.UserName,
+                    UserName = user.UserName,
                     UserClaimIds = claimIds.ToIdsString(),
                     RoleIds = roleIds.ToIdsString()
                 };

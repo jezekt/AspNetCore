@@ -18,7 +18,7 @@
     "JezekT.AspNetCore.IdentityServer4.WebApp": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://identity.local.net:5000",
+      "launchUrl": "http://identity.local.net:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

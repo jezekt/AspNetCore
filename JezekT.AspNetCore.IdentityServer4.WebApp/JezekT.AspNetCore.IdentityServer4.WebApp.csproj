@@ -63,6 +63,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>LoginViewModel.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Models\ClientViewModels\ClientSecretViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ClientSecretViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\ClientViewModels\ValueIdPairViewModel - Copy.Designer.cs">
+      <DependentUpon>ValueIdPairViewModel - Copy.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Update="Resources\Models\ClientViewModels\ValueIdPairViewModel - Copy.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ValueIdPairViewModel.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Models\RoleViewModels\RoleViewModel.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -104,6 +119,20 @@
       <LastGenOutput>LoginViewModel.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientViewModels\ClientSecretViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientViewModels\ClientSecretViewModel.resx">
+      <LastGenOutput>ClientSecretViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientViewModels\ValueIdPairViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientViewModels\ValueIdPairViewModel.resx">
+      <LastGenOutput>ValueIdPairViewModel - Copy.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Models\Shared\ViewModelsShared.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
@@ -143,6 +172,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Account\Login.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\Clients\Index.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\Clients\SharedResources.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Home\Index.cs.resx">

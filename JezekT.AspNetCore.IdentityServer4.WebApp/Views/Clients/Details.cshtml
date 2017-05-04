@@ -1,0 +1,95 @@
+﻿@using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientViewModels
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@model ClientViewModel
+
+@inject IStringLocalizerFactory StringLocalizerFactory
+@inject IViewLocalizer Localizer
+@{
+    var sharedLocalizer = StringLocalizerFactory.Create("Views.Shared.SharedResources", null);
+    var stringLocalizer = StringLocalizerFactory.Create("Views.Clients.SharedResources", null);
+    ViewData["Title"] = sharedLocalizer["DetailsTitle"];
+}
+
+<h2>@ViewData["Title"]</h2>
+<div>
+    <h4>@stringLocalizer["EntityName"]</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClientId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ClientName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClientName)
+        </dd>
+    </dl>
+</div>
+<br />
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#allowedScopes">@stringLocalizer["AllowedScopes"]</a></li>
+    <li><a data-toggle="tab" href="#grantTypes">@stringLocalizer["GrantTypes"]</a></li>
+    <li><a data-toggle="tab" href="#redirectUris">@stringLocalizer["RedirectUris"]</a></li>
+    <li><a data-toggle="tab" href="#postRedirectUris">@stringLocalizer["PostRedirectUris"]</a></li>
+    <li><a data-toggle="tab" href="#clientSecrets">@stringLocalizer["ClientSecrets"]</a></li>
+</ul>
+<br />
+<div class="tab-content">
+    <div id="allowedScopes" class="tab-pane fade in active">
+        <div class="col-md-12">
+            <data-table model-type="@typeof(ValueIdPairViewModel)" json-data="@Model.AllowedScopesJson" server-side="false" class="table table-striped table-bordered" table-id="allowedScopesTable">
+                <data-table-columns>
+                    <data-table-column property-name="Value" />
+                </data-table-columns>
+            </data-table>
+        </div>
+    </div>
+    <div id="grantTypes" class="tab-pane fade in">
+        <div class="col-md-12">
+            <data-table model-type="@typeof(ValueIdPairViewModel)" json-data="@Model.AllowedGrantTypesJson" server-side="false" class="table table-striped table-bordered" table-id="grantTypesTable">
+                <data-table-columns>
+                    <data-table-column property-name="Value" />
+                </data-table-columns>
+            </data-table>
+        </div>
+    </div>
+    <div id="redirectUris" class="tab-pane fade in">
+        <div class="col-md-12">
+            <data-table model-type="@typeof(ValueIdPairViewModel)" json-data="@Model.RedirectUrisJson" server-side="false" class="table table-striped table-bordered" table-id="redirectUrisTable">
+                <data-table-columns>
+                    <data-table-column property-name="Value" />
+                </data-table-columns>
+            </data-table>
+        </div>
+    </div>
+    <div id="postRedirectUris" class="tab-pane fade in">
+        <div class="col-md-12">
+            <data-table model-type="@typeof(ValueIdPairViewModel)" json-data="@Model.PostLogoutRedirectUrisJson" server-side="false" class="table table-striped table-bordered" table-id="postRedirectUrisTable">
+                <data-table-columns>
+                    <data-table-column property-name="Value" />
+                </data-table-columns>
+            </data-table>
+        </div>
+    </div>
+    <div id="clientSecrets" class="tab-pane fade in">
+        <div class="col-md-12">
+            <data-table model-type="@typeof(ClientSecretViewModel)" json-data="@Model.ClientSecretsJson" server-side="false" class="table table-striped table-bordered" table-id="clientSecretsTable">
+                <data-table-columns>
+                    <data-table-column property-name="Type" />
+                    <data-table-column property-name="Description" />
+                    <data-table-column property-name="Expiration" />
+                </data-table-columns>
+            </data-table>
+        </div>
+    </div>
+</div>
+<br/>
+@*<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-bracketed">@sharedLocalizer["Edit"]</a>
+    <a asp-action="Index" class="btn-bracketed">@sharedLocalizer["ToList"]</a>
+</div>*@

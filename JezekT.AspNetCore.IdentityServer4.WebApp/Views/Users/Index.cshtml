@@ -19,7 +19,7 @@
 
 <data-table url-data="@Url.Action("GetTableDataJsonAsync", "Users")" class="table table-striped table-bordered">
     <data-table-columns>
-        <data-table-column asp-for="Username"/>
+        <data-table-column asp-for="UserName"/>
         <data-table-column>
             <data-table-column-action action-title="@sharedLocalizer["Edit"]" action-url="@Url.Action("Edit", "Users")"/>
             <data-table-column-action action-title="@sharedLocalizer["Details"]" action-url="@Url.Action("Details", "Users")" />

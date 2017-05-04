@@ -104,7 +104,37 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         private async Task<ClientViewModel> GetClientViewModelAsync(int id)
         {
-
+            return new ClientViewModel
+            {
+                ClientId = "mvc",
+                ClientName = "MVC Client",
+                AllowedScopes = new List<ValueIdPairViewModel>
+                {
+                    new ValueIdPairViewModel{Id = 1, Value = "openid"},
+                    new ValueIdPairViewModel{Id = 2, Value = "profile"}
+                },
+                AllowedGrantTypes = new List<ValueIdPairViewModel>
+                {
+                    new ValueIdPairViewModel{Id=1, Value = "implicit"}
+                },
+                RedirectUris = new List<ValueIdPairViewModel>
+                {
+                    new ValueIdPairViewModel{Id=1, Value = "http://localhost:5002/signin-oidc"}
+                },
+                PostLogoutRedirectUris = new List<ValueIdPairViewModel>
+                {
+                    new ValueIdPairViewModel{Id=1, Value = "http://localhost:5002/signout-callback-oidc"}
+                },
+                ClientSecrets = new List<ClientSecretViewModel>
+                {
+                    new ClientSecretViewModel
+                    {
+                        Id = 1,
+                        Description = "Client default secret",
+                        Expiration = DateTime.Today.AddMonths(1)
+                    }
+                }
+            };
         }
 
     }

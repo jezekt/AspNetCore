@@ -12,8 +12,8 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.UserClaimServices
             return x => new
             {
                 x.Id,
-                claimtype = x.ClaimType,
-                claimvalue = x.ClaimValue
+                x.ClaimType,
+                x.ClaimValue
             };
         }
 

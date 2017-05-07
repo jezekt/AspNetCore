@@ -17,6 +17,12 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
+            @Html.DisplayNameFor(model => model.Enabled)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Enabled)
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.ClientId)
         </dt>
         <dd>
@@ -27,6 +33,30 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ClientName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AllowOfflineAccess)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AllowOfflineAccess)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AlwaysSendClientClaims)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AlwaysSendClientClaims)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IdentityTokenLifetime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IdentityTokenLifetime)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AccessTokenLifetime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AccessTokenLifetime)
         </dd>
     </dl>
 </div>
@@ -89,7 +119,7 @@
     </div>
 </div>
 <br/>
-@*<div>
+<div>
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-bracketed">@sharedLocalizer["Edit"]</a>
     <a asp-action="Index" class="btn-bracketed">@sharedLocalizer["ToList"]</a>
-</div>*@
+</div>

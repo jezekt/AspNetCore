@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Data;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Services.ClientServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.RoleServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.UserClaimServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.UserServices;
@@ -51,6 +53,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
             services.AddTransient<IPaginationDataProvider<User, object>, UserPaginationProvider>();
             services.AddTransient<IPaginationDataProvider<IdentityUserClaim<string>, object>, UserClaimPaginationProvider>();
             services.AddTransient<IPaginationDataProvider<IdentityRole, object>, RolePaginationProvider>();
+            services.AddTransient<IPaginationDataProvider<Client, object>, ClientPaginationProvider>();
 
             services.Configure<RequestLocalizationOptions>(options =>
             {

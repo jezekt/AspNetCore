@@ -68,6 +68,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ClientSecretViewModel.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Models\ClientViewModels\ClientViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ClientViewModel.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Models\ClientViewModels\ValueIdPairViewModel - Copy.Designer.cs">
       <DependentUpon>ValueIdPairViewModel - Copy.resx</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -117,6 +122,13 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Models\AccountViewModels\LoginViewModel.resx">
       <LastGenOutput>LoginViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientViewModels\ClientViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientViewModels\ClientViewModel.resx">
+      <LastGenOutput>ClientViewModel.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Models\ClientViewModels\ClientSecretViewModel.cs.resx">

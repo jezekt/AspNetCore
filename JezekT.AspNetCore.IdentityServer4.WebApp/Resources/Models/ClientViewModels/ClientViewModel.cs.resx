@@ -117,37 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ClientIdPlaceholder" xml:space="preserve">
-    <value>např. mvc</value>
+  <data name="AccessTokenLifetime" xml:space="preserve">
+    <value>Access token lifetime</value>
   </data>
-  <data name="EntityName" xml:space="preserve">
-    <value>Klient</value>
-  </data>
-  <data name="ClientNamePlaceholder" xml:space="preserve">
-    <value>např. MVC Client</value>
+  <data name="AllowedGrantTypes" xml:space="preserve">
+    <value>Allowed grant types</value>
   </data>
   <data name="AllowedScopes" xml:space="preserve">
-    <value>Allowed Scopes</value>
+    <value>Allowed scopes</value>
+  </data>
+  <data name="AllowOfflineAccess" xml:space="preserve">
+    <value>Allow offline access</value>
+  </data>
+  <data name="AlwaysSendClientClaims" xml:space="preserve">
+    <value>Always send client claims</value>
+  </data>
+  <data name="ClientId" xml:space="preserve">
+    <value>Client Id</value>
+  </data>
+  <data name="ClientName" xml:space="preserve">
+    <value>Cilent name</value>
   </data>
   <data name="ClientSecrets" xml:space="preserve">
-    <value>Client Secrets</value>
+    <value>Client secrets</value>
   </data>
-  <data name="GrantTypes" xml:space="preserve">
-    <value>Grant Types</value>
+  <data name="IdentityTokenLifetime" xml:space="preserve">
+    <value>Identity token lifetime</value>
   </data>
-  <data name="PostRedirectUris" xml:space="preserve">
-    <value>Post Redirect URIs</value>
+  <data name="PostLogoutRedirectUris" xml:space="preserve">
+    <value>Post logout URIs</value>
   </data>
   <data name="RedirectUris" xml:space="preserve">
     <value>Redirect URIs</value>
   </data>
-  <data name="AccessTokenLifetimePlaceholder" xml:space="preserve">
-    <value>např. 3600</value>
-  </data>
-  <data name="IdentityTokenLifetimePlaceholder" xml:space="preserve">
-    <value>např. 300</value>
-  </data>
-  <data name="Seconds" xml:space="preserve">
-    <value>s</value>
+  <data name="Enabled" xml:space="preserve">
+    <value>Povolen</value>
   </data>
 </root>

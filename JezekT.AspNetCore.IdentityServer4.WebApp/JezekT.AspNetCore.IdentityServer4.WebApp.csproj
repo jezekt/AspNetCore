@@ -63,6 +63,26 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>LoginViewModel.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Models\ClientGrantTypeViewModels\ClientGrantTypeViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ClientGrantTypeViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\ClientPostLogoutRedirectUriViewModels\ClientPostLogoutRedirectUriViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ClientPostLogoutRedirectUriViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\ClientRedirectUriViewModels\ClientRedirectUriViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ClientRedirectUriViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\ClientScopeViewModels\ClientScopeViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ClientScopeViewModel.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Models\ClientViewModels\ClientSecretViewModel.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -72,16 +92,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ClientViewModel.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\Models\ClientViewModels\ValueIdPairViewModel - Copy.Designer.cs">
-      <DependentUpon>ValueIdPairViewModel - Copy.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="Resources\Models\ClientViewModels\ValueIdPairViewModel - Copy.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ValueIdPairViewModel.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\Models\RoleViewModels\RoleViewModel.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -124,6 +134,34 @@
       <LastGenOutput>LoginViewModel.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientGrantTypeViewModels\ClientGrantTypeViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientGrantTypeViewModels\ClientGrantTypeViewModel.resx">
+      <LastGenOutput>ClientGrantTypeViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientPostLogoutRedirectUriViewModels\ClientPostLogoutRedirectUriViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientPostLogoutRedirectUriViewModels\ClientPostLogoutRedirectUriViewModel.resx">
+      <LastGenOutput>ClientPostLogoutRedirectUriViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientRedirectUriViewModels\ClientRedirectUriViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientRedirectUriViewModels\ClientRedirectUriViewModel.resx">
+      <LastGenOutput>ClientRedirectUriViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientScopeViewModels\ClientScopeViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ClientScopeViewModels\ClientScopeViewModel.resx">
+      <LastGenOutput>ClientScopeViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Models\ClientViewModels\ClientViewModel.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
@@ -136,13 +174,6 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Models\ClientViewModels\ClientSecretViewModel.resx">
       <LastGenOutput>ClientSecretViewModel.Designer.cs</LastGenOutput>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Models\ClientViewModels\ValueIdPairViewModel.cs.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Models\ClientViewModels\ValueIdPairViewModel.resx">
-      <LastGenOutput>ValueIdPairViewModel - Copy.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Models\Shared\ViewModelsShared.cs.resx">
@@ -184,6 +215,18 @@
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Account\Login.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\ClientPostLogoutRedirectUris\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\ClientRedirectUris\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\ClientScopes\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\ClientGrantTypes\SharedResources.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Clients\Index.cs.resx">

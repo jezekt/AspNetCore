@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewModels {
+namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientGrantTypeViewModels {
     using System;
     using System.Reflection;
     
@@ -23,14 +23,14 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewMo
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ValueIdPairViewModel {
+    public class ClientGrantTypeViewModel {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ValueIdPairViewModel() {
+        internal ClientGrantTypeViewModel() {
         }
         
         /// <summary>
@@ -40,8 +40,8 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewMo
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewModels.ValueI" +
-                            "dPairViewModel", typeof(ValueIdPairViewModel).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientGrantTypeViewMode" +
+                            "ls.ClientGrantTypeViewModel", typeof(ClientGrantTypeViewModel).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -65,9 +65,9 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewMo
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string Value {
+        public static string GrantType {
             get {
-                return ResourceManager.GetString("Value", resourceCulture);
+                return ResourceManager.GetString("GrantType", resourceCulture);
             }
         }
     }

@@ -5,18 +5,22 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientGrantTypeViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientPostLogoutRedirectUriViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientRedirectUriViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientScopeViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services;
 using JezekT.NetStandard.Pagination.DataProviders;
 using JezekT.NetStandard.Pagination.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
     public class ClientsController : Controller
     {
         private readonly ConfigurationDbContext _dbContext;
-        //private readonly IMapper _mapper;
         private readonly IPaginationDataProvider<Client, object> _clientPaginationProvider;
 
 
@@ -87,8 +91,14 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 client.ClientName = vm.ClientName;
                 client.AllowOfflineAccess = vm.AllowOfflineAccess;
                 client.AlwaysSendClientClaims = vm.AlwaysSendClientClaims;
-                client.IdentityTokenLifetime = vm.IdentityTokenLifetime;
-                client.AccessTokenLifetime = vm.AccessTokenLifetime;
+                if (vm.IdentityTokenLifetime != null)
+                {
+                    client.IdentityTokenLifetime = (int)vm.IdentityTokenLifetime;
+                }
+                if (vm.AccessTokenLifetime != null)
+                {
+                    client.AccessTokenLifetime = (int)vm.AccessTokenLifetime;
+                }
                 await _dbContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -141,24 +151,33 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             Contract.EndContractBlock();
 
             _dbContext = dbContext;
-            //_mapper = mapper;
             _clientPaginationProvider = clientPaginationDataProvider;
         }
 
 
         private async Task<ClientViewModel> GetClientViewModelAsync(int id)
         {
-            var client = await _dbContext.Clients.FindAsync(id);
+            var client = await _dbContext.Clients
+                .Include(x => x.AllowedGrantTypes).ThenInclude(x => x.Client)
+                .Include(x => x.AllowedScopes).ThenInclude(x => x.Client)
+                .Include(x => x.RedirectUris).ThenInclude(x => x.Client)
+                .Include(x => x.PostLogoutRedirectUris).ThenInclude(x => x.Client)
+                .FirstOrDefaultAsync(x => x.Id == id);
             if (client != null)
             {
                 return new ClientViewModel
                 {
+                    Id = client.Id,
                     ClientId = client.ClientId,
                     ClientName = client.ClientName,
                     AllowOfflineAccess = client.AllowOfflineAccess,
                     AlwaysSendClientClaims = client.AlwaysSendClientClaims,
                     IdentityTokenLifetime = client.IdentityTokenLifetime,
-                    AccessTokenLifetime = client.AccessTokenLifetime
+                    AccessTokenLifetime = client.AccessTokenLifetime,
+                    AllowedScopes = client.AllowedScopes.Select(x => new ClientScopeViewModel { Id = x.Id, ClientId = x.Client.Id, Scope = x.Scope }).ToList(),
+                    AllowedGrantTypes = client.AllowedGrantTypes.Select(x => new ClientGrantTypeViewModel{Id = x.Id, ClientId = x.Client.Id, GrantType = x.GrantType}).ToList(),
+                    RedirectUris = client.RedirectUris.Select(x => new ClientRedirectUriViewModel { Id = x.Id, ClientId = x.Client.Id, RedirectUri = x.RedirectUri }).ToList(),
+                    PostLogoutRedirectUris = client.PostLogoutRedirectUris.Select(x => new ClientPostLogoutRedirectUriViewModel { Id = x.Id, ClientId = x.Client.Id, PostLogoutRedirectUri = x.PostLogoutRedirectUri }).ToList(),
                 };
             }
             return null;
@@ -168,16 +187,23 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         {
             if (vm != null)
             {
-                return new Client
+                var client = new Client
                 {
                     Enabled = vm.Enabled,
                     ClientId = vm.ClientId,
                     ClientName = vm.ClientName,
                     AllowOfflineAccess = vm.AllowOfflineAccess,
                     AlwaysSendClientClaims = vm.AlwaysSendClientClaims,
-                    IdentityTokenLifetime = vm.IdentityTokenLifetime,
-                    AccessTokenLifetime = vm.AccessTokenLifetime
                 };
+
+                if (vm.IdentityTokenLifetime != null)
+                {
+                    client.IdentityTokenLifetime = (int)vm.IdentityTokenLifetime;
+                }
+                if (vm.AccessTokenLifetime != null)
+                {
+                    client.AccessTokenLifetime = (int)vm.AccessTokenLifetime;
+                }
             }
             return null;
         }

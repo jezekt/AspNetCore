@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientGrantTypeViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientPostLogoutRedirectUriViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientRedirectUriViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientScopeViewModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -20,18 +24,18 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientViewModels
         [Display(Name = "AlwaysSendClientClaims", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
         public bool AlwaysSendClientClaims { get; set; }
         [Display(Name = "IdentityTokenLifetime", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
-        public int IdentityTokenLifetime { get; set; }
+        public int? IdentityTokenLifetime { get; set; }
         [Display(Name = "AccessTokenLifetime", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
-        public int AccessTokenLifetime { get; set; }
+        public int? AccessTokenLifetime { get; set; }
 
         [Display(Name = "AllowedScopes", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
-        public List<ValueIdPairViewModel> AllowedScopes { get; set; } = new List<ValueIdPairViewModel>();
+        public List<ClientScopeViewModel> AllowedScopes { get; set; } = new List<ClientScopeViewModel>();
         [Display(Name = "AllowedGrantTypes", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
-        public List<ValueIdPairViewModel> AllowedGrantTypes { get; set; } = new List<ValueIdPairViewModel>();
+        public List<ClientGrantTypeViewModel> AllowedGrantTypes { get; set; } = new List<ClientGrantTypeViewModel>();
         [Display(Name = "RedirectUris", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
-        public List<ValueIdPairViewModel> RedirectUris { get; set; } = new List<ValueIdPairViewModel>();
+        public List<ClientRedirectUriViewModel> RedirectUris { get; set; } = new List<ClientRedirectUriViewModel>();
         [Display(Name = "PostLogoutRedirectUris", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
-        public List<ValueIdPairViewModel> PostLogoutRedirectUris { get; set; } = new List<ValueIdPairViewModel>();
+        public List<ClientPostLogoutRedirectUriViewModel> PostLogoutRedirectUris { get; set; } = new List<ClientPostLogoutRedirectUriViewModel>();
         [Display(Name = "ClientSecrets", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
         public List<ClientSecretViewModel> ClientSecrets { get; set; } = new List<ClientSecretViewModel>();
 

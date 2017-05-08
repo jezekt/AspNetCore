@@ -37,32 +37,34 @@
     <li><a data-toggle="tab" href="#roles">Roles</a></li>
 </ul>
 <br />
-<div class="tab-content">
-    <div id="claims" class="tab-pane fade in active">
-        <div class="col-md-12">
-            <data-table url-data="@Url.Action("GetClaimsTableDataJsonAsync", "Users")" query-ids="@Model.UserClaimIds" model-type="@typeof(UserClaimViewModel)" class="table table-striped table-bordered" table-id="userClaimsTable">
-                <data-table-columns>
-                    <data-table-column property-name="ClaimType" />
-                    <data-table-column property-name="ClaimValue" />
-                    <data-table-column>
-                        <data-table-column-action action-title="@sharedLocalizer["Details"]" action-url="@Url.Action("Details", "UserClaims")" />
-                    </data-table-column>
-                </data-table-columns>
-            </data-table>
+<div class="container">
+    <div class="tab-content">
+        <div id="claims" class="tab-pane fade in active">
+            <div class="col-md-12">
+                <data-table url-data="@Url.Action("GetClaimsTableDataJsonAsync", "Users")" query-ids="@Model.UserClaimIds" model-type="@typeof(UserClaimViewModel)" class="table table-striped table-bordered" table-id="userClaimsTable">
+                    <data-table-columns>
+                        <data-table-column property-name="ClaimType" />
+                        <data-table-column property-name="ClaimValue" />
+                        <data-table-column>
+                            <data-table-column-action action-title="@sharedLocalizer["Details"]" action-url="@Url.Action("Details", "UserClaims")" />
+                        </data-table-column>
+                    </data-table-columns>
+                </data-table>
+            </div>
         </div>
-    </div>
 
-    <div id="roles" class="tab-pane fade">
-        <div class="col-md-12">
-            <data-table url-data="@Url.Action("GetRolesTableDataJsonAsync", "Users")" query-ids="@Model.RoleIds" model-type="@typeof(RoleViewModel)" class="table table-striped table-bordered" table-id="RolesTable">
-                <data-table-columns>
-                    <data-table-column property-name="Name" />
-                </data-table-columns>
-            </data-table>
+        <div id="roles" class="tab-pane fade">
+            <div class="col-md-12">
+                <data-table url-data="@Url.Action("GetRolesTableDataJsonAsync", "Users")" query-ids="@Model.RoleIds" model-type="@typeof(RoleViewModel)" class="table table-striped table-bordered" table-id="RolesTable">
+                    <data-table-columns>
+                        <data-table-column property-name="Name" />
+                    </data-table-columns>
+                </data-table>
+            </div>
         </div>
     </div>
 </div>
-<br/>
+<br />
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-bracketed">@sharedLocalizer["Edit"]</a>
     <a asp-action="Index" class="btn-bracketed">@sharedLocalizer["ToList"]</a>

@@ -26,6 +26,7 @@
     <PackageReference Include="IdentityServer4" Version="1.5.0" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="1.0.1" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="1.0.1" />
+    <PackageReference Include="JezekT.AspNetCore.Bootstrap.Datepicker" Version="1.0.0" />
     <PackageReference Include="JezekT.AspNetCore.DataTables" Version="1.0.0" />
     <PackageReference Include="JezekT.AspNetCore.Mvc" Version="1.0.0" />
     <PackageReference Include="JezekT.AspNetCore.Select2" Version="1.0.0" />
@@ -83,7 +84,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ClientScopeViewModel.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\Models\ClientViewModels\ClientSecretViewModel.Designer.cs">
+    <Compile Update="Resources\Models\ClientSecretViewModels\ClientSecretViewModel.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ClientSecretViewModel.resx</DependentUpon>
@@ -92,6 +93,16 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>ClientViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\IdentityClaimViewModels\IdentityClaimViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IdentityClaimViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\IdentityResourceViewModels\IdentityResourceViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IdentityResourceViewModel.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\Models\RoleViewModels\RoleViewModel.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -117,6 +128,21 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>UserViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Services\DataTable\DataTableSettings.designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataTableSettings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Services\Datepicker\DatepickerSettings.designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DatepickerSettings.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Services\Select2\SelectDropdownSettings.designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SelectDropdownSettings.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -169,11 +195,25 @@
       <LastGenOutput>ClientViewModel.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Models\ClientViewModels\ClientSecretViewModel.cs.resx">
+    <EmbeddedResource Update="Resources\Models\ClientSecretViewModels\ClientSecretViewModel.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Models\ClientViewModels\ClientSecretViewModel.resx">
+    <EmbeddedResource Update="Resources\Models\ClientSecretViewModels\ClientSecretViewModel.resx">
       <LastGenOutput>ClientSecretViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\IdentityClaimViewModels\IdentityClaimViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\IdentityClaimViewModels\IdentityClaimViewModel.resx">
+      <LastGenOutput>IdentityClaimViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\IdentityResourceViewModels\IdentityResourceViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\IdentityResourceViewModels\IdentityResourceViewModel.resx">
+      <LastGenOutput>IdentityResourceViewModel.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Models\Shared\ViewModelsShared.cs.resx">
@@ -211,6 +251,27 @@
     <EmbeddedResource Update="Resources\Models\UserViewModels\UserViewModel.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Services\DataTable\DataTableSettings.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Services\DataTable\DataTableSettings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DataTableSettings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Services\Datepicker\DatepickerSettings.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Services\Datepicker\DatepickerSettings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DatepickerSettings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Services\Select2\SelectDropdownSettings.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Services\Select2\SelectDropdownSettings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SelectDropdownSettings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Account\AccessDenied.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
@@ -229,6 +290,9 @@
     <EmbeddedResource Update="Resources\Views\ClientGrantTypes\SharedResources.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\ClientSecrets\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Clients\Index.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
@@ -236,6 +300,15 @@
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Home\Index.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\IdentityClaims\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\IdentityResources\Index.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\IdentityResources\SharedResources.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Shared\SharedResources.cs.resx">

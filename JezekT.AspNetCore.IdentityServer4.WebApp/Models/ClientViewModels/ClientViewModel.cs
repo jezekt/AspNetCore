@@ -4,6 +4,7 @@ using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientGrantTypeViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientPostLogoutRedirectUriViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientRedirectUriViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientScopeViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientSecretViewModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 

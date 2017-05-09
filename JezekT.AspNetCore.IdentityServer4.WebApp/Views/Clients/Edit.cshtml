@@ -3,6 +3,7 @@
 @using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientPostLogoutRedirectUriViewModels
 @using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientRedirectUriViewModels
 @using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientScopeViewModels
+@using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientSecretViewModels
 @using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientViewModels
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Localization
@@ -157,7 +158,7 @@
         <div id="clientSecrets" class="tab-pane fade in">
             <div class="col-md-12">
                 <p>
-                    <a asp-controller="UserClaims" asp-action="Create" asp-route-userId="@Model.Id" class="btn-bracketed">@sharedLocalizer["Add"]</a>
+                    <a asp-controller="ClientSecrets" asp-action="Create" asp-route-clientId="@Model.Id" class="btn-bracketed">@sharedLocalizer["Add"]</a>
                 </p>
                 <data-table model-type="@typeof(ClientSecretViewModel)" json-data="@Model.ClientSecretsJson" server-side="false" class="table table-striped table-bordered" table-id="clientSecretsTable">
                     <data-table-columns>
@@ -165,8 +166,8 @@
                         <data-table-column property-name="Description" />
                         <data-table-column property-name="Expiration" />
                         <data-table-column>
-                            <data-table-column-action action-title="@sharedLocalizer["Edit"]" action-url="@Url.Action("Edit", "UserClaims")" />
-                            <data-table-column-action action-title="@sharedLocalizer["Delete"]" action-url="@Url.Action("Delete", "UserClaims")" />
+                            <data-table-column-action action-title="@sharedLocalizer["Edit"]" action-url="@Url.Action("Edit", "ClientSecrets")" />
+                            <data-table-column-action action-title="@sharedLocalizer["Delete"]" action-url="@Url.Action("Delete", "ClientSecrets")" />
                         </data-table-column>
                     </data-table-columns>
                 </data-table>

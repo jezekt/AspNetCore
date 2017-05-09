@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using IdentityServer4.EntityFramework.Entities;
+using JezekT.AspNetCore.Bootstrap.Datepicker.Settings;
+using JezekT.AspNetCore.DataTables.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +16,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Data;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.ClientServices;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Services.IdentityResourceServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.RoleServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.UserClaimServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.UserServices;
+using JezekT.AspNetCore.Select2.Settings;
 using JezekT.NetStandard.Pagination.DataProviders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -54,6 +58,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
             services.AddTransient<IPaginationDataProvider<IdentityUserClaim<string>, object>, UserClaimPaginationProvider>();
             services.AddTransient<IPaginationDataProvider<IdentityRole, object>, RolePaginationProvider>();
             services.AddTransient<IPaginationDataProvider<Client, object>, ClientPaginationProvider>();
+            services.AddTransient<IPaginationDataProvider<IdentityResource, object>, IdentityResourcePaginationProvider>();
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
@@ -72,6 +77,13 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
                 options.AddPolicy("AdministratorOnly", policy => policy.RequireRole("Administrator"));
                 options.AddPolicy("UserAdministratorOnly", policy => policy.RequireRole("Administrator", "UserAdministrator"));
             });
+
+            DataTableSettings.LocalizationUrl = Resources.Services.DataTable.DataTableSettings.LocalizationUrl;
+            SelectDropdownSettings.LanguageCode = Resources.Services.Select2.SelectDropdownSettings.LanguageCode;
+            SelectDropdownSettings.Loading = Resources.Services.Select2.SelectDropdownSettings.Loading;
+            SelectDropdownSettings.LocalizationUrl = Resources.Services.Select2.SelectDropdownSettings.LocalizationUrl;
+            DatepickerSettings.LanguageCode = Resources.Services.Datepicker.DatepickerSettings.LanguageCode;
+            DatepickerSettings.LocalizationUrl = Resources.Services.Datepicker.DatepickerSettings.LocalizationUrl;
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

@@ -9,15 +9,18 @@ using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientGrantTypeViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientPostLogoutRedirectUriViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientRedirectUriViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientScopeViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientSecretViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services;
 using JezekT.NetStandard.Pagination.DataProviders;
 using JezekT.NetStandard.Pagination.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
+    [Authorize(Policy = "AdministratorOnly")]
     public class ClientsController : Controller
     {
         private readonly ConfigurationDbContext _dbContext;
@@ -162,6 +165,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 .Include(x => x.AllowedScopes).ThenInclude(x => x.Client)
                 .Include(x => x.RedirectUris).ThenInclude(x => x.Client)
                 .Include(x => x.PostLogoutRedirectUris).ThenInclude(x => x.Client)
+                .Include(x => x.ClientSecrets).ThenInclude(x => x.Client)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (client != null)
             {
@@ -178,6 +182,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                     AllowedGrantTypes = client.AllowedGrantTypes.Select(x => new ClientGrantTypeViewModel{Id = x.Id, ClientId = x.Client.Id, GrantType = x.GrantType}).ToList(),
                     RedirectUris = client.RedirectUris.Select(x => new ClientRedirectUriViewModel { Id = x.Id, ClientId = x.Client.Id, RedirectUri = x.RedirectUri }).ToList(),
                     PostLogoutRedirectUris = client.PostLogoutRedirectUris.Select(x => new ClientPostLogoutRedirectUriViewModel { Id = x.Id, ClientId = x.Client.Id, PostLogoutRedirectUri = x.PostLogoutRedirectUri }).ToList(),
+                    ClientSecrets = client.ClientSecrets.Select(x => new ClientSecretViewModel{Id = x.Id, ClientId = x.Client.Id, Type = x.Type, Description = x.Description, Expiration = x.Expiration}).ToList()
                 };
             }
             return null;

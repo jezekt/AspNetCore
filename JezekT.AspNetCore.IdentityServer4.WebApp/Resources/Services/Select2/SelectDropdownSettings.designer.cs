@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewModels {
+namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Services.Select2 {
     using System;
     using System.Reflection;
     
@@ -23,25 +23,25 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewMo
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ClientSecretViewModel {
+    internal class SelectDropdownSettings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ClientSecretViewModel() {
+        internal SelectDropdownSettings() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewModels.Client" +
-                            "SecretViewModel", typeof(ClientSecretViewModel).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Services.Select2.SelectDropdow" +
+                            "nSettings", typeof(SelectDropdownSettings).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -53,7 +53,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewMo
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -65,36 +65,27 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewMo
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string Description {
+        internal static string LanguageCode {
             get {
-                return ResourceManager.GetString("Description", resourceCulture);
+                return ResourceManager.GetString("LanguageCode", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string Expiration {
+        internal static string Loading {
             get {
-                return ResourceManager.GetString("Expiration", resourceCulture);
+                return ResourceManager.GetString("Loading", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string Type {
+        internal static string LocalizationUrl {
             get {
-                return ResourceManager.GetString("Type", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string Value {
-            get {
-                return ResourceManager.GetString("Value", resourceCulture);
+                return ResourceManager.GetString("LocalizationUrl", resourceCulture);
             }
         }
     }

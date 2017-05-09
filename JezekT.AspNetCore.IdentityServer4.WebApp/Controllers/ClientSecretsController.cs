@@ -3,28 +3,30 @@ using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
-using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientViewModels;
+using IdentityServer4.Models;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientGrantTypeViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientSecretViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
     [Authorize(Policy = "AdministratorOnly")]
-    public abstract class ClientSettingsController<TViewModel, TEntity> : Controller where TViewModel : ClientStringSettingsViewModel where TEntity : class
+    public class ClientSecretsController : Controller
     {
         private readonly ConfigurationDbContext _dbContext;
 
 
         public IActionResult Create(int clientId)
         {
-            var vm = Activator.CreateInstance<TViewModel>();
-            vm.ClientId = clientId;
+            var vm = new ClientSecretViewModel{ ClientId = clientId, Expiration = DateTime.Today.AddYears(1)};
             return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(TViewModel vm)
+        public async Task<IActionResult> Create(ClientSecretViewModel vm)
         {
             if (vm == null)
             {
@@ -38,8 +40,19 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 {
                     return BadRequest();
                 }
-                
-                AddEntityToContext(vm, _dbContext, client);
+
+                var clientSecret = new ClientSecret
+                {
+                    Client = client,
+                    Description = vm.Description,
+                    Value = vm.Value.Sha256(),
+                    Expiration = vm.Expiration
+                };
+                if (!string.IsNullOrEmpty(vm.Type))
+                {
+                    clientSecret.Type = vm.Type;
+                }
+                _dbContext.Set<ClientSecret>().Add(clientSecret);
                 await _dbContext.SaveChangesAsync();
 
                 return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
@@ -50,13 +63,13 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var vm = await GetViewModel(id, _dbContext);
+            var vm = await GetViewModel(id);
             return View(vm);
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(TViewModel vm)
+        public async Task<IActionResult> Edit(ClientSecretViewModel vm)
         {
             if (vm == null)
             {
@@ -65,13 +78,15 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                var obj = await _dbContext.Set<TEntity>().FindAsync(vm.Id);
+                var obj = await _dbContext.Set<ClientSecret>().FindAsync(vm.Id);
                 if (obj == null)
                 {
                     return NotFound();
                 }
 
-                EntityUpdate(obj, vm);
+                obj.Type = vm.Type;
+                obj.Description = vm.Description;
+                obj.Expiration = vm.Expiration;
                 await _dbContext.SaveChangesAsync();
 
                 return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
@@ -79,23 +94,23 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             return View(vm);
         }
 
-        
+
         public async Task<IActionResult> Delete(int id)
         {
-            var vm = await GetViewModel(id, _dbContext);
+            var vm = await GetViewModel(id);
             return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(TViewModel vm)
+        public async Task<IActionResult> Delete(ClientGrantTypeViewModel vm)
         {
             if (vm == null)
             {
                 return BadRequest();
             }
 
-            var obj = await _dbContext.Set<TEntity>().FindAsync(vm.Id);
+            var obj = await _dbContext.Set<ClientSecret>().FindAsync(vm.Id);
             if (obj == null)
             {
                 return NotFound();
@@ -108,18 +123,30 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         }
 
 
-        protected abstract void AddEntityToContext(TViewModel vm, ConfigurationDbContext dbContext, Client client);
-        protected abstract void EntityUpdate(TEntity obj, TViewModel vm);
-        protected abstract Task<TViewModel> GetViewModel(int id, ConfigurationDbContext dbContext);
-
-
-        protected ClientSettingsController(ConfigurationDbContext dbContext)
+        public ClientSecretsController(ConfigurationDbContext dbContext)
         {
             if (dbContext == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _dbContext = dbContext;
         }
-        
+
+
+        private async Task<ClientSecretViewModel> GetViewModel(int id)
+        {
+            var clientSecret = await _dbContext.Set<ClientSecret>().Include(x => x.Client).FirstOrDefaultAsync(x => x.Id == id);
+            if (clientSecret != null)
+            {
+                return new ClientSecretViewModel
+                {
+                    Id = clientSecret.Id,
+                    ClientId = clientSecret.Client.Id,
+                    Type = clientSecret.Type,
+                    Description = clientSecret.Description,
+                    Expiration = clientSecret.Expiration
+                };
+            }
+            return null;
+        }
     }
 }

@@ -117,22 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AppTitle" xml:space="preserve">
-    <value>Identity Server 4</value>
+  <data name="DescriptionPlaceholder" xml:space="preserve">
+    <value>např. Vaše e-mailová adresa</value>
   </data>
-  <data name="Clients" xml:space="preserve">
-    <value>Klienti</value>
+  <data name="DisplayNamePlaceholder" xml:space="preserve">
+    <value>např. E-mail</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Domů</value>
+  <data name="EntityName" xml:space="preserve">
+    <value>Identity resource</value>
   </data>
-  <data name="IdentityResources" xml:space="preserve">
-    <value>Identity resources</value>
+  <data name="IdentityClaims" xml:space="preserve">
+    <value>Identity claims</value>
   </data>
-  <data name="Roles" xml:space="preserve">
-    <value>Role</value>
-  </data>
-  <data name="Users" xml:space="preserve">
-    <value>Uživatelé</value>
+  <data name="NamePlaceholder" xml:space="preserve">
+    <value>např. email</value>
   </data>
 </root>

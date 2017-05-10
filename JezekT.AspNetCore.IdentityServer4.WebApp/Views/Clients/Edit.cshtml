@@ -26,6 +26,13 @@
         <div asp-validation-summary="All" class="text-danger"></div>
         <input type="hidden" asp-for="Id" />
         <div class="form-group">
+            <label asp-for="Enabled" class="col-md-2 control-label"></label>
+            <div class="col-md-4">
+                <input asp-for="Enabled" class="form-control" />
+                <span asp-validation-for="Enabled" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
             <label asp-for="ClientId" class="col-md-2 control-label"></label>
             <div class="col-md-4">
                 <input asp-for="ClientId" class="form-control" placeholder="@stringLocalizer["ClientIdPlaceholder"]" />
@@ -37,20 +44,6 @@
             <div class="col-md-4">
                 <input asp-for="ClientName" class="form-control" placeholder="@stringLocalizer["ClientNamePlaceholder"]" />
                 <span asp-validation-for="ClientName" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="AllowOfflineAccess" class="col-md-2 control-label"></label>
-            <div class="col-md-4">
-                <input asp-for="AllowOfflineAccess" class="form-control" />
-                <span asp-validation-for="AllowOfflineAccess" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="AlwaysSendClientClaims" class="col-md-2 control-label"></label>
-            <div class="col-md-4">
-                <input asp-for="AlwaysSendClientClaims" class="form-control" />
-                <span asp-validation-for="AlwaysSendClientClaims" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
@@ -71,6 +64,20 @@
                     <span class="input-group-addon">@stringLocalizer["Seconds"]</span>
                 </div>
                 <span asp-validation-for="AccessTokenLifetime" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="AllowOfflineAccess" class="col-md-2 control-label"></label>
+            <div class="col-md-4">
+                <input asp-for="AllowOfflineAccess" class="form-control" />
+                <span asp-validation-for="AllowOfflineAccess" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="AlwaysSendClientClaims" class="col-md-2 control-label"></label>
+            <div class="col-md-4">
+                <input asp-for="AlwaysSendClientClaims" class="form-control" />
+                <span asp-validation-for="AlwaysSendClientClaims" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">

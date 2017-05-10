@@ -135,38 +135,6 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-                //serviceScope.ServiceProvider.GetRequiredService<IdentityServerDbContext>().Database.Migrate();
-                //serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
-
-                //var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-                //context.Database.Migrate();
-                //if (!context.Clients.Any())
-                //{
-                //    foreach (var client in InitialConfiguration.GetClients())
-                //    {
-                //        context.Clients.Add(client.ToEntity());
-                //    }
-                //    context.SaveChanges();
-                //}
-
-                //if (!context.IdentityResources.Any())
-                //{
-                //    foreach (var resource in InitialConfiguration.GetIdentityResources())
-                //    {
-                //        context.IdentityResources.Add(resource.ToEntity());
-                //    }
-                //    context.SaveChanges();
-                //}
-
-                //if (!context.ApiResources.Any())
-                //{
-                //    foreach (var resource in InitialConfiguration.GetApiResources())
-                //    {
-                //        context.ApiResources.Add(resource.ToEntity());
-                //    }
-                //    context.SaveChanges();
-                //}
-
                 var context = serviceScope.ServiceProvider.GetRequiredService<IdentityServerDbContext>();
                 var adminUsername = "admin";
                 var defaultPassword = "Admin123||";

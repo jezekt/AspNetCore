@@ -209,6 +209,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 {
                     client.AccessTokenLifetime = (int)vm.AccessTokenLifetime;
                 }
+                return client;
             }
             return null;
         }

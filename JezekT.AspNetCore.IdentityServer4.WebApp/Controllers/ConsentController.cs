@@ -15,7 +15,6 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public async Task<IActionResult> Index(string returnUrl)
         {
-            var user = User;
             var vm = await _consent.BuildViewModelAsync(returnUrl);
             if (vm != null)
             {
@@ -38,7 +37,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             {
                 ModelState.AddModelError("", result.ValidationError);
             }
-            if (result.ShowView)
+            if (result.HasViewModel)
             {
                 return View("Index", result.ViewModel);
             }

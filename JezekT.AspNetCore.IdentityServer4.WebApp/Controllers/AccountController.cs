@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4.Services;
+using IdentityServer4.Stores;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Data;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Extensions;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.AccountViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Services.AccountServices;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +18,17 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly AccountService _account;
         private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly IPasswordResetSender _resetPwdSender;
+       
 
         [AllowAnonymous]
-        [HttpGet]
-        public IActionResult Login(string returnUrl)
+        public async Task<IActionResult> Login(string returnUrl)
         {
-            return View(new LoginViewModel{ReturnUrl = returnUrl});
+            var vm = await _account.BuildLoginViewModelAsync(returnUrl);
+            return View(vm);
         }
 
         [AllowAnonymous]
@@ -28,7 +38,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, vm.RememberLogin, false);
+                var result = await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, vm.RememberLogin, true);
                 if (result.Succeeded)
                 {
                     return RedirectToLocal(vm.ReturnUrl);
@@ -50,29 +60,137 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
 
         [AllowAnonymous]
+        public async Task<IActionResult> Logout(string logoutId)
+        {
+            var vm = await _account.BuildLogoutViewModelAsync(logoutId);
+            if (vm.ShowLogoutPrompt == false)
+            {
+                return await Logout(vm);
+            }
+            return View(vm);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
+        [AllowAnonymous]
+        public async Task<IActionResult> Logout(LogoutViewModel model)
         {
+            var vm = await _account.BuildLoggedOutViewModelAsync(model.LogoutId);
             await _signInManager.SignOutAsync();
 
-            return RedirectToAction("Index", "Home");
+            return View("LoggedOut", vm);
         }
 
 
-        [HttpGet]
+        [AllowAnonymous]
         public IActionResult AccessDenied()
         {
             return View();
         }
 
 
-        public AccountController(SignInManager<User> signInManager)
+        [AllowAnonymous]
+        public async Task<IActionResult> EmailConfirmed(string userId, string code)
         {
-            if (signInManager == null) throw new ArgumentNullException();
+            if (userId == null || code == null)
+            {
+                return BadRequest();
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+            {
+                return View();
+            }
+            ModelState.AddErrors(result.Errors.ToList());
+            return View("Error");
+        }
+
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null || !await _userManager.IsEmailConfirmedAsync(user))
+                {
+                    return View("ForgotPasswordConfirmation");
+                }
+
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code, email = model.Email }, HttpContext.Request.Scheme);
+                await _resetPwdSender.SendPasswordResetAsync(user.Email, callbackUrl);
+                return View("ForgotPasswordConfirmation");
+            }
+
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string code = null, string userId = null)
+        {
+            return code == null || userId == null ? View("Error") : View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByIdAsync(model.UserId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction(nameof(ResetPasswordConfirmation), "Account");
+                }
+                ModelState.AddErrors(result.Errors.ToList());
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
+
+        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, IIdentityServerInteractionService interaction, 
+            IHttpContextAccessor httpContextAccessor, IClientStore clientStore, IPasswordResetSender resetPwdSender)
+        {
+            if (signInManager == null || userManager == null || interaction == null || httpContextAccessor == null || resetPwdSender == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _signInManager = signInManager;
+            _userManager = userManager;
+            _resetPwdSender = resetPwdSender;
+            _account = new AccountService(interaction, httpContextAccessor);
         }
 
 

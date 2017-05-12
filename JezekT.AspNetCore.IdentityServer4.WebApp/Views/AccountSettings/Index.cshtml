@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@model JezekT.AspNetCore.IdentityServer4.WebApp.Models.AccountSettingsViewModels.IndexViewModel
+
+@inject IViewLocalizer Localizer
+@inject IStringLocalizerFactory StringLocalizerFactory
+@{
+    var sharedLocalizer = StringLocalizerFactory.Create("Views.Shared.SharedResources", null);
+    ViewData["Title"] = Localizer["ViewTitle"];
+}
+
+
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+    <h4>@Localizer["IndexMessage"]</h4>
+    <p class="text-success">@ViewData["StatusMessage"]</p>
+</div>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>@Localizer["Password"]</dt>
+        <dd>
+            <a asp-controller="AccountSettings" asp-action="ChangePassword" class="btn-bracketed">@sharedLocalizer["Change"]</a>
+        </dd>
+        <dt>@Localizer["Email"]</dt>
+        <dd>
+            @if (Model.HasEmail)
+            {
+                <a asp-controller="AccountSettings" asp-action="ChangeEmail" class="btn-bracketed">@sharedLocalizer["Change"]</a>
+                if (!Model.EmailConfirmed)
+                {
+                    <a asp-controller="AccountSettings" asp-action="ConfirmEmail" class="btn-bracketed"><b>@Localizer["ConfirmEmail"]</b></a>
+                }
+            }
+            else
+            {
+                <a asp-controller="AccountSettings" asp-action="ChangeEmail" class="btn-bracketed">@sharedLocalizer["Create"]</a>
+            }
+        </dd>
+
+    </dl>
+</div>

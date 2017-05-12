@@ -5,17 +5,16 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Models.AccountViewModels
     public class ResetPasswordViewModel
     {
         [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+        public string UserId { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [Display(Name = "Password", ResourceType = typeof(Resources.Models.UserViewModels.UserViewModel))]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "PasswordConfirmation", ResourceType = typeof(Resources.Models.UserViewModels.UserViewModel))]
+        [Compare("Password", ErrorMessageResourceName = "PasswordConfirmationMessage", ErrorMessageResourceType = typeof(Resources.Models.UserViewModels.UserViewModel))]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }

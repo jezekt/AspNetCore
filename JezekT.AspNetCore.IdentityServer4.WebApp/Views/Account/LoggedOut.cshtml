@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@model LoggedOutViewModel
+
+@inject IViewLocalizer Localizer
+@{
+    // set this so UI rendering sees an anonymous user
+    Context.User = new System.Security.Claims.ClaimsPrincipal(new System.Security.Claims.ClaimsIdentity());
+}
+
+<div class="page-header logged-out">
+    <h1>
+        @Localizer["LoggedOut"]
+    </h1>
+</div>
+
+<div>
+    <p>
+        @Localizer["LoggedOutMessage"]
+    </p>
+</div>
+@if (Model.PostLogoutRedirectUri != null)
+{
+    <div>
+        @Localizer["ForReturnClick"] <a class="PostLogoutRedirectUri" href="@Model.PostLogoutRedirectUri">@Localizer["Here"]</a>.
+    </div>
+}
+
+@section scripts
+{
+    @if (Model.AutomaticRedirectAfterSignOut)
+    {
+        <script>
+            window.addEventListener("load", function () {
+                var a = document.querySelector("a.PostLogoutRedirectUri");
+                if (a) {
+                    window.location = a.href;
+                }
+            });
+        </script>
+    }
+}

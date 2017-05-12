@@ -117,58 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Add" xml:space="preserve">
-    <value>Přidat</value>
+  <data name="EmailConfirmedLinkText" xml:space="preserve">
+    <value>Přihlásit se.</value>
   </data>
-  <data name="ToList" xml:space="preserve">
-    <value>Seznam</value>
+  <data name="EmailConfirmedMessage" xml:space="preserve">
+    <value>Děkujeme za potvrzení e-mailu.</value>
   </data>
-  <data name="Create" xml:space="preserve">
-    <value>Vytvořit</value>
-  </data>
-  <data name="CreateNew" xml:space="preserve">
-    <value>Vytvořit nový</value>
-  </data>
-  <data name="CreateTitle" xml:space="preserve">
-    <value>Vytvoření</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Odstranit</value>
-  </data>
-  <data name="DeleteQuestion" xml:space="preserve">
-    <value>Opravdu chcete odstanit tento záznam?</value>
-  </data>
-  <data name="DeleteTitle" xml:space="preserve">
-    <value>Odstranění</value>
-  </data>
-  <data name="Detail" xml:space="preserve">
-    <value>Detail</value>
-  </data>
-  <data name="Details" xml:space="preserve">
-    <value>Detaily</value>
-  </data>
-  <data name="DetailsTitle" xml:space="preserve">
-    <value>Detaily</value>
-  </data>
-  <data name="Edit" xml:space="preserve">
-    <value>Editace</value>
-  </data>
-  <data name="EditTitle" xml:space="preserve">
-    <value>Editace</value>
-  </data>
-  <data name="Loading" xml:space="preserve">
-    <value>Načítám...</value>
-  </data>
-  <data name="Remove" xml:space="preserve">
-    <value>Odebrat</value>
-  </data>
-  <data name="Save" xml:space="preserve">
-    <value>Uložit</value>
-  </data>
-  <data name="Change" xml:space="preserve">
-    <value>Změnit</value>
-  </data>
-  <data name="Send" xml:space="preserve">
-    <value>Odeslat</value>
+  <data name="ViewTitle" xml:space="preserve">
+    <value>E-mail potvrzen</value>
   </data>
 </root>

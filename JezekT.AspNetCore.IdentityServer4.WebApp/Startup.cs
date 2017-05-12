@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Data;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Services.AccountServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.ClientServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.IdentityResourceServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.RoleServices;
@@ -40,7 +41,10 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddDbContext<IdentityServerDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddIdentity<User, IdentityRole>(option => option.SecurityStampValidationInterval = TimeSpan.FromSeconds(30)).AddEntityFrameworkStores<IdentityServerDbContext>();
+            services.AddIdentity<User, IdentityRole>(option => option.SecurityStampValidationInterval = TimeSpan.FromSeconds(30))
+                .AddEntityFrameworkStores<IdentityServerDbContext>()
+                .AddDefaultTokenProviders();
+                //.AddTokenProvider(TokenOptions.DefaultEmailProvider, typeof(EmailTokenProvider<User>));
 
             services.AddMvc()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -59,6 +63,10 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
             services.AddTransient<IPaginationDataProvider<IdentityRole, object>, RolePaginationProvider>();
             services.AddTransient<IPaginationDataProvider<Client, object>, ClientPaginationProvider>();
             services.AddTransient<IPaginationDataProvider<IdentityResource, object>, IdentityResourcePaginationProvider>();
+
+            services.AddTransient<IPasswordResetSender, AccountEmailTools>();
+            services.AddTransient<IEmailConfirmationSender, AccountEmailTools>();
+            services.AddTransient<IEmailSender, EmailSender>();
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
@@ -84,6 +92,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
             SelectDropdownSettings.LocalizationUrl = Resources.Services.Select2.SelectDropdownSettings.LocalizationUrl;
             DatepickerSettings.LanguageCode = Resources.Services.Datepicker.DatepickerSettings.LanguageCode;
             DatepickerSettings.LocalizationUrl = Resources.Services.Datepicker.DatepickerSettings.LocalizationUrl;
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

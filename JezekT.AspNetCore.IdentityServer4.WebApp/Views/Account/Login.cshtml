@@ -2,10 +2,10 @@
 @inject IViewLocalizer Localizer
 @model LoginViewModel
 
-
-<h2>@Localizer["ViewTitle"]</h2>
-<h4>@Localizer["LoginText"]</h4>
-<hr />
+<div class="page-header">
+    <h1>@Localizer["ViewTitle"]</h1>
+    <h4>@Localizer["LoginText"]</h4>
+</div>
 <div asp-validation-summary="All" class="text-danger"></div>
 
     <div>
@@ -26,16 +26,19 @@
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-3">
-                        <div class="checkbox">
-                            <label asp-for="RememberLogin">
-                                <input asp-for="RememberLogin"/>
-                                @Html.DisplayNameFor(m => m.RememberLogin)
-                            </label>
+                @if (Model.AllowRememberLogin)
+                {
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-3">
+                            <div class="checkbox">
+                                <label asp-for="RememberLogin">
+                                    <input asp-for="RememberLogin"/>
+                                    @Html.DisplayNameFor(m => m.RememberLogin)
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-3">
                         <button type="submit" class="btn btn-default">@Localizer["Login"]</button>

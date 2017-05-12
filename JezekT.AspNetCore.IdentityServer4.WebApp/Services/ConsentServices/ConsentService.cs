@@ -20,18 +20,14 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.ConsentServices
         public async Task<ProcessConsentResult> ProcessConsent(ConsentInputModel model)
         {
             var result = new ProcessConsentResult();
-
             ConsentResponse grantedConsent = null;
 
-            // user clicked 'no' - send back the standard 'access_denied' response
             if (model.Button == "no")
             {
                 grantedConsent = ConsentResponse.Denied;
             }
-            // user clicked 'yes' - validate the data
-            else if (model.Button == "yes" && model != null)
+            else if (model.Button == "yes")
             {
-                // if the user consented to some scope, build the response model
                 if (model.ScopesConsented != null && model.ScopesConsented.Any())
                 {
                     var scopes = model.ScopesConsented;
@@ -58,19 +54,17 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.ConsentServices
 
             if (grantedConsent != null)
             {
-                // validate return url is still valid
                 var request = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
-                if (result == null) return result;
+                if (request == null)
+                {
+                    return result;
+                }
 
-                // communicate outcome of consent back to identityserver
                 await _interaction.GrantConsentAsync(request, grantedConsent);
-
-                // indiate that's it ok to redirect back to authorization endpoint
                 result.RedirectUri = model.ReturnUrl;
             }
             else
             {
-                // we need to redisplay the consent UI
                 result.ViewModel = await BuildViewModelAsync(model.ReturnUrl, model);
             }
 
@@ -88,12 +82,10 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.ConsentServices
                     var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);
                     if (resources != null && (resources.IdentityResources.Any() || resources.ApiResources.Any()))
                     {
-                        return CreateConsentViewModel(model, returnUrl, request, client, resources);
+                        return GetConsentViewModel(model, returnUrl, client, resources);
                     }
-                    else
-                    {
-                        _logger.LogError("No scopes matching: {0}", request.ScopesRequested.Aggregate((x, y) => x + ", " + y));
-                    }
+
+                    _logger.LogError("No scopes matching: {0}", request.ScopesRequested.Aggregate((x, y) => x + ", " + y));
                 }
                 else
                 {
@@ -104,63 +96,9 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.ConsentServices
             {
                 _logger.LogError("No consent request matching request: {0}", returnUrl);
             }
-
             return null;
         }
-
-        private ConsentViewModel CreateConsentViewModel(
-            ConsentInputModel model, string returnUrl, 
-            AuthorizationRequest request, 
-            Client client, global::IdentityServer4.Models.Resources resources)
-        {
-            var vm = new ConsentViewModel();
-            vm.RememberConsent = model?.RememberConsent ?? true;
-            vm.ScopesConsented = model?.ScopesConsented ?? Enumerable.Empty<string>();
-
-            vm.ReturnUrl = returnUrl;
-
-            vm.ClientName = client.ClientName;
-            vm.ClientUrl = client.ClientUri;
-            vm.ClientLogoUrl = client.LogoUri;
-            vm.AllowRememberConsent = client.AllowRememberConsent;
-
-            vm.IdentityScopes = resources.IdentityResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
-            vm.ResourceScopes = resources.ApiResources.SelectMany(x => x.Scopes).Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
-            if (ConsentOptions.EnableOfflineAccess && resources.OfflineAccess)
-            {
-                vm.ResourceScopes = vm.ResourceScopes.Union(new ScopeViewModel[] {
-                    GetOfflineAccessScope(vm.ScopesConsented.Contains(IdentityServerConstants.StandardScopes.OfflineAccess) || model == null)
-                });
-            }
-
-            return vm;
-        }
-
-        public ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
-        {
-            return new ScopeViewModel
-            {
-                Name = identity.Name,
-                DisplayName = identity.DisplayName,
-                Description = identity.Description,
-                Emphasize = identity.Emphasize,
-                Required = identity.Required,
-                Checked = check || identity.Required,
-            };
-        }
-
-        public ScopeViewModel CreateScopeViewModel(Scope scope, bool check)
-        {
-            return new ScopeViewModel
-            {
-                Name = scope.Name,
-                DisplayName = scope.DisplayName,
-                Description = scope.Description,
-                Emphasize = scope.Emphasize,
-                Required = scope.Required,
-                Checked = check || scope.Required,
-            };
-        }
+        
 
         public ConsentService(IIdentityServerInteractionService interaction, IClientStore clientStore, IResourceStore resourceStore, ILogger logger)
         {
@@ -170,6 +108,31 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.ConsentServices
             _logger = logger;
         }
 
+
+        private ConsentViewModel GetConsentViewModel(ConsentInputModel model, string returnUrl, Client client, global::IdentityServer4.Models.Resources resources)
+        {
+            var vm = new ConsentViewModel
+            {
+                RememberConsent = model?.RememberConsent ?? true,
+                ScopesConsented = model?.ScopesConsented ?? Enumerable.Empty<string>(),
+                ReturnUrl = returnUrl,
+                ClientName = client.ClientName,
+                ClientUrl = client.ClientUri,
+                ClientLogoUrl = client.LogoUri,
+                AllowRememberConsent = client.AllowRememberConsent
+            };
+
+            vm.IdentityScopes = resources.IdentityResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
+            vm.ResourceScopes = resources.ApiResources.SelectMany(x => x.Scopes).Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
+            if (ConsentOptions.EnableOfflineAccess && resources.OfflineAccess)
+            {
+                vm.ResourceScopes = vm.ResourceScopes.Union(new[] {
+                    GetOfflineAccessScope(vm.ScopesConsented.Contains(IdentityServerConstants.StandardScopes.OfflineAccess) || model == null)
+                });
+            }
+
+            return vm;
+        }
 
         private ScopeViewModel GetOfflineAccessScope(bool check)
         {
@@ -182,6 +145,34 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.ConsentServices
                 Checked = check
             };
         }
+
+        private ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
+        {
+            return new ScopeViewModel
+            {
+                Name = identity.Name,
+                DisplayName = identity.DisplayName,
+                Description = identity.Description,
+                Emphasize = identity.Emphasize,
+                Required = identity.Required,
+                Checked = check || identity.Required,
+            };
+        }
+
+        private ScopeViewModel CreateScopeViewModel(Scope scope, bool check)
+        {
+            return new ScopeViewModel
+            {
+                Name = scope.Name,
+                DisplayName = scope.DisplayName,
+                Description = scope.Description,
+                Emphasize = scope.Emphasize,
+                Required = scope.Required,
+                Checked = check || scope.Required,
+            };
+        }
+
+
     }
 }
 

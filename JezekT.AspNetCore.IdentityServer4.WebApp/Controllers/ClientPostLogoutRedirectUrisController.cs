@@ -4,6 +4,7 @@ using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientPostLogoutRedirectUriViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
@@ -39,7 +40,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         }
 
 
-        public ClientPostLogoutRedirectUrisController(ConfigurationDbContext dbContext) : base(dbContext)
+        public ClientPostLogoutRedirectUrisController(ConfigurationDbContext dbContext, ILogger<ClientPostLogoutRedirectUrisController> logger) : base(dbContext, logger)
         {
         }
 

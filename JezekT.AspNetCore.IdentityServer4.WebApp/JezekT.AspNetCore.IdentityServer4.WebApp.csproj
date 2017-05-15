@@ -413,6 +413,9 @@
     <EmbeddedResource Update="Resources\Views\Shared\SharedResources.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\Shared\Error.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Shared\_LoginPartial.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>

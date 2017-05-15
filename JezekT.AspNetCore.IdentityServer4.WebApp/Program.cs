@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp
@@ -8,8 +7,6 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
     {
         public static void Main(string[] args)
         {
-            Console.Title = "IdentityServer";
-
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())

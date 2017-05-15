@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
@@ -22,7 +23,8 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IPasswordResetSender _resetPwdSender;
-       
+        private readonly ILogger _logger;
+
 
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl)
@@ -41,14 +43,17 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 var result = await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, vm.RememberLogin, true);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation($"User {vm.Username} logged in.");
                     return RedirectToLocal(vm.ReturnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {
+                    _logger.LogInformation("Two factor authentication not supported.");
                     return BadRequest();
                 }
                 if (result.IsLockedOut)
                 {
+                    _logger.LogInformation($"User {vm.Username} locked out.");
                     return View("Lockout");
                 }
 
@@ -78,6 +83,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             var vm = await _account.BuildLoggedOutViewModelAsync(model.LogoutId);
             await _signInManager.SignOutAsync();
 
+            _logger.LogInformation($"Client {vm.ClientName} logged out.");
             return View("LoggedOut", vm);
         }
 
@@ -99,11 +105,13 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
+                _logger.LogInformation($"User Id {userId} not found.");
                 return NotFound();
             }
             var result = await _userManager.ConfirmEmailAsync(user, code);
             if (result.Succeeded)
             {
+                _logger.LogInformation($"User {user.UserName} confirmed his email {user.Email}.");
                 return View();
             }
             ModelState.AddErrors(result.Errors.ToList());
@@ -166,6 +174,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation($"User {user.UserName} reset his password.");
                     return RedirectToAction(nameof(ResetPasswordConfirmation), "Account");
                 }
                 ModelState.AddErrors(result.Errors.ToList());
@@ -182,15 +191,17 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
 
         public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, IIdentityServerInteractionService interaction, 
-            IHttpContextAccessor httpContextAccessor, IClientStore clientStore, IPasswordResetSender resetPwdSender)
+            IHttpContextAccessor httpContextAccessor, IClientStore clientStore, IPasswordResetSender resetPwdSender, ILogger<AccountController> logger)
         {
-            if (signInManager == null || userManager == null || interaction == null || httpContextAccessor == null || resetPwdSender == null) throw new ArgumentNullException();
+            if (signInManager == null || userManager == null || interaction == null || httpContextAccessor == null || 
+                resetPwdSender == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _signInManager = signInManager;
             _userManager = userManager;
             _resetPwdSender = resetPwdSender;
             _account = new AccountService(interaction, httpContextAccessor);
+            _logger = logger;
         }
 
 

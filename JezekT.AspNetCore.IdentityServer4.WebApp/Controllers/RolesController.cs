@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
@@ -20,6 +21,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
     {
         private readonly IdentityServerDbContext _dbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ILogger _logger;
 
 
         public IActionResult Index()
@@ -47,9 +49,11 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 var result = await _roleManager.CreateAsync(new IdentityRole { Name = vm.Name });
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation($"Role {vm.Name} created by {User?.Identity?.Name}.");
                     return RedirectToAction("Index");
                 }
 
+                _logger.LogError($"Role create error. {string.Join(";", result.Errors.Select(x => x.ToString()).ToArray())}");
                 ModelState.AddErrors(result.Errors.ToArray());
             }
             return View(vm);
@@ -88,9 +92,11 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 var result = await _roleManager.UpdateAsync(role);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation($"Role {vm.Name} updated by {User?.Identity?.Name}.");
                     return RedirectToAction("Index");
                 }
 
+                _logger.LogError($"Role edit error. {string.Join(";", result.Errors.Select(x => x.ToString()).ToArray())}");
                 ModelState.AddErrors(result.Errors.ToArray());
             }
             return View(vm);
@@ -120,9 +126,11 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             var result = await _roleManager.DeleteAsync(role);
             if (result.Succeeded)
             {
+                _logger.LogInformation($"Role {role.Name} removed by {User?.Identity?.Name}.");
                 return RedirectToAction("Index");
             }
 
+            _logger.LogError($"Role delete error. {string.Join(";", result.Errors.Select(x => x.ToString()).ToArray())}");
             ModelState.AddErrors(result.Errors.ToArray());
             return View(vm);
         }
@@ -136,13 +144,14 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         }
 
 
-        public RolesController(IdentityServerDbContext dbContext, RoleManager<IdentityRole> roleManager)
+        public RolesController(IdentityServerDbContext dbContext, RoleManager<IdentityRole> roleManager, ILogger<RolesController> logger)
         {
-            if (dbContext == null || roleManager == null) throw new ArgumentNullException();
+            if (dbContext == null || roleManager == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _dbContext = dbContext;
             _roleManager = roleManager;
+            _logger = logger;
         }
 
 

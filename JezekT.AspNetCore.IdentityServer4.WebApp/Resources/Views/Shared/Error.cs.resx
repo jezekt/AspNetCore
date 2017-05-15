@@ -117,19 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ConfirmEmailAccountMessage" xml:space="preserve">
-    <value>Potvrďte prosím Váš e-mailový účet kliknutím na následující {0}.</value>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Při zpracování požadavku nastala chyba</value>
   </data>
-  <data name="ConfirmEmailAccountSubject" xml:space="preserve">
-    <value>Potvrzení e-mailového účtu</value>
-  </data>
-  <data name="Link" xml:space="preserve">
-    <value>odkaz</value>
-  </data>
-  <data name="ResetPasswordMessage" xml:space="preserve">
-    <value>Pro resetování hesla klikněte na následující {0}.</value>
-  </data>
-  <data name="ResetPasswordSubject" xml:space="preserve">
-    <value>Resetování hesla</value>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Chyba</value>
   </data>
 </root>

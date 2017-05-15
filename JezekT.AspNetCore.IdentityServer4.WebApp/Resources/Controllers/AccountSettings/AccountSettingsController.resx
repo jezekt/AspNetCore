@@ -126,12 +126,6 @@
   <data name="PasswordChanged" xml:space="preserve">
     <value />
   </data>
-  <data name="UserXChangedEmail" xml:space="preserve">
-    <value />
-  </data>
-  <data name="UserXChangedPassword" xml:space="preserve">
-    <value />
-  </data>
   <data name="UserXSentEmailConfirmation" xml:space="preserve">
     <value />
   </data>
@@ -139,9 +133,6 @@
     <value />
   </data>
   <data name="ConfirmationSentToX" xml:space="preserve">
-    <value />
-  </data>
-  <data name="CurrentUserNotFound" xml:space="preserve">
     <value />
   </data>
 </root>

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
+using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using JezekT.AspNetCore.Bootstrap.Datepicker.Settings;
 using JezekT.AspNetCore.DataTables.Settings;
@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Data;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Extensions;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.AccountServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.ClientServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.IdentityResourceServices;
@@ -38,19 +39,16 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
-
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddDbContext<IdentityServerDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddIdentity<User, IdentityRole>(option => option.SecurityStampValidationInterval = TimeSpan.FromSeconds(30))
+            services.AddIdentity<User, IdentityRole>(option => option.SecurityStampValidationInterval = TimeSpan.FromSeconds(_configuration.GetValue<int>("SecurityStampValidationInterval")))
                 .AddEntityFrameworkStores<IdentityServerDbContext>()
                 .AddDefaultTokenProviders();
-                //.AddTokenProvider(TokenOptions.DefaultEmailProvider, typeof(EmailTokenProvider<User>));
 
             services.AddMvc()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization();
 
-            var signingCert = new X509Certificate2(Path.Combine("c:/users/jezek/desktop", "identity.local.signing.pfx"), "best");
+            var signingCert = new X509Certificate2(_configuration.GetValue<string>("SigningCertificate:Path"), _configuration.GetValue<string>("SigningCertificate:Password"));
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             services.AddIdentityServer()
                 .AddSigningCredential(signingCert)
@@ -66,8 +64,9 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
 
             services.AddTransient<IPasswordResetSender, AccountEmailTools>();
             services.AddTransient<IEmailConfirmationSender, AccountEmailTools>();
-            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddEmailSender(_configuration);
 
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 var supportedCultures = new List<CultureInfo>
@@ -92,29 +91,29 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
             SelectDropdownSettings.LocalizationUrl = Resources.Services.Select2.SelectDropdownSettings.LocalizationUrl;
             DatepickerSettings.LanguageCode = Resources.Services.Datepicker.DatepickerSettings.LanguageCode;
             DatepickerSettings.LocalizationUrl = Resources.Services.Datepicker.DatepickerSettings.LocalizationUrl;
-
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             InitializeDatabase(app);
-
-            loggerFactory.AddConsole(LogLevel.Debug);
-            loggerFactory.AddDebug();
+            loggerFactory.AddConsole(_configuration.GetSection("Logging"));
 
             if (env.IsDevelopment())
             {
+                //loggerFactory.AddConsole(_configuration.GetSection("Logging"));
+                loggerFactory.AddDebug();
+
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
             }
             else
             {
+                app.UseStatusCodePages();
                 app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseStaticFiles();
-
             app.UseIdentity();
             app.UseIdentityServer();
 
@@ -129,11 +128,10 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
 
         public Startup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder().SetBasePath(env.ContentRootPath).AddJsonFile("appsettings.json", false, true);
-            if (env.IsDevelopment())
-            {
-                builder.AddUserSecrets<Startup>();
-            }
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
 
             builder.AddEnvironmentVariables();
             _configuration = builder.Build();
@@ -144,10 +142,14 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
+                serviceScope.ServiceProvider.GetRequiredService<IdentityServerDbContext>().Database.Migrate();
+                serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
+                serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+
                 var context = serviceScope.ServiceProvider.GetRequiredService<IdentityServerDbContext>();
-                var adminUsername = "admin";
-                var defaultPassword = "Admin123||";
-                var adminRoleValue = "Administrator";
+                var adminUsername = _configuration.GetValue<string>("DefaultAdministrator:Username");
+                var defaultPassword = _configuration.GetValue<string>("DefaultAdministrator:Password");
+                var adminRoleValue = _configuration.GetValue<string>("DefaultAdministrator:Role");
                 
                 var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 if (!roleManager.RoleExistsAsync(adminRoleValue).Result)

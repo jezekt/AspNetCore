@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.DbContexts;
@@ -7,6 +8,7 @@ using JezekT.AspNetCore.IdentityServer4.WebApp.Models.IdentityClaimViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
@@ -14,6 +16,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
     public class IdentityClaimsController : Controller
     {
         private readonly ConfigurationDbContext _dbContext;
+        private readonly ILogger _logger;
 
 
         public IActionResult Create(int identityResourceId)
@@ -44,10 +47,19 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                     Type = vm.Type,
                     IdentityResource = identityResource
                 };
-                _dbContext.Set<IdentityClaim>().Add(identityClaim);
-                await _dbContext.SaveChangesAsync();
 
-                return RedirectToAction("Edit", "IdentityResources", new { id = vm.IdentityResourceId });
+                _dbContext.Set<IdentityClaim>().Add(identityClaim);
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation($"Identity claim Id {vm.Id} created by {User?.Identity?.Name}.");
+                    return RedirectToAction("Edit", "IdentityResources", new { id = vm.IdentityResourceId });
+                }
+                catch (DbException ex)
+                {
+                    _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                    throw;
+                }
             }
             return View(vm);
         }
@@ -77,9 +89,17 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 }
 
                 obj.Type = vm.Type;
-                await _dbContext.SaveChangesAsync();
-
-                return RedirectToAction("Edit", "IdentityResources", new { id = vm.IdentityResourceId });
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation($"Identity claim Id {vm.Id} updated by {User?.Identity?.Name}.");
+                    return RedirectToAction("Edit", "IdentityResources", new { id = vm.IdentityResourceId });
+                }
+                catch (DbException ex)
+                {
+                    _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                    throw;
+                }
             }
             return View(vm);
         }
@@ -107,18 +127,27 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             }
 
             _dbContext.Remove(obj);
-            await _dbContext.SaveChangesAsync();
-
-            return RedirectToAction("Edit", "IdentityResources", new { id = vm.IdentityResourceId });
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                _logger.LogInformation($"Identity claim Id {vm.Id} removed by {User?.Identity?.Name}.");
+                return RedirectToAction("Edit", "IdentityResources", new { id = vm.IdentityResourceId });
+            }
+            catch (DbException ex)
+            {
+                _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                throw;
+            }
         }
 
 
-        public IdentityClaimsController(ConfigurationDbContext dbContext)
+        public IdentityClaimsController(ConfigurationDbContext dbContext, ILogger<IdentityClaimsController> logger)
         {
-            if (dbContext == null) throw new ArgumentNullException();
+            if (dbContext == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _dbContext = dbContext;
+            _logger = logger;
         }
 
 

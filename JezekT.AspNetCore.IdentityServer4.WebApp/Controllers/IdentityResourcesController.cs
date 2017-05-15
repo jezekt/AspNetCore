@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
@@ -14,6 +15,7 @@ using JezekT.NetStandard.Pagination.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
@@ -22,6 +24,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
     {
         private readonly ConfigurationDbContext _dbContext;
         private readonly IPaginationDataProvider<IdentityResource, object> _identityResourcePaginationProvider;
+        private readonly ILogger _logger;
 
 
         public IActionResult Index()
@@ -57,8 +60,17 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _dbContext.IdentityResources.Add(GetIdentityResource(vm));
-                await _dbContext.SaveChangesAsync();
-                return RedirectToAction("Index");
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation($"Identity resource Id {vm.Id} created by {User?.Identity?.Name}.");
+                    return RedirectToAction("Index");
+                }
+                catch (DbException ex)
+                {
+                    _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                    throw;
+                }
             }
             return View(vm);
         }
@@ -93,8 +105,18 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 identityResource.Required = vm.Required;
                 identityResource.ShowInDiscoveryDocument = vm.ShowInDiscoveryDocument;
                 identityResource.Emphasize = vm.Emphasize;
-                await _dbContext.SaveChangesAsync();
-                return RedirectToAction("Index");
+
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation($"Identity resource Id {vm.Id} updated by {User?.Identity?.Name}.");
+                    return RedirectToAction("Index");
+                }
+                catch (DbException ex)
+                {
+                    _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                    throw;
+                }
             }
             return View(vm);
         }
@@ -124,9 +146,19 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             {
                 return NotFound();
             }
+
             _dbContext.IdentityResources.Remove(identityResource);
-            await _dbContext.SaveChangesAsync();
-            return RedirectToAction("Index");
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                _logger.LogInformation($"Identity resource Id {vm.Id} removed by {User?.Identity?.Name}.");
+                return RedirectToAction("Index");
+            }
+            catch (DbException ex)
+            {
+                _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                throw;
+            }
         }
 
 
@@ -139,13 +171,15 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         }
 
 
-        public IdentityResourcesController(ConfigurationDbContext dbContext, IPaginationDataProvider<IdentityResource, object> identityResourcePaginationDataProvider)
+        public IdentityResourcesController(ConfigurationDbContext dbContext, IPaginationDataProvider<IdentityResource, object> identityResourcePaginationDataProvider, 
+            ILogger<IdentityResourcesController> logger)
         {
-            if (dbContext == null || identityResourcePaginationDataProvider == null) throw new ArgumentNullException();
+            if (dbContext == null || identityResourcePaginationDataProvider == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _dbContext = dbContext;
             _identityResourcePaginationProvider = identityResourcePaginationDataProvider;
+            _logger = null;
         }
 
 

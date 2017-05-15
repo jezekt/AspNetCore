@@ -18,7 +18,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.AccountServices
             var linkMessage = string.Format(Resources.Services.Account.AccountEmailTools.ConfirmEmailAccountMessage, 
                 $"<a href='{callbackUrl}'>{Resources.Services.Account.AccountEmailTools.Link}</a>");
             await _emailSender.SendEmailAsync(email, Resources.Services.Account.AccountEmailTools.ConfirmEmailAccountSubject, linkMessage);
-            _logger.LogInformation(string.Format(Resources.Services.Account.AccountEmailTools.ConfirmationSentToX, email));
+            _logger.LogInformation($"Confirmation email sent to {email}.");
         }
 
         public async Task SendPasswordResetAsync(string email, string callbackUrl)
@@ -29,7 +29,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.AccountServices
             var linkMessage = string.Format(Resources.Services.Account.AccountEmailTools.ResetPasswordMessage,
                 $"<a href='{callbackUrl}'>{Resources.Services.Account.AccountEmailTools.Link}</a>");
             await _emailSender.SendEmailAsync(email, Resources.Services.Account.AccountEmailTools.ResetPasswordSubject, linkMessage);
-            _logger.LogInformation(string.Format(Resources.Services.Account.AccountEmailTools.PasswordResetSentToX, email));
+            _logger.LogInformation($"Reset password email sent to {email}.");
         }
 
 

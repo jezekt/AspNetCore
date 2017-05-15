@@ -83,15 +83,6 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Controllers.Account
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string CurrentUserNotFound {
-            get {
-                return ResourceManager.GetString("CurrentUserNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
         public static string EmailAlreadyConfirmed {
             get {
                 return ResourceManager.GetString("EmailAlreadyConfirmed", resourceCulture);
@@ -113,24 +104,6 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Controllers.Account
         public static string PasswordChanged {
             get {
                 return ResourceManager.GetString("PasswordChanged", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string UserXChangedEmail {
-            get {
-                return ResourceManager.GetString("UserXChangedEmail", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string UserXChangedPassword {
-            get {
-                return ResourceManager.GetString("UserXChangedPassword", resourceCulture);
             }
         }
         

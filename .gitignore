@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /JezekT.AspNetCore.IdentityServer4.WebApp/wwwroot/lib
+/JezekT.AspNetCore.IdentityServer4.WebApp/appsettings.Production.json

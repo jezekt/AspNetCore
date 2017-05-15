@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.DbContexts;
@@ -9,6 +10,7 @@ using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientSecretViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
@@ -16,6 +18,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
     public class ClientSecretsController : Controller
     {
         private readonly ConfigurationDbContext _dbContext;
+        private readonly ILogger _logger;
 
 
         public IActionResult Create(int clientId)
@@ -52,10 +55,19 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 {
                     clientSecret.Type = vm.Type;
                 }
-                _dbContext.Set<ClientSecret>().Add(clientSecret);
-                await _dbContext.SaveChangesAsync();
 
-                return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+                _dbContext.Set<ClientSecret>().Add(clientSecret);
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation($"Client secret Id {vm.Id} created by {User?.Identity?.Name}.");
+                    return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+                }
+                catch (DbException ex)
+                {
+                    _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                    throw;
+                }
             }
             return View(vm);
         }
@@ -87,9 +99,18 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 obj.Type = vm.Type;
                 obj.Description = vm.Description;
                 obj.Expiration = vm.Expiration;
-                await _dbContext.SaveChangesAsync();
 
-                return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation($"Client secret Id {vm.Id} updated by {User?.Identity?.Name}.");
+                    return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+                }
+                catch (DbException ex)
+                {
+                    _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                    throw;
+                }
             }
             return View(vm);
         }
@@ -117,18 +138,27 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             }
 
             _dbContext.Remove(obj);
-            await _dbContext.SaveChangesAsync();
-
-            return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                _logger.LogInformation($"Client secret Id {obj.Id} removed by {User?.Identity?.Name}.");
+                return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+            }
+            catch (DbException ex)
+            {
+                _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                throw;
+            }
         }
 
 
-        public ClientSecretsController(ConfigurationDbContext dbContext)
+        public ClientSecretsController(ConfigurationDbContext dbContext, ILogger<ClientSecretsController> logger)
         {
-            if (dbContext == null) throw new ArgumentNullException();
+            if (dbContext == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _dbContext = dbContext;
+            _logger = logger;
         }
 
 

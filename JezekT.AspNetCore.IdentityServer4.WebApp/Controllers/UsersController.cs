@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
@@ -28,6 +30,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         private readonly IPaginationDataProvider<User, object> _userPaginationProvider;
         private readonly IPaginationDataProvider<IdentityUserClaim<string>, object> _userClaimPaginationProvider;
         private readonly IPaginationDataProvider<IdentityRole, object> _rolePaginationProvider;
+        private readonly ILogger _logger;
 
 
         public IActionResult Index()
@@ -67,9 +70,11 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 var result = await _userManager.CreateAsync(new User { UserName = vm.UserName, Email = vm.Email }, vm.Password);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation($"User {vm.UserName} created by {User?.Identity?.Name}.");
                     return RedirectToAction("Index");
                 }
 
+                _logger.LogError($"User create error. {string.Join(";", result.Errors.Select(x => x.ToString()).ToArray())}");
                 ModelState.AddErrors(result.Errors.ToArray());
             }
             return View(vm);
@@ -109,9 +114,11 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation($"User {vm.UserName} updated by {User?.Identity?.Name}.");
                     return RedirectToAction("Index");
                 }
 
+                _logger.LogError($"User update error. {string.Join(";", result.Errors.Select(x => x.ToString()).ToArray())}");
                 ModelState.AddErrors(result.Errors.ToArray());
             }
             return View(vm);
@@ -141,9 +148,11 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             var result = await _userManager.DeleteAsync(user);
             if (result.Succeeded)
             {
+                _logger.LogInformation($"User {user.UserName} removed by {User?.Identity?.Name}.");
                 return RedirectToAction("Index");
             }
 
+            _logger.LogError($"User delete error. {string.Join(";", result.Errors.Select(x => x.ToString()).ToArray())}");
             ModelState.AddErrors(result.Errors.ToArray());
             return View(vm);
         }
@@ -182,9 +191,11 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                     var result = await _userManager.AddToRoleAsync(user, role.Name);
                     if (result.Succeeded)
                     {
+                        _logger.LogInformation($"Role Id {vm.RoleId} assigned to User Id {vm.UserId} by {User?.Identity?.Name}.");
                         return RedirectToAction("Edit", new { id = vm.UserId });
                     }
 
+                    _logger.LogError($"Role assign error. {string.Join(";", result.Errors.Select(x => x.ToString()).ToArray())}");
                     ModelState.AddErrors(result.Errors.ToArray());
                 }
                 else
@@ -218,7 +229,16 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             }
 
             _dbContext.UserRoles.Remove(userRole);
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                _logger.LogInformation($"Role Id {vm.RoleId} removed from User Id {vm.UserId} by {User?.Identity?.Name}.");
+            }
+            catch (DbException ex)
+            {
+                _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                throw;
+            }
 
             return RedirectToAction("Edit", "Users", new {id = vm.UserId});
         }
@@ -266,10 +286,11 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public UsersController(IdentityServerDbContext dbContext, IPaginationDataProvider<User, object> userPaginationProvider, 
             IPaginationDataProvider<IdentityUserClaim<string>, object> userClaimPaginationProvider, 
-            IPaginationDataProvider<IdentityRole, object> rolePaginationProvider, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+            IPaginationDataProvider<IdentityRole, object> rolePaginationProvider, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, 
+            ILogger<UsersController> logger)
         {
             if (dbContext == null || userPaginationProvider == null || userClaimPaginationProvider == null || 
-                rolePaginationProvider == null || userManager == null) throw new ArgumentNullException();
+                rolePaginationProvider == null || userManager == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _dbContext = dbContext;
@@ -277,6 +298,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             _userClaimPaginationProvider = userClaimPaginationProvider;
             _rolePaginationProvider = rolePaginationProvider;
             _userManager = userManager;
+            _logger = logger;
         }
 
 

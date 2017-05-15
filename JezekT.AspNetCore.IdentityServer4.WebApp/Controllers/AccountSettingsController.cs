@@ -56,13 +56,14 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 var user = await _userManager.GetUserAsync(HttpContext.User);
                 if (user == null)
                 {
-                    return RedirectToAction(nameof(Index), new {Message = Resources.Controllers.AccountSettings.AccountSettingsController.CurrentUserNotFound });
+                    _logger.LogInformation("Current user not found.");
+                    return NotFound();
                 }
                 var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, false);
-                    _logger.LogInformation(3, string.Format(Resources.Controllers.AccountSettings.AccountSettingsController.UserXChangedPassword, user.UserName));
+                    _logger.LogInformation($"User {user.UserName} changed his password.");
                     return RedirectToAction(nameof(Index), new { Message = Resources.Controllers.AccountSettings.AccountSettingsController.PasswordChanged });
                 }
                 ModelState.AddErrors(result.Errors.ToList());
@@ -86,13 +87,14 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 var user = await _userManager.GetUserAsync(HttpContext.User);
                 if (user == null)
                 {
-                    return RedirectToAction(nameof(Index), new { Message = Resources.Controllers.AccountSettings.AccountSettingsController.CurrentUserNotFound });
+                    _logger.LogInformation("Current user not found.");
+                    return NotFound();
                 }
                 var result = await _userManager.SetEmailAsync(user, model.NewEmail);
                 if (result.Succeeded)
                 {
                     await EmailConfirmation(user);
-                    _logger.LogInformation(3, string.Format(Resources.Controllers.AccountSettings.AccountSettingsController.UserXChangedEmail, user.UserName));
+                    _logger.LogInformation($"User {user.UserName} changed his email.");
                     return RedirectToAction(nameof(Index), new { Message = Resources.Controllers.AccountSettings.AccountSettingsController.EmailChanged });
                 }
                 ModelState.AddErrors(result.Errors.ToList());
@@ -116,17 +118,20 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 return View(model);
             }
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            if (user != null)
+            if (user == null)
             {
-                if (!user.EmailConfirmed)
-                {
-                    await EmailConfirmation(user);
-                    return RedirectToAction(nameof(Index), new { Message = string.Format(Resources.Controllers.AccountSettings.AccountSettingsController.ConfirmationSentToX, user.Email) });
-                }
-                return RedirectToAction(nameof(Index), new { Message = string.Format(Resources.Controllers.AccountSettings.AccountSettingsController.EmailAlreadyConfirmed, user.Email) });
+                _logger.LogInformation("Current user not found.");
+                return NotFound();
             }
-            return RedirectToAction(nameof(Index), new { Message = Resources.Controllers.AccountSettings.AccountSettingsController.AnErrorOcurred });
+
+            if (!user.EmailConfirmed)
+            {
+                await EmailConfirmation(user);
+                return RedirectToAction(nameof(Index), new { Message = string.Format(Resources.Controllers.AccountSettings.AccountSettingsController.ConfirmationSentToX, user.Email) });
+            }
+            return RedirectToAction(nameof(Index), new { Message = string.Format(Resources.Controllers.AccountSettings.AccountSettingsController.EmailAlreadyConfirmed, user.Email) });
         }
+
 
         public AccountSettingsController(UserManager<User> userManager, SignInManager<User> signInManager, ILoggerFactory loggerFactory, IEmailConfirmationSender confirmationSender)
         {
@@ -147,6 +152,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var callbackUrl = Url.Action("EmailConfirmed", "Account", new { userId = user.Id, code }, HttpContext.Request.Scheme);
             await _confirmationSender.SendEmailConfirmationAsync(user.Email, callbackUrl);
+            _logger.LogInformation($"Email confirmation of user {user.UserName} has been sent to {user.Email}.");
         }
 
     }

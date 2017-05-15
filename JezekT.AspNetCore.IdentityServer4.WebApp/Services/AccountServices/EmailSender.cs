@@ -11,15 +11,14 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.AccountServices
         {
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("Identity Server 4", "test@best.com"));
+            emailMessage.From.Add(new MailboxAddress(EmailSenderOptions.SenderName, EmailSenderOptions.SenderEmail));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart("html") { Text = message };
 
             using (var client = new SmtpClient())
             {
-                //client.LocalDomain = "some.domain.com";
-                await client.ConnectAsync("smtp.pb.cz", 25, SecureSocketOptions.None).ConfigureAwait(false);
+                await client.ConnectAsync(EmailSenderOptions.Host, EmailSenderOptions.Port, SecureSocketOptions.None).ConfigureAwait(false);
                 await client.SendAsync(emailMessage).ConfigureAwait(false);
                 await client.DisconnectAsync(true).ConfigureAwait(false);
             }

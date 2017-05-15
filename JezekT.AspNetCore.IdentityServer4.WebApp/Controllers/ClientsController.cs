@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
@@ -17,6 +18,7 @@ using JezekT.NetStandard.Pagination.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
@@ -25,6 +27,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
     {
         private readonly ConfigurationDbContext _dbContext;
         private readonly IPaginationDataProvider<Client, object> _clientPaginationProvider;
+        private readonly ILogger _logger;
 
 
         public IActionResult Index()
@@ -60,8 +63,18 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 _dbContext.Clients.Add(GetClient(vm));
-                await _dbContext.SaveChangesAsync();
-                return RedirectToAction("Index");
+
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation($"Client Id {vm.Id} created by {User?.Identity?.Name}.");
+                    return RedirectToAction("Index");
+                }
+                catch (DbException ex)
+                {
+                    _logger.LogError(ex.GetBaseException()?.Message?? ex.Message);
+                    throw;
+                }
             }
             return View(vm);
         }
@@ -102,8 +115,18 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 {
                     client.AccessTokenLifetime = (int)vm.AccessTokenLifetime;
                 }
-                await _dbContext.SaveChangesAsync();
-                return RedirectToAction("Index");
+
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation($"Client Id {vm.Id} updated by {User?.Identity?.Name}.");
+                    return RedirectToAction("Index");
+                }
+                catch (DbException ex)
+                {
+                    _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                    throw;
+                }
             }
             return View(vm);
         }
@@ -133,9 +156,19 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             {
                 return NotFound();
             }
+
             _dbContext.Clients.Remove(client);
-            await _dbContext.SaveChangesAsync();
-            return RedirectToAction("Index");
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                _logger.LogInformation($"Client Id {client.Id} removed by {User?.Identity?.Name}.");
+                return RedirectToAction("Index");
+            }
+            catch (DbException ex)
+            {
+                _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                throw;
+            }
         }
 
 
@@ -148,13 +181,14 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         }
 
 
-        public ClientsController(ConfigurationDbContext dbContext, IPaginationDataProvider<Client, object> clientPaginationDataProvider)
+        public ClientsController(ConfigurationDbContext dbContext, IPaginationDataProvider<Client, object> clientPaginationDataProvider, ILogger<ClientsController> logger)
         {
-            if (dbContext == null || clientPaginationDataProvider == null) throw new ArgumentNullException();
+            if (dbContext == null || clientPaginationDataProvider == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _dbContext = dbContext;
             _clientPaginationProvider = clientPaginationDataProvider;
+            _logger = logger;
         }
 
 
@@ -213,14 +247,5 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             }
             return null;
         }
-
-        /*
-                client.AllowedScopes = vm.AllowedScopes.Select(x => new ClientScope {Client = client, Scope = x.Value}).ToList();
-                client.AllowedGrantTypes = vm.AllowedScopes.Select(x => new ClientGrantType { Client = client, GrantType = x.Value }).ToList();
-                client.RedirectUris = vm.AllowedScopes.Select(x => new ClientRedirectUri { Client = client, RedirectUri = x.Value }).ToList();
-                client.PostLogoutRedirectUris = vm.AllowedScopes.Select(x => new ClientPostLogoutRedirectUri { Client = client, PostLogoutRedirectUri = x.Value }).ToList();
-                client.ClientSecrets = vm.AllowedScopes.Select(x => new ClientScope { Client = client, Scope = x.Value }).ToList();
-
-         */
     }
 }

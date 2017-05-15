@@ -126,12 +126,6 @@
   <data name="PasswordChanged" xml:space="preserve">
     <value>Heslo bylo změněno.</value>
   </data>
-  <data name="UserXChangedEmail" xml:space="preserve">
-    <value>Uživatel {0} změnil svůj e-mail.</value>
-  </data>
-  <data name="UserXChangedPassword" xml:space="preserve">
-    <value>Uživatel {0} změnil své heslo.</value>
-  </data>
   <data name="UserXSentEmailConfirmation" xml:space="preserve">
     <value>Uživatel {0} odeslal potvrzovací e-mail.</value>
   </data>
@@ -140,8 +134,5 @@
   </data>
   <data name="ConfirmationSentToX" xml:space="preserve">
     <value>Potvrzovací e-mail byl odeslán na {0}.</value>
-  </data>
-  <data name="CurrentUserNotFound" xml:space="preserve">
-    <value>Aktuální uživatel nebyl nalezen.</value>
   </data>
 </root>

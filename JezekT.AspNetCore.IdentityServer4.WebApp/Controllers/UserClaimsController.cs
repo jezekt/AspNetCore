@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Data;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
@@ -14,7 +16,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
     public class UserClaimsController : Controller
     {
         private readonly IdentityServerDbContext _dbContext;
-
+        private readonly ILogger _logger;
 
         public async Task<IActionResult> Details(int id)
         {
@@ -55,7 +57,17 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                     ClaimType = vm.ClaimType,
                     ClaimValue = vm.ClaimValue
                 });
-                await _dbContext.SaveChangesAsync();
+
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation($"User claim Id {vm.Id} created by {User?.Identity?.Name}.");
+                }
+                catch (DbException ex)
+                {
+                    _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                    throw;
+                }
             }
 
             return RedirectToAction("Edit", "Users", new {id = vm.UserId});
@@ -92,7 +104,16 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 claim.ClaimType = vm.ClaimType;
                 claim.ClaimValue = vm.ClaimValue;
                 _dbContext.Entry(claim).State = EntityState.Modified;
-                await _dbContext.SaveChangesAsync();
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation($"User claim Id {vm.Id} updated by {User?.Identity?.Name}.");
+                }
+                catch (DbException ex)
+                {
+                    _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                    throw;
+                }
             }
 
             return RedirectToAction("Edit", "Users", new { id = vm.UserId });
@@ -125,18 +146,28 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             }
 
             _dbContext.UserClaims.Remove(claim);
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                _logger.LogInformation($"User claim Id {vm.Id} removed by {User?.Identity?.Name}.");
+            }
+            catch (DbException ex)
+            {
+                _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                throw;
+            }
 
             return RedirectToAction("Edit", "Users", new { id = vm.UserId });
         }
 
 
-        public UserClaimsController(IdentityServerDbContext dbContext)
+        public UserClaimsController(IdentityServerDbContext dbContext, ILogger<UserClaimsController> logger)
         {
-            if (dbContext == null) throw new ArgumentNullException();
+            if (dbContext == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _dbContext = dbContext;
+            _logger = logger;
         }
 
 

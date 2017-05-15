@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.DbContexts;
@@ -6,6 +7,7 @@ using IdentityServer4.EntityFramework.Entities;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
@@ -13,6 +15,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
     public abstract class ClientSettingsController<TViewModel, TEntity> : Controller where TViewModel : ClientStringSettingsViewModel where TEntity : class
     {
         private readonly ConfigurationDbContext _dbContext;
+        private readonly ILogger _logger;
 
 
         public IActionResult Create(int clientId)
@@ -40,9 +43,17 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 }
                 
                 AddEntityToContext(vm, _dbContext, client);
-                await _dbContext.SaveChangesAsync();
-
-                return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation($"Client settings {vm.GetType().Name} Id {vm.Id} created by {User?.Identity?.Name}.");
+                    return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+                }
+                catch (DbException ex)
+                {
+                    _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                    throw;
+                }
             }
             return View(vm);
         }
@@ -72,9 +83,17 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 }
 
                 EntityUpdate(obj, vm);
-                await _dbContext.SaveChangesAsync();
-
-                return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+                try
+                {
+                    await _dbContext.SaveChangesAsync();
+                    _logger.LogInformation($"Client settings {vm.GetType().Name} Id {vm.Id} updated by {User?.Identity?.Name}.");
+                    return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+                }
+                catch (DbException ex)
+                {
+                    _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                    throw;
+                }
             }
             return View(vm);
         }
@@ -102,9 +121,17 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             }
 
             _dbContext.Remove(obj);
-            await _dbContext.SaveChangesAsync();
-
-            return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                _logger.LogInformation($"Client settings {vm.GetType().Name} Id {vm.Id} removed by {User?.Identity?.Name}.");
+                return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+            }
+            catch (DbException ex)
+            {
+                _logger.LogError(ex.GetBaseException()?.Message ?? ex.Message);
+                throw;
+            }
         }
 
 
@@ -113,12 +140,13 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         protected abstract Task<TViewModel> GetViewModel(int id, ConfigurationDbContext dbContext);
 
 
-        protected ClientSettingsController(ConfigurationDbContext dbContext)
+        protected ClientSettingsController(ConfigurationDbContext dbContext, ILogger logger)
         {
-            if (dbContext == null) throw new ArgumentNullException();
+            if (dbContext == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _dbContext = dbContext;
+            _logger = logger;
         }
         
     }

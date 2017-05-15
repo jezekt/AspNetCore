@@ -5,6 +5,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientPostLogoutRedire
 {
     public class ClientPostLogoutRedirectUriViewModel : ClientStringSettingsViewModel
     {
+        [Required(ErrorMessageResourceName = "RequiredErrorMessageX", ErrorMessageResourceType = typeof(Resources.Models.Shared.ViewModelsShared))]
         [Display(Name = "PostLogoutRedirectUri", ResourceType = typeof(Resources.Models.ClientPostLogoutRedirectUriViewModels.ClientPostLogoutRedirectUriViewModel))]
         public string PostLogoutRedirectUri { get; set; }
         public override string Value => PostLogoutRedirectUri;

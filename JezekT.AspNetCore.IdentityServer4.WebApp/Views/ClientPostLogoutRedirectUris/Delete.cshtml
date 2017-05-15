@@ -11,14 +11,18 @@
     ViewData["Title"] = sharedLocalizer["DeleteTitle"];
 }
 
-
-<h2>@ViewData["Title"]</h2>
-<div asp-validation-summary="All" class="text-danger"></div>
-
-<h3>@sharedLocalizer["DeleteQuestion"]</h3>
-<div>
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
     <h4>@stringLocalizer["EntityName"]</h4>
-    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+</div>
+
+<div class="text-warning">
+    <p>
+        @sharedLocalizer["DeleteQuestion"]
+    </p>
+</div>
+<div>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.PostLogoutRedirectUri)
@@ -31,7 +35,7 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id"/>
         <input type="hidden" asp-for="ClientId"/>
-        <div class="form-actions no-color">
+        <div>
             <input type="submit" value="@sharedLocalizer["Delete"]" class="btn btn-default"/>
         </div>
     </form>

@@ -11,29 +11,31 @@
     ViewData["Title"] = sharedLocalizer["CreateTitle"];
 }
 
-<h2>@ViewData["Title"]</h2>
-<div asp-validation-summary="All" class="text-danger"></div>
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+    <h4>@stringLocalizer["UserRole"]</h4>
+    <div asp-validation-summary="All" class="text-danger"></div>
+</div>
 
 <form asp-action="AddRole">
     <div class="form-horizontal">
-        <h4>@stringLocalizer["UserRole"]</h4>
-        <hr />
-        <input type="hidden" asp-for="UserId"/>
+        <input type="hidden" asp-for="UserId" />
         <div class="form-group">
             <label asp-for="RoleId" class="col-md-2 control-label"></label>
             <div class="col-md-4">
-                <select-dropdown selected-id-property="RoleId" url-all-data="@Url.Action("GetRolesSelectDataJsonAsync", "Users")" url-single-data="@Url.Action("GetRoleSelectDataJsonAsync", "Users")" theme="bootstrap" class="form-control"/>
+                <select-dropdown selected-id-property="RoleId" url-all-data="@Url.Action("GetRolesSelectDataJsonAsync", "Users")" url-single-data="@Url.Action("GetRoleSelectDataJsonAsync", "Users")" theme="bootstrap" class="form-control" />
                 <span asp-validation-for="RoleId" class="text-danger"></span>
             </div>
-        </div>        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" Value="@sharedLocalizer["Create"]" class="btn btn-default"/>
+        </div>        
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-4">
+                <input type="submit" Value="@sharedLocalizer["Create"]" class="btn btn-default" />
             </div>
         </div>
     </div>
 </form>
 
-<br/>
+<br />
 <div>
     <a asp-action="Index" class="btn-bracketed">@sharedLocalizer["ToList"]</a>
 </div>

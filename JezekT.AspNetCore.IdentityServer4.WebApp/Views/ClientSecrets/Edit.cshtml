@@ -11,39 +11,39 @@
     ViewData["Title"] = sharedLocalizer["EditTitle"];
 }
 
-
-<h2>@ViewData["Title"]</h2>
-<div asp-validation-summary="All" class="text-danger"></div>
+<div class="page-header">
+    <h1>@ViewData["Title"]</h1>
+    <h4>@stringLocalizer["EntityName"]</h4>
+    <div asp-validation-summary="All" class="text-danger"></div>
+</div>
 
 <form asp-action="Edit">
     <div class="form-horizontal">
-        <h4>@stringLocalizer["EntityName"]</h4>
-        <hr />
         <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="ClientId" />
         <div class="form-group">
             <label asp-for="Type" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
+            <div class="col-md-4">
                 <input asp-for="Type" class="form-control" placeholder="@stringLocalizer["TypePlaceholder"]" />
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="Description" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
+            <div class="col-md-4">
                 <input asp-for="Description" class="form-control" placeholder="@stringLocalizer["DescriptionPlaceholder"]" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="Expiration" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
+            <div class="col-md-4">
                 <datepicker datetime-property="Expiration" format="L" class="form-control"></datepicker>
                 <span asp-validation-for="Expiration" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-md-offset-2 col-md-4">
                 <input type="submit" Value="@sharedLocalizer["Save"]" class="btn btn-default" />
             </div>
         </div>

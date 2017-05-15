@@ -11,15 +11,23 @@
     ViewData["Title"] = sharedLocalizer["DeleteTitle"];
 }
 
-<h2>@stringLocalizer["UserRole"]</h2>
-<div asp-validation-summary="All" class="text-danger"></div>
-<h3>@sharedLocalizer["DeleteQuestion"]</h3>
+<div class="page-header">
+    <h4>@ViewData["Title"]</h4>
+    <h4>@stringLocalizer["UserRole"]</h4>
+</div>
+
+<div class="text-warning">
+    <p>
+        @sharedLocalizer["DeleteQuestion"]
+    </p>
+</div>
+
 <br/>
 <div>
     <form asp-action="DeleteRole">
         <input type="hidden" asp-for="UserId"/>
         <input type="hidden" asp-for="RoleId" />
-        <div class="form-actions no-color">
+        <div>
             <input type="submit" value="@sharedLocalizer["Delete"]" class="btn btn-default"/>
         </div>
     </form>

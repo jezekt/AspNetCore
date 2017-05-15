@@ -13,7 +13,7 @@
     @if (User.Identity.IsAuthenticated)
     {
         <h1>@User.Identity.Name</h1>
-        <h2>User Claims</h2>
+        <h1>User Claims</h1>
         <dl>
             @foreach (var claim in User.Claims)
             {
@@ -25,7 +25,7 @@
         var authScheme = "Identity.Application";
         if (!String.IsNullOrWhiteSpace(authScheme))
         {
-            <h2>Cookies Properties</h2>
+            <h1>Cookies Properties</h1>
             <dl>
                 @{
                     var props = (await Context.Authentication.GetAuthenticateInfoAsync(authScheme)).Properties;

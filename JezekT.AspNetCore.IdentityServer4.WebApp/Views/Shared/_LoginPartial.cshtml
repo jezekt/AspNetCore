@@ -1,5 +1,7 @@
 ﻿@using JezekT.AspNetCore.IdentityServer4.WebApp.Data
+@using Microsoft.AspNetCore.Mvc.Localization
 
+@inject IViewLocalizer Localizer
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
@@ -11,7 +13,7 @@
                 <a asp-area="" asp-controller="AccountSettings" asp-action="Index" title="Manage">@UserManager.GetUserName(User)</a>
             </li>
             <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>
+                <button type="submit" class="btn btn-link navbar-btn navbar-link">@Localizer["Logout"]</button>
             </li>
         </ul>
     </form>
@@ -19,6 +21,6 @@
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="" asp-controller="Account" asp-action="Login">Log in</a></li>
+        <li><a asp-area="" asp-controller="Account" asp-action="Login">@Localizer["Login"]</a></li>
     </ul>
 }

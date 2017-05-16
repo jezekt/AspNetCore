@@ -3,7 +3,6 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text;
 using System.Text.Encodings.Web;
-using JezekT.AspNetCore.Bootstrap.Datepicker.Settings;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -54,9 +53,9 @@ namespace JezekT.AspNetCore.Bootstrap.Datepicker.TagHelpers
                     sb.AppendLine("<script type=\"text/javascript\">");
                     sb.AppendLine("$(function (){");
                     sb.AppendLine($"$('#{className}').datetimepicker({{");
-                    if (!string.IsNullOrEmpty(DatepickerSettings.LanguageCode))
+                    if (!string.IsNullOrEmpty(Resources.TagHelpers.DatePickerTagHelper.LanguageCode))
                     {
-                        sb.AppendLine($"locale: '{DatepickerSettings.LanguageCode}',");
+                        sb.AppendLine($"locale: '{Resources.TagHelpers.DatePickerTagHelper.LanguageCode}',");
                     }
                     if (!string.IsNullOrEmpty(Format))
                     {

@@ -8,4 +8,25 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\TagHelpers\DatePickerTagHelper.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DatePickerTagHelper.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\TagHelpers\DatePickerTagHelper.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\TagHelpers\DatePickerTagHelper.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\TagHelpers\DatePickerTagHelper.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>DatePickerTagHelper.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

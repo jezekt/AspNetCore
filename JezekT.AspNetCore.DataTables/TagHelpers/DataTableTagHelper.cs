@@ -4,7 +4,6 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using JezekT.AspNetCore.DataTables.Settings;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -57,7 +56,6 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
             Contract.EndContractBlock();
 
             output.TagName = "";
-
             var tableContext = await GetTableContextAsync(context, output);
 
             var sb = new StringBuilder();
@@ -79,9 +77,9 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
         {
             sb.AppendLine("function " + initializeFunctionName + "(){");
             sb.AppendLine($"$('#{TableId}').DataTable({{");
-            if (!string.IsNullOrEmpty(DataTableSettings.LocalizationUrl))
+            if (!string.IsNullOrEmpty(Resources.TagHelpers.DataTableTagHelper.LocalizationUrl))
             {
-                sb.AppendLine($"language: {{url: \"{DataTableSettings.LocalizationUrl}\"}},");
+                sb.AppendLine($"language: {{url: \"{Resources.TagHelpers.DataTableTagHelper.LocalizationUrl}\"}},");
             }
 
             if (ServerSide)

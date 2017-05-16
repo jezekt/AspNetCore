@@ -6,8 +6,6 @@ using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
-using JezekT.AspNetCore.Bootstrap.Datepicker.Settings;
-using JezekT.AspNetCore.DataTables.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,12 +20,12 @@ using JezekT.AspNetCore.IdentityServer4.WebApp.Services.IdentityResourceServices
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.RoleServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.UserClaimServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.UserServices;
-using JezekT.AspNetCore.Select2.Settings;
 using JezekT.NetStandard.Pagination.DataProviders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Serilog;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp
 {
@@ -40,7 +38,11 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
         {
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<IdentityServerDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddIdentity<User, IdentityRole>(option => option.SecurityStampValidationInterval = TimeSpan.FromSeconds(_configuration.GetValue<int>("SecurityStampValidationInterval")))
+            services.AddIdentity<User, IdentityRole>(option =>
+                {
+                    option.SecurityStampValidationInterval = TimeSpan.FromSeconds(_configuration.GetValue<int>("SecurityStampValidationInterval"));
+                    //option.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromSeconds(30);
+                })
                 .AddEntityFrameworkStores<IdentityServerDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -50,6 +52,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
 
             var signingCert = new X509Certificate2(_configuration.GetValue<string>("SigningCertificate:Path"), _configuration.GetValue<string>("SigningCertificate:Password"));
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
             services.AddIdentityServer()
                 .AddSigningCredential(signingCert)
                 .AddConfigurationStore(builder => builder.UseSqlServer(connectionString, options => options.MigrationsAssembly(migrationsAssembly)))
@@ -72,6 +75,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
                 var supportedCultures = new List<CultureInfo>
                 {
                     new CultureInfo("cs-CZ"),
+                    new CultureInfo("en")
                 };
 
                 options.DefaultRequestCulture = new RequestCulture(supportedCultures.First());
@@ -84,23 +88,15 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
                 options.AddPolicy("AdministratorOnly", policy => policy.RequireRole("Administrator"));
                 options.AddPolicy("UserAdministratorOnly", policy => policy.RequireRole("Administrator", "UserAdministrator"));
             });
-
-            DataTableSettings.LocalizationUrl = Resources.Services.DataTable.DataTableSettings.LocalizationUrl;
-            SelectDropdownSettings.LanguageCode = Resources.Services.Select2.SelectDropdownSettings.LanguageCode;
-            SelectDropdownSettings.Loading = Resources.Services.Select2.SelectDropdownSettings.Loading;
-            SelectDropdownSettings.LocalizationUrl = Resources.Services.Select2.SelectDropdownSettings.LocalizationUrl;
-            DatepickerSettings.LanguageCode = Resources.Services.Datepicker.DatepickerSettings.LanguageCode;
-            DatepickerSettings.LocalizationUrl = Resources.Services.Datepicker.DatepickerSettings.LocalizationUrl;
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             InitializeDatabase(app);
-            loggerFactory.AddConsole(_configuration.GetSection("Logging"));
 
             if (env.IsDevelopment())
             {
-                //loggerFactory.AddConsole(_configuration.GetSection("Logging"));
+                loggerFactory.AddConsole(_configuration.GetSection("Logging"));
                 loggerFactory.AddDebug();
 
                 app.UseDeveloperExceptionPage();
@@ -109,6 +105,10 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
             }
             else
             {
+                loggerFactory.AddSerilog(new LoggerConfiguration().ReadFrom.Configuration(_configuration)
+                    .WriteTo.Async(a => new LoggerConfiguration().ReadFrom.Configuration(_configuration), 500)
+                    .CreateLogger(), true);
+
                 app.UseStatusCodePages();
                 app.UseExceptionHandler("/Home/Error");
             }
@@ -133,7 +133,6 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
                 .AddJsonFile("appsettings.json", false, true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
 
-            builder.AddEnvironmentVariables();
             _configuration = builder.Build();
         }
 

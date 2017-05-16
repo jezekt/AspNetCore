@@ -47,6 +47,9 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
+    <PackageReference Include="Serilog.Extensions.Logging.File" Version="1.0.1" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="2.3.1" />
+    <PackageReference Include="Serilog.Sinks.Async" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
@@ -153,21 +156,6 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>AccountEmailTools.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\Services\DataTable\DataTableSettings.designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DataTableSettings.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\Services\Datepicker\DatepickerSettings.designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DatepickerSettings.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\Services\Select2\SelectDropdownSettings.designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SelectDropdownSettings.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -343,27 +331,6 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Models\UserViewModels\UserViewModel.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Services\DataTable\DataTableSettings.cs.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Services\DataTable\DataTableSettings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>DataTableSettings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Services\Datepicker\DatepickerSettings.cs.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Services\Datepicker\DatepickerSettings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>DatepickerSettings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Services\Select2\SelectDropdownSettings.cs.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Services\Select2\SelectDropdownSettings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SelectDropdownSettings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Account\AccessDenied.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>

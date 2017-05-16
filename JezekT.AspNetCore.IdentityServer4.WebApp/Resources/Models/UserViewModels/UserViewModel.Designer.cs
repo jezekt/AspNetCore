@@ -101,9 +101,9 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.UserViewMode
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string Username {
+        public static string UserName {
             get {
-                return ResourceManager.GetString("Username", resourceCulture);
+                return ResourceManager.GetString("UserName", resourceCulture);
             }
         }
     }

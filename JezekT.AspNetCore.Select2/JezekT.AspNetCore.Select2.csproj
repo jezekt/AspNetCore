@@ -9,4 +9,25 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Resources\TagHelpers\SelectDropdownTagHelper.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SelectDropdownTagHelper.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\TagHelpers\SelectDropdownTagHelper.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\TagHelpers\SelectDropdownTagHelper.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\TagHelpers\SelectDropdownTagHelper.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SelectDropdownTagHelper.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

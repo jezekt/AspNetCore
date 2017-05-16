@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using JezekT.AspNetCore.Select2.Settings;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -162,9 +161,9 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
                     sb.AppendLine("escapeMarkup: function (markup) { return markup; },");
                     sb.AppendLine("minimumInputLength: " + InputLengthMin + ",");
                     sb.AppendLine("maximumInputLength: " + InputLengthMax + ",");
-                    if (!string.IsNullOrEmpty(SelectDropdownSettings.LanguageCode))
+                    if (!string.IsNullOrEmpty(Resources.TagHelpers.SelectDropdownTagHelper.LanguageCode))
                     {
-                        sb.AppendLine("language: '" + SelectDropdownSettings.LanguageCode + "',");
+                        sb.AppendLine("language: '" + Resources.TagHelpers.SelectDropdownTagHelper.LanguageCode + "',");
                     }
 
                     if (!string.IsNullOrEmpty(Theme))
@@ -173,12 +172,12 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
                     }
                     sb.AppendLine("templateResult: formatResult, templateSelection: formatSelection");
                 sb.AppendLine("});");
-                sb.AppendLine("function formatResult(item) { if (item.loading) return \"" + SelectDropdownSettings.Loading + "\"; return item.text; }");
+                sb.AppendLine("function formatResult(item) { if (item.loading) return \"" + Resources.TagHelpers.SelectDropdownTagHelper.Loading + "\"; return item.text; }");
                 sb.AppendLine("function formatSelection(item) { return item.text; }");
 
                 if (SelectedIdProperty?.Model != null && !HasDefaultValue(SelectedIdProperty.Model))
                 {
-                    sb.AppendLine("var option = $('<option selected>" + SelectDropdownSettings.Loading + "</option>').val(" + SelectedIdProperty.Model + ");");
+                    sb.AppendLine("var option = $('<option selected>" + Resources.TagHelpers.SelectDropdownTagHelper.Loading + "</option>').val(" + SelectedIdProperty.Model + ");");
                     sb.AppendLine("select.append(option).trigger('change');");
                     sb.AppendLine("$.ajax({ type: 'GET', url: '" + SingleDataUrl + "/" + SelectedIdProperty.Model +
                                     "', dataType: 'json'}).then(function (data) { option.text(data.text).val(data.id); option.removeData();select.trigger('change');});");
@@ -207,9 +206,9 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
         {
             Contract.Requires(sb != null);
 
-            if (!string.IsNullOrEmpty(SelectDropdownSettings.LocalizationUrl))
+            if (!string.IsNullOrEmpty(Resources.TagHelpers.SelectDropdownTagHelper.LocalizationUrl))
             {
-                sb.AppendLine($"<script src=\"{SelectDropdownSettings.LocalizationUrl}\" type=\"text/javascript\"></script>");
+                sb.AppendLine($"<script src=\"{Resources.TagHelpers.SelectDropdownTagHelper.LocalizationUrl}\" type=\"text/javascript\"></script>");
             }
         }
 

@@ -222,7 +222,8 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
                     }
                     else
                     {
-                        sb.AppendLine($"{{ \"data\": \"{columnName}\" }},");
+                        sb.AppendLine($"{{ \"data\": \"{columnName}\",");
+                        sb.AppendLine("render: $.fn.dataTable.render.text()},");
                     }
                 }
             }

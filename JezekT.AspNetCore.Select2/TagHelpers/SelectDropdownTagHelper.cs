@@ -161,7 +161,6 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
                             sb.AppendLine("results: data.items,");
                             sb.AppendLine("pagination: { more: data.more }");
                     sb.AppendLine("};},},");
-                    sb.AppendLine("escapeMarkup: function (markup) { return markup; },");
                     sb.AppendLine("minimumInputLength: " + InputLengthMin + ",");
                     sb.AppendLine("maximumInputLength: " + InputLengthMax + ",");
                     var languageCode = _localizer["LanguageCode"];

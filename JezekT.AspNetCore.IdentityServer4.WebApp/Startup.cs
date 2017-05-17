@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp
@@ -113,6 +114,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseRequestLocalization(app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value);
             app.UseStaticFiles();
             app.UseIdentity();
             app.UseIdentityServer();

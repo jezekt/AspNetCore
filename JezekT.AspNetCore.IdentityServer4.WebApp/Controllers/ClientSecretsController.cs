@@ -29,7 +29,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ClientSecretViewModel vm)
+        public async Task<IActionResult> Create(ClientSecretInputViewModel vm)
         {
             if (vm == null)
             {

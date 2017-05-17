@@ -52,7 +52,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientViewModels
             return JsonConvert.SerializeObject(obj, new JsonSerializerSettings
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Include
             });
         }
     }

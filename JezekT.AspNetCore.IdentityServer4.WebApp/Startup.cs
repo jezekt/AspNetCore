@@ -24,6 +24,7 @@ using JezekT.NetStandard.Pagination.DataProviders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -47,7 +48,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
                 .AddEntityFrameworkStores<IdentityServerDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc()
+            services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization();
 

@@ -2,12 +2,16 @@
 using System.Diagnostics.Contracts;
 using System.Text;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Localization;
 
 namespace JezekT.AspNetCore.Bootstrap.Datepicker.TagHelpers
 {
     [HtmlTargetElement("datepicker-jscss")]
     public class DatepickerJsAndCssTagHelper : TagHelper
     {
+        private readonly IStringLocalizer _localizer;
+
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             if (context == null || output == null) throw new ArgumentNullException();
@@ -16,9 +20,10 @@ namespace JezekT.AspNetCore.Bootstrap.Datepicker.TagHelpers
             var sb = new StringBuilder();
 
             AppendScript(sb, "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js");
-            if (!string.IsNullOrEmpty(Resources.TagHelpers.DatePickerTagHelper.LocalizationUrl))
+            var localizationUrl = _localizer["LocalizationUrl"];
+            if (!string.IsNullOrEmpty(localizationUrl))
             {
-                AppendScript(sb, Resources.TagHelpers.DatePickerTagHelper.LocalizationUrl);
+                AppendScript(sb, localizationUrl);
             }
             AppendScript(sb, "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js");
 
@@ -27,6 +32,16 @@ namespace JezekT.AspNetCore.Bootstrap.Datepicker.TagHelpers
             output.Content.AppendHtml(sb.ToString());
 
         }
+
+
+        public DatepickerJsAndCssTagHelper(IStringLocalizer<DatepickerTagHelper> localizer)
+        {
+            if (localizer == null) throw new ArgumentNullException();
+            Contract.EndContractBlock();
+
+            _localizer = localizer;
+        }
+
 
         private void AppendScript(StringBuilder sb, string src)
         {

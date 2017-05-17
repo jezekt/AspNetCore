@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Localization;
 
 namespace JezekT.AspNetCore.DataTables.TagHelpers
 {
@@ -24,6 +25,7 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
         private const string JsonDataName = "json-data";
 
         private readonly IModelMetadataProvider _modelMetadataProvider;
+        private readonly IStringLocalizer _localizer;
 
         [HtmlAttributeName(DataUrlName)]
         public string DataUrl { get; set; }
@@ -77,9 +79,11 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
         {
             sb.AppendLine("function " + initializeFunctionName + "(){");
             sb.AppendLine($"$('#{TableId}').DataTable({{");
-            if (!string.IsNullOrEmpty(Resources.TagHelpers.DataTableTagHelper.LocalizationUrl))
+
+            var localizationUrl = _localizer["LocalizationUrl"];
+            if (!string.IsNullOrEmpty(localizationUrl))
             {
-                sb.AppendLine($"language: {{url: \"{Resources.TagHelpers.DataTableTagHelper.LocalizationUrl}\"}},");
+                sb.AppendLine($"language: {{url: \"{localizationUrl}\"}},");
             }
 
             if (ServerSide)
@@ -103,12 +107,13 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
         }
 
 
-        public DataTableTagHelper(IModelMetadataProvider modelMetadataProvider)
+        public DataTableTagHelper(IModelMetadataProvider modelMetadataProvider, IStringLocalizer<DataTableTagHelper> localizer)
         {
-            if (modelMetadataProvider == null) throw new ArgumentNullException();
+            if (modelMetadataProvider == null || localizer == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _modelMetadataProvider = modelMetadataProvider;
+            _localizer = localizer;
         }
 
 

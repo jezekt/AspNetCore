@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Localization;
 
 namespace JezekT.AspNetCore.Select2.TagHelpers
 {
@@ -27,6 +28,7 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
         private const string FilterIdsName = "filter-ids";
 
         private readonly IHtmlGenerator _generator;
+        private readonly IStringLocalizer _localizer;
 
         [HtmlAttributeName(SelectedIdName)]
         public ModelExpression SelectedIdProperty { get; set; }
@@ -122,12 +124,13 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
         }
 
 
-        public SelectDropdownTagHelper(IHtmlGenerator generator)
+        public SelectDropdownTagHelper(IHtmlGenerator generator, IStringLocalizer<SelectDropdownTagHelper> localizer)
         {
-            if (generator == null) throw new ArgumentNullException();
+            if (generator == null || localizer == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _generator = generator;
+            _localizer = localizer;
         }
 
 
@@ -161,9 +164,10 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
                     sb.AppendLine("escapeMarkup: function (markup) { return markup; },");
                     sb.AppendLine("minimumInputLength: " + InputLengthMin + ",");
                     sb.AppendLine("maximumInputLength: " + InputLengthMax + ",");
-                    if (!string.IsNullOrEmpty(Resources.TagHelpers.SelectDropdownTagHelper.LanguageCode))
+                    var languageCode = _localizer["LanguageCode"];
+                    if (!string.IsNullOrEmpty(languageCode))
                     {
-                        sb.AppendLine("language: '" + Resources.TagHelpers.SelectDropdownTagHelper.LanguageCode + "',");
+                        sb.AppendLine("language: '" + languageCode + "',");
                     }
 
                     if (!string.IsNullOrEmpty(Theme))
@@ -172,12 +176,13 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
                     }
                     sb.AppendLine("templateResult: formatResult, templateSelection: formatSelection");
                 sb.AppendLine("});");
-                sb.AppendLine("function formatResult(item) { if (item.loading) return \"" + Resources.TagHelpers.SelectDropdownTagHelper.Loading + "\"; return item.text; }");
+                var loading = _localizer["Loading"] ?? "Loading...";
+                sb.AppendLine("function formatResult(item) { if (item.loading) return \"" + loading + "\"; return item.text; }");
                 sb.AppendLine("function formatSelection(item) { return item.text; }");
 
                 if (SelectedIdProperty?.Model != null && !HasDefaultValue(SelectedIdProperty.Model))
                 {
-                    sb.AppendLine("var option = $('<option selected>" + Resources.TagHelpers.SelectDropdownTagHelper.Loading + "</option>').val(" + SelectedIdProperty.Model + ");");
+                    sb.AppendLine("var option = $('<option selected>" + loading + "</option>').val(" + SelectedIdProperty.Model + ");");
                     sb.AppendLine("select.append(option).trigger('change');");
                     sb.AppendLine("$.ajax({ type: 'GET', url: '" + SingleDataUrl + "/" + SelectedIdProperty.Model +
                                     "', dataType: 'json'}).then(function (data) { option.text(data.text).val(data.id); option.removeData();select.trigger('change');});");
@@ -206,9 +211,10 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
         {
             Contract.Requires(sb != null);
 
-            if (!string.IsNullOrEmpty(Resources.TagHelpers.SelectDropdownTagHelper.LocalizationUrl))
+            var localizationUrl = _localizer["LocalizationUrl"];
+            if (!string.IsNullOrEmpty(localizationUrl))
             {
-                sb.AppendLine($"<script src=\"{Resources.TagHelpers.SelectDropdownTagHelper.LocalizationUrl}\" type=\"text/javascript\"></script>");
+                sb.AppendLine($"<script src=\"{localizationUrl}\" type=\"text/javascript\"></script>");
             }
         }
 

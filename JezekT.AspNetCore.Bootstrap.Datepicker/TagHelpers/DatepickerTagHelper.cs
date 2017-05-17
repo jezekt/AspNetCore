@@ -6,6 +6,7 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Localization;
 
 namespace JezekT.AspNetCore.Bootstrap.Datepicker.TagHelpers
 {
@@ -16,7 +17,9 @@ namespace JezekT.AspNetCore.Bootstrap.Datepicker.TagHelpers
         private const string FormatName = "format";
 
         private readonly IHtmlGenerator _generator;
-        
+        private readonly IStringLocalizer _localizer;
+
+
         [HtmlAttributeName(DateTimePropertyName)]
         public ModelExpression DateTimeProperty { get; set; }
         [HtmlAttributeName(FormatName)]
@@ -53,9 +56,10 @@ namespace JezekT.AspNetCore.Bootstrap.Datepicker.TagHelpers
                     sb.AppendLine("<script type=\"text/javascript\">");
                     sb.AppendLine("$(function (){");
                     sb.AppendLine($"$('#{className}').datetimepicker({{");
-                    if (!string.IsNullOrEmpty(Resources.TagHelpers.DatePickerTagHelper.LanguageCode))
+                    var languageCode = _localizer["LanguageCode"];
+                    if (!string.IsNullOrEmpty(languageCode))
                     {
-                        sb.AppendLine($"locale: '{Resources.TagHelpers.DatePickerTagHelper.LanguageCode}',");
+                        sb.AppendLine($"locale: '{languageCode}',");
                     }
                     if (!string.IsNullOrEmpty(Format))
                     {
@@ -71,12 +75,13 @@ namespace JezekT.AspNetCore.Bootstrap.Datepicker.TagHelpers
         }
         
 
-        public DatepickerTagHelper(IHtmlGenerator generator)
+        public DatepickerTagHelper(IHtmlGenerator generator, IStringLocalizer<DatepickerTagHelper> localizer)
         {
-            if (generator == null) throw new ArgumentNullException();
+            if (generator == null || localizer == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _generator = generator;
+            _localizer = localizer;
         }
 
 

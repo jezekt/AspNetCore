@@ -11,22 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\TagHelpers\DataTableTagHelper.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>DataTableTagHelper.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\TagHelpers\DataTableTagHelper.en.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\TagHelpers\DataTableTagHelper.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>DataTableTagHelper.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Update="Resources\TagHelpers\DataTableTagHelper.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\TagHelpers\DataTableTagHelper.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>

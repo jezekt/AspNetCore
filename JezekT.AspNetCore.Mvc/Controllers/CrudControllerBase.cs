@@ -3,17 +3,20 @@ using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using AutoMapper;
 using JezekT.AspNetCore.Mvc.Extensions;
+using JezekT.NetStandard.Data;
 using JezekT.NetStandard.Services.EntityOperations;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.Mvc.Controllers
 {
     public abstract class CrudControllerBase<T, TViewModel, TId> : Controller
-        where T : class
+        where T : class,  IWithId<TId>
         where TViewModel : class
     {
         protected ICrudService<T, TId> Service { get; }
         protected IMapper Mapper { get; }
+        private readonly ILogger _logger;
 
 
         protected virtual async Task<T> GetEntity(TId id)
@@ -54,10 +57,13 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> Create(TViewModel objVm)
         {
-            if (ModelState.IsValid && await Service.CreateAsync(Mapper.Map<TViewModel, T>(objVm)))
+            var obj = Mapper.Map<TViewModel, T>(objVm);
+            if (ModelState.IsValid && await Service.CreateAsync(obj))
             {
+                _logger?.LogInformation($"{obj.GetType().Name} Id {obj.Id} created by {User?.Identity.Name}.");
                 return RedirectToAction("Index");
             }
+            _logger?.LogInformation($"Failed to create {obj.GetType().Name} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
             return View(objVm);
         }
@@ -76,10 +82,13 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> Edit(TViewModel objVm)
         {
-            if (ModelState.IsValid && await Service.UpdateAsync(Mapper.Map<TViewModel, T>(objVm)))
+            var obj = Mapper.Map<TViewModel, T>(objVm);
+            if (ModelState.IsValid && await Service.UpdateAsync(obj))
             {
+                _logger?.LogInformation($"{obj.GetType().Name} Id {obj.Id} updated by {User?.Identity.Name}.");
                 return RedirectToAction("Index");
             }
+            _logger?.LogInformation($"Failed to update {obj.GetType().Name} Id {obj.Id} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
             return View(objVm);
         }
@@ -101,20 +110,23 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         {
             if (await Service.DeleteByIdAsync(id))
             {
+                _logger?.LogInformation($"{typeof(T).Name} Id {id} removed by {User?.Identity.Name}.");
                 return RedirectToAction("Index");
             }
+            _logger?.LogInformation($"Failed to remove {typeof(T).Name} Id {id} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
             return View(GetViewModel(await Service.GetByIdAsync(id)));
         }
 
         
-        protected CrudControllerBase(ICrudService<T, TId> service, IMapper mapper)
+        protected CrudControllerBase(ICrudService<T, TId> service, IMapper mapper, ILogger logger = null)
         {
             if (service == null || mapper == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             Service = service;
             Mapper = mapper;
+            _logger = logger;
         }
 
     }

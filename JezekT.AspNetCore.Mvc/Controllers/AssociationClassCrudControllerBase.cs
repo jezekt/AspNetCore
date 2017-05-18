@@ -6,6 +6,7 @@ using JezekT.AspNetCore.Mvc.Extensions;
 using JezekT.NetStandard.Data;
 using JezekT.NetStandard.Services.EntityOperations;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.Mvc.Controllers
 {
@@ -15,6 +16,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
     {
         protected IAssociationClassCrudService<T, FirstId, SecondId> Service { get; }
         protected IMapper Mapper { get; }
+        private readonly ILogger _logger;
 
 
         public virtual ActionResult Index()
@@ -44,10 +46,13 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> Create(TViewModel objVm, string redirectUrl = null)
         {
-            if (ModelState.IsValid && await Service.CreateAsync(Mapper.Map<TViewModel, T>(objVm)))
+            var obj = Mapper.Map<TViewModel, T>(objVm);
+            if (ModelState.IsValid && await Service.CreateAsync(obj))
             {
+                _logger?.LogInformation($"{obj.GetType().Name} FirstId {obj.FirstObjId} SecondId {obj.SecondObjId} created by {User?.Identity.Name}.");
                 return Redirect(redirectUrl);
             }
+            _logger?.LogInformation($"Failed to create {obj.GetType().Name} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
             return View(objVm);
         }
@@ -66,10 +71,13 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public virtual async Task<IActionResult> Edit(TViewModel objVm, string redirectUrl = null)
         {
-            if (ModelState.IsValid && await Service.UpdateAsync(Mapper.Map<TViewModel, T>(objVm)))
+            var obj = Mapper.Map<TViewModel, T>(objVm);
+            if (ModelState.IsValid && await Service.UpdateAsync(obj))
             {
+                _logger?.LogInformation($"{obj.GetType().Name} FirstId {obj.FirstObjId} SecondId {obj.SecondObjId} updated by {User?.Identity.Name}.");
                 return Redirect(redirectUrl);
             }
+            _logger?.LogInformation($"Failed to update {obj.GetType().Name} FirstId {obj.FirstObjId} SecondId {obj.SecondObjId} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
             return View(objVm);
         }
@@ -91,20 +99,23 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         {
             if (await Service.DeleteByIdsAsync(firstObjId, secondObjId))
             {
+                _logger?.LogInformation($"{typeof(T).Name} FirstId {firstObjId} SecondId {secondObjId} removed by {User?.Identity.Name}.");
                 return Redirect(redirectUrl);
             }
+            _logger?.LogInformation($"Failed to delete {typeof(T).Name} FirstId {firstObjId} SecondId {secondObjId} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
             return View(Mapper.Map<T, TViewModel>(await Service.GetByIdsAsync(firstObjId, secondObjId)));
         }
 
 
-        protected AssociationClassCrudControllerBase(IAssociationClassCrudService<T, FirstId, SecondId> service, IMapper mapper)
+        protected AssociationClassCrudControllerBase(IAssociationClassCrudService<T, FirstId, SecondId> service, IMapper mapper, ILogger logger = null)
         {
             if (service == null || mapper == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             Service = service;
             Mapper = mapper;
+            _logger = logger;
         }
 
     }

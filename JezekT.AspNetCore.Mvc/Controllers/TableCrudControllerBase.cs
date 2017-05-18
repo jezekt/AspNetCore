@@ -7,6 +7,7 @@ using JezekT.NetStandard.Pagination;
 using JezekT.NetStandard.Services.EntityOperations;
 using JezekT.NetStandard.Services.Pagination;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.Mvc.Controllers
 {
@@ -31,7 +32,8 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         }
 
 
-        protected TableCrudControllerBase(IPaginationService<T, TId, TPaginationItem> paginationService, ICrudService<T, TId> crudService, IMapper mapper) : base(crudService, mapper)
+        protected TableCrudControllerBase(IPaginationService<T, TId, TPaginationItem> paginationService, ICrudService<T, TId> crudService, IMapper mapper, ILogger logger = null)
+            : base(crudService, mapper, logger)
         {
             if (paginationService == null || mapper == null) throw new ArgumentNullException();
             Contract.EndContractBlock();

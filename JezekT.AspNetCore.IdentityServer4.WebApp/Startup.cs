@@ -136,6 +136,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
                 .AddJsonFile("appsettings.json", false, true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true);
 
+            builder.AddEnvironmentVariables();
             _configuration = builder.Build();
         }
 

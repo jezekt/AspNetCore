@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
-@using JezekT.AspNetCore.IdentityServer4.WebApp.Data
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Mvc.Localization
 
 @inject IViewLocalizer Localizer
-@inject SignInManager<User> SignInManager
+@inject IAuthorizationService AuthorizationService
 
 <html>
 <head>
@@ -56,12 +56,15 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">@Localizer["Home"]</a></li>
-                    @if (SignInManager.IsSignedIn(User))
+                    @if (await AuthorizationService.AuthorizeAsync(User, "AdministratorOnly"))
                     {
                         <li><a asp-area="" asp-controller="Clients" asp-action="Index">@Localizer["Clients"]</a></li>
-                        <li><a asp-area="" asp-controller="Users" asp-action="Index">@Localizer["Users"]</a></li>
-                        <li><a asp-area="" asp-controller="Roles" asp-action="Index">@Localizer["Roles"]</a></li>
                         <li><a asp-area="" asp-controller="IdentityResources" asp-action="Index">@Localizer["IdentityResources"]</a></li>
+                        <li><a asp-area="" asp-controller="Roles" asp-action="Index">@Localizer["Roles"]</a></li>
+                    }
+                    @if (await AuthorizationService.AuthorizeAsync(User, "UserAdministratorOnly"))
+                    {
+                        <li><a asp-area="" asp-controller="Users" asp-action="Index">@Localizer["Users"]</a></li>
                     }
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")

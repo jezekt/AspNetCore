@@ -3,6 +3,7 @@ using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using JezekT.NetStandard.Pagination.DataProviders;
 using JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders;
+using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.IdentityResourceServices
 {
@@ -11,11 +12,11 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.IdentityResourceServ
         protected override IPaginationTemplate<IdentityResource, object> DefaultPaginationTemplate => new IdentityResourcePaginationDefaultTemplate();
 
 
-        public IdentityResourcePaginationProvider(ConfigurationDbContext dbContext) : base(dbContext)
+        public IdentityResourcePaginationProvider(ConfigurationDbContext dbContext, ILogger<IdentityResourcePaginationProvider> logger) : base(dbContext, logger)
         {
         }
 
-        public IdentityResourcePaginationProvider(IQueryable<IdentityResource> baseQuery) : base(baseQuery)
+        public IdentityResourcePaginationProvider(IQueryable<IdentityResource> baseQuery, ILogger<IdentityResourcePaginationProvider> logger) : base(baseQuery, logger)
         {
         }
 

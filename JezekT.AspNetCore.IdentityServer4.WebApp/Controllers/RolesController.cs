@@ -22,6 +22,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         private readonly IdentityServerDbContext _dbContext;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger _logger;
+        private readonly ILogger<RolePaginationProvider> _paginationLogger;
 
 
         public IActionResult Index()
@@ -138,13 +139,13 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public async Task<IActionResult> GetTableDataJsonAsync(int draw, string term, int start, int pageSize, string orderField, string orderDirection, string queryIds)
         {
-            var rolePaginationProvider = new RolePaginationProvider(_dbContext.Roles);
+            var rolePaginationProvider = new RolePaginationProvider(_dbContext.Roles, _paginationLogger);
             var paginationData = await rolePaginationProvider.GetPaginationDataAsync(start, pageSize, term, orderField, orderDirection, queryIds.ToIdsArray<string>());
             return Json(PaginationHelper.GetDataObject(paginationData, draw));
         }
 
 
-        public RolesController(IdentityServerDbContext dbContext, RoleManager<IdentityRole> roleManager, ILogger<RolesController> logger)
+        public RolesController(IdentityServerDbContext dbContext, RoleManager<IdentityRole> roleManager, ILogger<RolesController> logger, ILogger<RolePaginationProvider> paginationLogger)
         {
             if (dbContext == null || roleManager == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
@@ -152,6 +153,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             _dbContext = dbContext;
             _roleManager = roleManager;
             _logger = logger;
+            _paginationLogger = paginationLogger;
         }
 
 

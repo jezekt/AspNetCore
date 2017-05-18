@@ -83,7 +83,15 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             var vm = await _account.BuildLoggedOutViewModelAsync(model.LogoutId);
             await _signInManager.SignOutAsync();
 
-            _logger.LogInformation($"Client {vm.ClientName} logged out.");
+            if (vm.ClientName == null)
+            {
+                _logger.LogInformation($"User {User?.Identity.Name} logged out.");
+            }
+            else
+            {
+                _logger.LogInformation($"Client {vm.ClientName} logged out.");
+            }
+            
             return View("LoggedOut", vm);
         }
 

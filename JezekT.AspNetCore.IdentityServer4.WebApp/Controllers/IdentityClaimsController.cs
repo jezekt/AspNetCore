@@ -52,7 +52,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Identity claim Id {vm.Id} created by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"Identity claim Id {identityClaim.Id} created by {User?.Identity?.Name}.");
                     return RedirectToAction("Edit", "IdentityResources", new { id = vm.IdentityResourceId });
                 }
                 catch (DbException ex)
@@ -92,7 +92,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Identity claim Id {vm.Id} updated by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"Identity claim Id {obj.Id} updated by {User?.Identity?.Name}.");
                     return RedirectToAction("Edit", "IdentityResources", new { id = vm.IdentityResourceId });
                 }
                 catch (DbException ex)

@@ -59,11 +59,12 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                _dbContext.IdentityResources.Add(GetIdentityResource(vm));
+                var obj = GetIdentityResource(vm);
+                _dbContext.IdentityResources.Add(obj);
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Identity resource Id {vm.Id} created by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"Identity resource Id {obj.Id} created by {User?.Identity?.Name}.");
                     return RedirectToAction("Index");
                 }
                 catch (DbException ex)
@@ -109,7 +110,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Identity resource Id {vm.Id} updated by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"Identity resource Id {identityResource.Id} updated by {User?.Identity?.Name}.");
                     return RedirectToAction("Index");
                 }
                 catch (DbException ex)
@@ -179,7 +180,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
             _dbContext = dbContext;
             _identityResourcePaginationProvider = identityResourcePaginationDataProvider;
-            _logger = null;
+            _logger = logger;
         }
 
 

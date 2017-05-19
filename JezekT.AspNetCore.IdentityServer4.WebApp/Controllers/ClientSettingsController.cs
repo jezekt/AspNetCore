@@ -46,7 +46,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Client settings {vm.GetType().Name} Id {vm.Id} created by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"Client settings {vm.GetType().Name} value {vm.Value} created by {User?.Identity?.Name}.");
                     return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
                 }
                 catch (DbException ex)

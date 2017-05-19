@@ -23,7 +23,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public IActionResult Create(int clientId)
         {
-            var vm = new ClientSecretViewModel{ ClientId = clientId, Expiration = DateTime.Today.AddYears(1)};
+            var vm = new ClientSecretInputViewModel{ ClientId = clientId, Expiration = DateTime.Today.AddYears(1)};
             return View(vm);
         }
 
@@ -60,7 +60,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Client secret Id {vm.Id} created by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"Client secret Id {clientSecret.Id} created by {User?.Identity?.Name}.");
                     return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
                 }
                 catch (DbException ex)
@@ -103,7 +103,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Client secret Id {vm.Id} updated by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"Client secret Id {obj.Id} updated by {User?.Identity?.Name}.");
                     return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
                 }
                 catch (DbException ex)

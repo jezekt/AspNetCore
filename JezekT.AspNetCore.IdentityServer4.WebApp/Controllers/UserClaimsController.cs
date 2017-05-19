@@ -51,17 +51,18 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 {
                     return BadRequest();
                 }
-                _dbContext.UserClaims.Add(new IdentityUserClaim<string>
+                var obj = new IdentityUserClaim<string>
                 {
                     UserId = vm.UserId,
                     ClaimType = vm.ClaimType,
                     ClaimValue = vm.ClaimValue
-                });
+                };
+                _dbContext.UserClaims.Add(obj);
 
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"User claim Id {vm.Id} created by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"User claim Id {obj.Id} created by {User?.Identity?.Name}.");
                 }
                 catch (DbException ex)
                 {
@@ -107,7 +108,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"User claim Id {vm.Id} updated by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"User claim Id {claim.Id} updated by {User?.Identity?.Name}.");
                 }
                 catch (DbException ex)
                 {

@@ -62,12 +62,13 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             
             if (ModelState.IsValid)
             {
-                _dbContext.Clients.Add(GetClient(vm));
+                var obj = GetClient(vm);
+                _dbContext.Clients.Add(obj);
 
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Client Id {vm.Id} created by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"Client Id {obj.Id} created by {User?.Identity?.Name}.");
                     return RedirectToAction("Index");
                 }
                 catch (DbException ex)
@@ -119,7 +120,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Client Id {vm.Id} updated by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"Client Id {client.Id} updated by {User?.Identity?.Name}.");
                     return RedirectToAction("Index");
                 }
                 catch (DbException ex)
@@ -206,6 +207,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 return new ClientViewModel
                 {
                     Id = client.Id,
+                    Enabled = client.Enabled,
                     ClientId = client.ClientId,
                     ClientName = client.ClientName,
                     AllowOfflineAccess = client.AllowOfflineAccess,

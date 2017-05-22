@@ -2,41 +2,31 @@
 using System.Data.Common;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
-using JezekT.AspNetCore.IdentityServer4.WebApp.Data;
-using JezekT.AspNetCore.IdentityServer4.WebApp.Models.UserClaimViewModels;
+using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Entities;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiScopeClaimViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
-    [Authorize(Policy = "UserAdministratorOnly")]
-    public class UserClaimsController : Controller
+    [Authorize(Policy = "AdministratorOnly")]
+    public class ApiScopeClaimsController : Controller
     {
-        private readonly IdentityServerDbContext _dbContext;
+        private readonly ConfigurationDbContext _dbContext;
         private readonly ILogger _logger;
 
-        public async Task<IActionResult> Details(int id)
+
+        public IActionResult Create(int apiScopeId)
         {
-            var vm = await GetUserClaimViewModelAsync(id);
-            if (vm == null)
-            {
-                return NotFound();
-            }
-
-            return View(vm);
-        }
-
-
-        public IActionResult Create(string userId)
-        {
-            return View(new UserClaimViewModel { UserId = userId });
+            return View(new ApiScopeClaimViewModel { ApiScopeId = apiScopeId });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(UserClaimViewModel vm)
+        public async Task<IActionResult> Create(ApiScopeClaimViewModel vm)
         {
             if (vm == null)
             {
@@ -45,23 +35,22 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = await _dbContext.Users.FindAsync(vm.UserId);
-                if (user == null)
+                var apiScope = await _dbContext.Set<ApiScope>().FindAsync(vm.ApiScopeId);
+                if (apiScope == null)
                 {
                     return BadRequest();
                 }
-                var obj = new IdentityUserClaim<string>
+                var obj = new ApiScopeClaim
                 {
-                    UserId = vm.UserId,
-                    ClaimType = vm.ClaimType,
-                    ClaimValue = vm.ClaimValue
+                    Type = vm.Type,
+                    ApiScope = apiScope
                 };
-                _dbContext.UserClaims.Add(obj);
+                _dbContext.Set<ApiScopeClaim>().Add(obj);
 
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"User claim Id {obj.Id} created by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"API scope claim Id {obj.Id} created by {User?.Identity?.Name}.");
                 }
                 catch (DbException ex)
                 {
@@ -70,12 +59,12 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 }
             }
 
-            return RedirectToAction("Edit", "Users", new {id = vm.UserId});
+            return RedirectToAction("Edit", "ApiScopes", new { id = vm.ApiScopeId });
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            var vm = await GetUserClaimViewModelAsync(id);
+            var vm = await GetClaimViewModelAsync(id);
             if (vm == null)
             {
                 return NotFound();
@@ -86,7 +75,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(UserClaimViewModel vm)
+        public async Task<IActionResult> Edit(ApiScopeClaimViewModel vm)
         {
             if (vm == null)
             {
@@ -95,19 +84,18 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                var claim = await _dbContext.UserClaims.FindAsync(vm.Id);
+                var claim = await _dbContext.Set<ApiScopeClaim>().FindAsync(vm.Id);
                 if (claim == null)
                 {
                     return BadRequest();
                 }
 
-                claim.ClaimType = vm.ClaimType;
-                claim.ClaimValue = vm.ClaimValue;
+                claim.Type = vm.Type;
 
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"User claim Id {claim.Id} updated by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"API scope claim Id {claim.Id} updated by {User?.Identity?.Name}.");
                 }
                 catch (DbException ex)
                 {
@@ -116,12 +104,12 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 }
             }
 
-            return RedirectToAction("Edit", "Users", new { id = vm.UserId });
+            return RedirectToAction("Edit", "ApiScopes", new { id = vm.ApiScopeId });
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var vm = await GetUserClaimViewModelAsync(id);
+            var vm = await GetClaimViewModelAsync(id);
             if (vm == null)
             {
                 return NotFound();
@@ -132,24 +120,24 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(UserClaimViewModel vm)
+        public async Task<IActionResult> Delete(ApiScopeClaimViewModel vm)
         {
             if (vm == null)
             {
                 return BadRequest();
             }
 
-            var claim = await _dbContext.UserClaims.FindAsync(vm.Id);
+            var claim = await _dbContext.Set<ApiScopeClaim>().FindAsync(vm.Id);
             if (claim == null)
             {
                 return BadRequest();
             }
 
-            _dbContext.UserClaims.Remove(claim);
+            _dbContext.Set<ApiScopeClaim>().Remove(claim);
             try
             {
                 await _dbContext.SaveChangesAsync();
-                _logger.LogInformation($"User claim Id {vm.Id} removed by {User?.Identity?.Name}.");
+                _logger.LogInformation($"API scope claim Id {vm.Id} removed by {User?.Identity?.Name}.");
             }
             catch (DbException ex)
             {
@@ -157,11 +145,11 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 throw;
             }
 
-            return RedirectToAction("Edit", "Users", new { id = vm.UserId });
+            return RedirectToAction("Edit", "ApiScopes", new { id = vm.ApiScopeId });
         }
 
 
-        public UserClaimsController(IdentityServerDbContext dbContext, ILogger<UserClaimsController> logger)
+        public ApiScopeClaimsController(ConfigurationDbContext dbContext, ILogger<ApiScopeClaimsController> logger)
         {
             if (dbContext == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
@@ -171,17 +159,16 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         }
 
 
-        private async Task<UserClaimViewModel> GetUserClaimViewModelAsync(int id)
+        private async Task<ApiScopeClaimViewModel> GetClaimViewModelAsync(int id)
         {
-            var claim = await _dbContext.UserClaims.FindAsync(id);
+            var claim = await _dbContext.Set<ApiScopeClaim>().Include(x => x.ApiScope).FirstOrDefaultAsync(x => x.Id == id);
             if (claim != null)
             {
-                return new UserClaimViewModel
+                return new ApiScopeClaimViewModel
                 {
                     Id = claim.Id,
-                    ClaimType = claim.ClaimType,
-                    ClaimValue = claim.ClaimValue,
-                    UserId = claim.UserId
+                    ApiScopeId = claim.ApiScope.Id,
+                    Type = claim.Type,
                 };
             }
             return null;

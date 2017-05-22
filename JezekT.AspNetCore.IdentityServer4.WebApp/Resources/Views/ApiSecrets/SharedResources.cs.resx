@@ -117,25 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ApiResources" xml:space="preserve">
-    <value>API resources</value>
+  <data name="DescriptionPlaceholder" xml:space="preserve">
+    <value>např. Běžné přihlášení</value>
   </data>
-  <data name="AppTitle" xml:space="preserve">
-    <value>Identity Server 4</value>
+  <data name="EntityName" xml:space="preserve">
+    <value>API secret</value>
   </data>
-  <data name="Clients" xml:space="preserve">
-    <value>Clients</value>
-  </data>
-  <data name="Home" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="IdentityResources" xml:space="preserve">
-    <value>Identity resources</value>
-  </data>
-  <data name="Roles" xml:space="preserve">
-    <value>Roles</value>
-  </data>
-  <data name="Users" xml:space="preserve">
-    <value>Users</value>
+  <data name="TypePlaceholder" xml:space="preserve">
+    <value>např. SharedSecret</value>
   </data>
 </root>

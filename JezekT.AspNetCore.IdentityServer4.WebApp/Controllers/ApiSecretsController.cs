@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.Models;
-using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientSecretViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiSecretViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,21 +14,21 @@ using Microsoft.Extensions.Logging;
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
     [Authorize(Policy = "AdministratorOnly")]
-    public class ClientSecretsController : Controller
+    public class ApiSecretsController : Controller
     {
         private readonly ConfigurationDbContext _dbContext;
         private readonly ILogger _logger;
 
 
-        public IActionResult Create(int clientId)
+        public IActionResult Create(int apiResourceId)
         {
-            var vm = new ClientSecretInputViewModel{ ClientId = clientId, Expiration = DateTime.Today.AddYears(1)};
+            var vm = new ApiSecretInputViewModel{ ApiResourceId = apiResourceId, Expiration = DateTime.Today.AddYears(1)};
             return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ClientSecretInputViewModel vm)
+        public async Task<IActionResult> Create(ApiSecretInputViewModel vm)
         {
             if (vm == null)
             {
@@ -37,30 +37,30 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                var client = await _dbContext.Clients.FindAsync(vm.ClientId);
-                if (client == null)
+                var apiResource = await _dbContext.ApiResources.FindAsync(vm.ApiResourceId);
+                if (apiResource == null)
                 {
                     return BadRequest();
                 }
 
-                var clientSecret = new ClientSecret
+                var apiSecret = new ApiSecret
                 {
-                    Client = client,
+                    ApiResource = apiResource,
                     Description = vm.Description,
                     Value = vm.Value.Sha256(),
                     Expiration = vm.Expiration
                 };
                 if (!string.IsNullOrEmpty(vm.Type))
                 {
-                    clientSecret.Type = vm.Type;
+                    apiSecret.Type = vm.Type;
                 }
 
-                _dbContext.Set<ClientSecret>().Add(clientSecret);
+                _dbContext.Set<ApiSecret>().Add(apiSecret);
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Client secret Id {clientSecret.Id} created by {User?.Identity?.Name}.");
-                    return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+                    _logger.LogInformation($"API secret Id {apiSecret.Id} created by {User?.Identity?.Name}.");
+                    return RedirectToAction("Edit", "ApiResources", new { id = vm.ApiResourceId });
                 }
                 catch (DbException ex)
                 {
@@ -80,7 +80,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(ClientSecretViewModel vm)
+        public async Task<IActionResult> Edit(ApiSecretViewModel vm)
         {
             if (vm == null)
             {
@@ -89,7 +89,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                var obj = await _dbContext.Set<ClientSecret>().FindAsync(vm.Id);
+                var obj = await _dbContext.Set<ApiSecret>().FindAsync(vm.Id);
                 if (obj == null)
                 {
                     return NotFound();
@@ -102,8 +102,8 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Client secret Id {obj.Id} updated by {User?.Identity?.Name}.");
-                    return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+                    _logger.LogInformation($"API secret Id {obj.Id} updated by {User?.Identity?.Name}.");
+                    return RedirectToAction("Edit", "ApiResources", new { id = vm.ApiResourceId });
                 }
                 catch (DbException ex)
                 {
@@ -123,14 +123,14 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(ClientSecretViewModel vm)
+        public async Task<IActionResult> Delete(ApiSecretViewModel vm)
         {
             if (vm == null)
             {
                 return BadRequest();
             }
 
-            var obj = await _dbContext.Set<ClientSecret>().FindAsync(vm.Id);
+            var obj = await _dbContext.Set<ApiSecret>().FindAsync(vm.Id);
             if (obj == null)
             {
                 return NotFound();
@@ -140,8 +140,8 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
             try
             {
                 await _dbContext.SaveChangesAsync();
-                _logger.LogInformation($"Client secret Id {obj.Id} removed by {User?.Identity?.Name}.");
-                return RedirectToAction("Edit", "Clients", new { id = vm.ClientId });
+                _logger.LogInformation($"API secret Id {obj.Id} removed by {User?.Identity?.Name}.");
+                return RedirectToAction("Edit", "ApiResources", new { id = vm.ApiResourceId });
             }
             catch (DbException ex)
             {
@@ -151,7 +151,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         }
 
 
-        public ClientSecretsController(ConfigurationDbContext dbContext, ILogger<ClientSecretsController> logger)
+        public ApiSecretsController(ConfigurationDbContext dbContext, ILogger<ApiSecretsController> logger)
         {
             if (dbContext == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
@@ -161,18 +161,18 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         }
 
 
-        private async Task<ClientSecretViewModel> GetViewModel(int id)
+        private async Task<ApiSecretViewModel> GetViewModel(int id)
         {
-            var clientSecret = await _dbContext.Set<ClientSecret>().Include(x => x.Client).FirstOrDefaultAsync(x => x.Id == id);
-            if (clientSecret != null)
+            var apiSecret = await _dbContext.Set<ApiSecret>().Include(x => x.ApiResource).FirstOrDefaultAsync(x => x.Id == id);
+            if (apiSecret != null)
             {
-                return new ClientSecretViewModel
+                return new ApiSecretViewModel
                 {
-                    Id = clientSecret.Id,
-                    ClientId = clientSecret.Client.Id,
-                    Type = clientSecret.Type,
-                    Description = clientSecret.Description,
-                    Expiration = clientSecret.Expiration
+                    Id = apiSecret.Id,
+                    ApiResourceId = apiSecret.ApiResource.Id,
+                    Type = apiSecret.Type,
+                    Description = apiSecret.Description,
+                    Expiration = apiSecret.Expiration
                 };
             }
             return null;

@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Data;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Extensions;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.AccountServices;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Services.ApiResourceServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.ClientServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.IdentityResourceServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.RoleServices;
@@ -66,6 +67,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
             services.AddTransient<IPaginationDataProvider<IdentityRole, object>, RolePaginationProvider>();
             services.AddTransient<IPaginationDataProvider<Client, object>, ClientPaginationProvider>();
             services.AddTransient<IPaginationDataProvider<IdentityResource, object>, IdentityResourcePaginationProvider>();
+            services.AddTransient<IPaginationDataProvider<ApiResource, object>, ApiResourcePaginationProvider>();
 
             services.AddTransient<IPasswordResetSender, AccountEmailTools>();
             services.AddTransient<IEmailConfirmationSender, AccountEmailTools>();

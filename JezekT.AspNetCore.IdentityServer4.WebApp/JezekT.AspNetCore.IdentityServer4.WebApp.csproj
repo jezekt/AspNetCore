@@ -87,6 +87,26 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>LoginViewModel.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\Models\ApiResourceClaimViewModels\ApiResourceClaimViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApiResourceClaimViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\ApiResourceViewModels\ApiResourceViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApiResourceViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\ApiScopeViewModels\ApiScopeViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApiScopeViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Models\ApiSecretViewModels\ApiSecretViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ApiSecretViewModel.resx</DependentUpon>
+    </Compile>
     <Compile Update="Resources\Models\ClientGrantTypeViewModels\ClientGrantTypeViewModel.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -187,6 +207,34 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ConfirmEmailViewModel.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ApiResourceClaimViewModels\ApiResourceClaimViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ApiResourceClaimViewModels\ApiResourceClaimViewModel.resx">
+      <LastGenOutput>ApiResourceClaimViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ApiResourceViewModels\ApiResourceViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ApiResourceViewModels\ApiResourceViewModel.resx">
+      <LastGenOutput>ApiResourceViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ApiScopeViewModels\ApiScopeViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ApiScopeViewModels\ApiScopeViewModel.resx">
+      <LastGenOutput>ApiScopeViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ApiSecretViewModels\ApiSecretViewModel.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Models\ApiSecretViewModels\ApiSecretViewModel.resx">
+      <LastGenOutput>ApiSecretViewModel.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="Resources\Services\Account\AccountEmailTools.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
@@ -222,6 +270,21 @@
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Account\ResetPasswordConfirmation.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\ApiResources\Index.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\ApiResources\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\ApiScopeClaims\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\ApiScopes\SharedResources.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\ApiSecrets\SharedResources.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Consent\Index.cs.resx">
@@ -366,6 +429,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\Home\Index.cs.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Views\ApiResourceClaims\SharedResources.cs.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Views\IdentityClaims\SharedResources.cs.resx">

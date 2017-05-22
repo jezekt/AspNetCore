@@ -6,8 +6,10 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
-using JezekT.AspNetCore.IdentityServer4.WebApp.Models.IdentityClaimViewModels;
-using JezekT.AspNetCore.IdentityServer4.WebApp.Models.IdentityResourceViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiResourceClaimViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiResourceViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiScopeViewModels;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiSecretViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services;
 using JezekT.NetStandard.Pagination.DataProviders;
 using JezekT.NetStandard.Pagination.Extensions;
@@ -19,10 +21,10 @@ using Microsoft.Extensions.Logging;
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 {
     [Authorize(Policy = "AdministratorOnly")]
-    public class IdentityResourcesController : Controller
+    public class ApiResourcesController : Controller
     {
         private readonly ConfigurationDbContext _dbContext;
-        private readonly IPaginationDataProvider<IdentityResource, object> _identityResourcePaginationProvider;
+        private readonly IPaginationDataProvider<ApiResource, object> _apiResourcePaginationProvider;
         private readonly ILogger _logger;
 
 
@@ -33,7 +35,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var vm = await GetIdentityResourceViewModelAsync(id);
+            var vm = await GetApiResourceViewModelAsync(id);
             if (vm == null)
             {
                 return NotFound();
@@ -44,12 +46,12 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public IActionResult Create()
         {
-            return View(new IdentityResourceViewModel { Enabled = true });
+            return View(new ApiResourceViewModel { Enabled = true });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(IdentityResourceViewModel vm)
+        public async Task<IActionResult> Create(ApiResourceViewModel vm)
         {
             if (vm == null)
             {
@@ -58,12 +60,12 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                var obj = GetIdentityResource(vm);
-                _dbContext.IdentityResources.Add(obj);
+                var obj = GetApiResource(vm);
+                _dbContext.ApiResources.Add(obj);
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Identity resource Id {obj.Id} created by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"API resource Id {obj.Id} created by {User?.Identity?.Name}.");
                     return RedirectToAction("Index");
                 }
                 catch (DbException ex)
@@ -78,7 +80,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var vm = await GetIdentityResourceViewModelAsync(id);
+            var vm = await GetApiResourceViewModelAsync(id);
             if (vm == null)
             {
                 return NotFound();
@@ -88,7 +90,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(IdentityResourceViewModel vm)
+        public async Task<IActionResult> Edit(ApiResourceViewModel vm)
         {
             if (vm == null)
             {
@@ -97,19 +99,16 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                var identityResource = await _dbContext.IdentityResources.FindAsync(vm.Id);
-                identityResource.Enabled = vm.Enabled;
-                identityResource.Name = vm.Name;
-                identityResource.DisplayName = vm.DisplayName;
-                identityResource.Description = vm.Description;
-                identityResource.Required = vm.Required;
-                identityResource.ShowInDiscoveryDocument = vm.ShowInDiscoveryDocument;
-                identityResource.Emphasize = vm.Emphasize;
+                var apiResource = await _dbContext.IdentityResources.FindAsync(vm.Id);
+                apiResource.Enabled = vm.Enabled;
+                apiResource.Name = vm.Name;
+                apiResource.DisplayName = vm.DisplayName;
+                apiResource.Description = vm.Description;
 
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    _logger.LogInformation($"Identity resource Id {identityResource.Id} updated by {User?.Identity?.Name}.");
+                    _logger.LogInformation($"API resource Id {apiResource.Id} updated by {User?.Identity?.Name}.");
                     return RedirectToAction("Index");
                 }
                 catch (DbException ex)
@@ -124,7 +123,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var vm = await GetIdentityResourceViewModelAsync(id);
+            var vm = await GetApiResourceViewModelAsync(id);
             if (vm == null)
             {
                 return NotFound();
@@ -134,24 +133,24 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(IdentityResourceViewModel vm)
+        public async Task<IActionResult> Delete(ApiResourceViewModel vm)
         {
             if (vm == null)
             {
                 return BadRequest();
             }
 
-            var identityResource = await _dbContext.IdentityResources.FindAsync(vm.Id);
-            if (identityResource == null)
+            var apiResource = await _dbContext.ApiResources.FindAsync(vm.Id);
+            if (apiResource == null)
             {
                 return NotFound();
             }
 
-            _dbContext.IdentityResources.Remove(identityResource);
+            _dbContext.ApiResources.Remove(apiResource);
             try
             {
                 await _dbContext.SaveChangesAsync();
-                _logger.LogInformation($"Identity resource Id {vm.Id} removed by {User?.Identity?.Name}.");
+                _logger.LogInformation($"API resource Id {vm.Id} removed by {User?.Identity?.Name}.");
                 return RedirectToAction("Index");
             }
             catch (DbException ex)
@@ -165,58 +164,59 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
         public async Task<IActionResult> GetTableDataJsonAsync(int draw, string term, int start, int pageSize, string orderField, string orderDirection, string queryIds)
         {
             var filterIds = queryIds.ToIdsArray<int>();
-            var filterIdsExpression = filterIds != null ? (Expression<Func<IdentityResource, bool>>)(x => filterIds.Contains(x.Id)) : null;
-            var paginationData = await _identityResourcePaginationProvider.GetPaginationDataAsync(start, pageSize, term, orderField, orderDirection, filterIdsExpression);
+            var filterIdsExpression = filterIds != null ? (Expression<Func<ApiResource, bool>>)(x => filterIds.Contains(x.Id)) : null;
+            var paginationData = await _apiResourcePaginationProvider.GetPaginationDataAsync(start, pageSize, term, orderField, orderDirection, filterIdsExpression);
             return Json(PaginationHelper.GetDataObject(paginationData, draw));
         }
 
 
-        public IdentityResourcesController(ConfigurationDbContext dbContext, IPaginationDataProvider<IdentityResource, object> identityResourcePaginationDataProvider, 
-            ILogger<IdentityResourcesController> logger)
+        public ApiResourcesController(ConfigurationDbContext dbContext, IPaginationDataProvider<ApiResource, object> apiResourcePaginationDataProvider,
+            ILogger<ApiResourcesController> logger)
         {
-            if (dbContext == null || identityResourcePaginationDataProvider == null || logger == null) throw new ArgumentNullException();
+            if (dbContext == null || apiResourcePaginationDataProvider == null || logger == null) throw new ArgumentNullException();
             Contract.EndContractBlock();
 
             _dbContext = dbContext;
-            _identityResourcePaginationProvider = identityResourcePaginationDataProvider;
+            _apiResourcePaginationProvider = apiResourcePaginationDataProvider;
             _logger = logger;
         }
 
 
-        private async Task<IdentityResourceViewModel> GetIdentityResourceViewModelAsync(int id)
+        private async Task<ApiResourceViewModel> GetApiResourceViewModelAsync(int id)
         {
-            var identityResource = await _dbContext.IdentityResources.Include(x => x.UserClaims).FirstOrDefaultAsync(x => x.Id == id);
-            if (identityResource != null)
+            var apiResource = await _dbContext.ApiResources
+                .Include(x => x.UserClaims)
+                .Include(x => x.Scopes)
+                .Include(x => x.Secrets)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (apiResource != null)
             {
-                return new IdentityResourceViewModel
+                return new ApiResourceViewModel
                 {
-                    Id = identityResource.Id,
-                    Enabled = identityResource.Enabled,
-                    Name = identityResource.Name,
-                    DisplayName = identityResource.DisplayName,
-                    Description = identityResource.Description,
-                    Required = identityResource.Required,
-                    Emphasize = identityResource.Emphasize,
-                    ShowInDiscoveryDocument = identityResource.ShowInDiscoveryDocument,
-                    UserClaims = identityResource.UserClaims.Select(x => new IdentityClaimViewModel{Id = x.Id, IdentityResourceId = identityResource.Id, Type = x.Type}).ToList()
+                    Id = apiResource.Id,
+                    Enabled = apiResource.Enabled,
+                    Name = apiResource.Name,
+                    DisplayName = apiResource.DisplayName,
+                    Description = apiResource.Description,
+                    Claims = apiResource.UserClaims.Select(x => new ApiResourceClaimViewModel { Id = x.Id, ApiResourceId = apiResource.Id, Type = x.Type }).ToList(),
+                    Secrets = apiResource.Secrets.Select(x => new ApiSecretViewModel {Id = x.Id, ApiResourceId = apiResource.Id, Type = x.Type, Description = x.Description, Expiration = x.Expiration}).ToList(),
+                    Scopes = apiResource.Scopes.Select(x => new ApiScopeViewModel {Id = x.Id, ApiResourceId = apiResource.Id, Description = x.Description, Name = x.Name,
+                        DisplayName = x.DisplayName, Required = x.Required, Emphasize = x.Emphasize, ShowInDiscoveryDocument = x.ShowInDiscoveryDocument}).ToList()
                 };
             }
             return null;
         }
 
-        private IdentityResource GetIdentityResource(IdentityResourceViewModel vm)
+        private ApiResource GetApiResource(ApiResourceViewModel vm)
         {
             if (vm != null)
             {
-                return new IdentityResource
+                return new ApiResource
                 {
                     Enabled = vm.Enabled,
                     Name = vm.Name,
                     DisplayName = vm.DisplayName,
                     Description = vm.Description,
-                    Required = vm.Required,
-                    ShowInDiscoveryDocument = vm.ShowInDiscoveryDocument,
-                    Emphasize = vm.Emphasize
                 };
             }
             return null;

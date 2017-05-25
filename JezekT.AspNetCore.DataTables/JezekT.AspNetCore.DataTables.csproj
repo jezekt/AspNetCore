@@ -3,11 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Version>1.0.0</Version>
+    <Version>1.0.0-beta</Version>
+    <Authors>Tomas Jezek</Authors>
+    <Company>JezekT</Company>
+    <Description>Datatables Tag Helper for ASP .NET Core (based on https://datatables.net/)</Description>
+    <PackageLicenseUrl>https://github.com/jezekt/AspNetCore/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/jezekt/AspNetCore/tree/master/JezekT.AspNetCore.DataTables</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jezekt/AspNetCore</RepositoryUrl>
+    <PackageTags>datatables aspnetcore</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
   </ItemGroup>
 
   <ItemGroup>

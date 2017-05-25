@@ -25,11 +25,11 @@
     <PackageReference Include="IdentityServer4" Version="1.5.1" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="1.0.1" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="1.0.1" />
-    <PackageReference Include="JezekT.AspNetCore.Bootstrap.Datepicker" Version="1.0.0" />
-    <PackageReference Include="JezekT.AspNetCore.DataTables" Version="1.0.0" />
-    <PackageReference Include="JezekT.AspNetCore.Mvc" Version="1.0.0" />
-    <PackageReference Include="JezekT.AspNetCore.Select2" Version="1.0.0" />
-    <PackageReference Include="JezekT.NetStandard.Pagination.EntityFrameworkCore" Version="1.0.0" />
+    <PackageReference Include="JezekT.AspNetCore.Bootstrap.Datepicker" Version="1.0.0.1-beta" />
+    <PackageReference Include="JezekT.AspNetCore.DataTables" Version="1.0.0-beta" />
+    <PackageReference Include="JezekT.AspNetCore.Mvc" Version="1.0.0-beta" />
+    <PackageReference Include="JezekT.AspNetCore.Select2" Version="1.0.0-beta" />
+    <PackageReference Include="JezekT.NetStandard.Pagination.EntityFrameworkCore" Version="1.0.0-beta" />
     <PackageReference Include="MailKit" Version="1.16.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
@@ -48,7 +48,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.2" />
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="1.0.1" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="2.3.1" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="2.4.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>

@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 /JezekT.AspNetCore.IdentityServer4.WebApp/wwwroot/lib
 /JezekT.AspNetCore.IdentityServer4.WebApp/appsettings.Production.json
+/JezekT.AspNetCore.IdentityServer4.WebApp/Properties/PublishProfiles/FolderProfile.pubxml

@@ -127,15 +127,15 @@
     <value>Secrets</value>
   </data>
   <data name="DescriptionPlaceholder" xml:space="preserve">
-    <value>např. Vaše e-mailová adresa</value>
+    <value>např. CRUD API for Users</value>
   </data>
   <data name="DisplayNamePlaceholder" xml:space="preserve">
-    <value>např. E-mail</value>
+    <value>např. Users API</value>
   </data>
   <data name="EntityName" xml:space="preserve">
-    <value>Identity resource</value>
+    <value>API resource</value>
   </data>
   <data name="NamePlaceholder" xml:space="preserve">
-    <value>např. email</value>
+    <value>např. usersApi</value>
   </data>
 </root>

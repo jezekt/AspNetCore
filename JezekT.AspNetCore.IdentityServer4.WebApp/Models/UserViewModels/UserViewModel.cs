@@ -7,7 +7,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Models.UserViewModels
         public string Id { get; set; }
         [Required(ErrorMessageResourceName = "RequiredErrorMessageX", ErrorMessageResourceType = typeof(Resources.Models.Shared.ViewModelsShared))]
         [Display(Name = "UserName", ResourceType = typeof(Resources.Models.UserViewModels.UserViewModel))]
-        public string UserName { get; set; }
+        public string Username { get; set; }
         [EmailAddress]
         [Display(Name = "Email", ResourceType = typeof(Resources.Models.UserViewModels.UserViewModel))]
         public string Email { get; set; }

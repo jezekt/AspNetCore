@@ -12,7 +12,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.UserServices
             return x => new
             {
                 x.Id,
-                x.UserName
+                username = x.UserName
             };
         }
 

@@ -1,4 +1,4 @@
-#Datepicker Tag Helper
+# Datepicker Tag Helper
 
 ASP .NET Core Tag Helper for datepicker. Uses [Bootstrap 3 Datepicker v4](https://eonasdan.github.io/bootstrap-datetimepicker).
 

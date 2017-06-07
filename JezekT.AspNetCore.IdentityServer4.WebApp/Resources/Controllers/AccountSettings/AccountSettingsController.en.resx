@@ -117,7 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RequiredErrorMessageX" xml:space="preserve">
-    <value>Pole {0} musí být vyplněné.</value>
+  <data name="AnErrorOcurred" xml:space="preserve">
+    <value>An error occured.</value>
+  </data>
+  <data name="EmailChanged" xml:space="preserve">
+    <value>Email address changed. Please check your mail.</value>
+  </data>
+  <data name="PasswordChanged" xml:space="preserve">
+    <value>Password changed.</value>
+  </data>
+  <data name="UserXSentEmailConfirmation" xml:space="preserve">
+    <value>User {0} sent confirmation email.</value>
+  </data>
+  <data name="EmailAlreadyConfirmed" xml:space="preserve">
+    <value>Email {0} is already confirmed.</value>
+  </data>
+  <data name="ConfirmationSentToX" xml:space="preserve">
+    <value>Confirmation email sent to {0}.</value>
   </data>
 </root>

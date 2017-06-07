@@ -117,40 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Aktivni" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Dokonceno" xml:space="preserve">
-    <value />
-  </data>
-  <data name="MaxLenghtErrorMessageX" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Nazev" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Popis" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Provedl" xml:space="preserve">
-    <value />
-  </data>
   <data name="RequiredErrorMessageX" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Vytvoreno" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Vytvoril" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Zahajeno" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Zmeneno" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Zmenil" xml:space="preserve">
     <value />
   </data>
 </root>

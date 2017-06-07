@@ -117,7 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RequiredErrorMessageX" xml:space="preserve">
-    <value>Pole {0} musí být vyplněné.</value>
+  <data name="ConfirmEmailAccountMessage" xml:space="preserve">
+    <value>Please confirm your email address by clicking on following {0}.</value>
+  </data>
+  <data name="ConfirmEmailAccountSubject" xml:space="preserve">
+    <value>Email address confirmation</value>
+  </data>
+  <data name="Link" xml:space="preserve">
+    <value>link</value>
+  </data>
+  <data name="ResetPasswordMessage" xml:space="preserve">
+    <value>Click on following {0} to restart your password.</value>
+  </data>
+  <data name="ResetPasswordSubject" xml:space="preserve">
+    <value>Password restart</value>
   </data>
 </root>

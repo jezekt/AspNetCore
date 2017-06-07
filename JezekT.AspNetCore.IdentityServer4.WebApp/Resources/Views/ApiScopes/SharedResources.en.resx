@@ -117,7 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RequiredErrorMessageX" xml:space="preserve">
-    <value>Pole {0} musí být vyplněné.</value>
+  <data name="Claims" xml:space="preserve">
+    <value>Claims</value>
+  </data>
+  <data name="DescriptionPlaceholder" xml:space="preserve">
+    <value>e.g. API scope for creating users</value>
+  </data>
+  <data name="DisplayNamePlaceholder" xml:space="preserve">
+    <value>e.g. Users API - Create</value>
+  </data>
+  <data name="EntityName" xml:space="preserve">
+    <value>API scope</value>
+  </data>
+  <data name="NamePlaceholder" xml:space="preserve">
+    <value>e.g. usersApiCreate</value>
   </data>
 </root>

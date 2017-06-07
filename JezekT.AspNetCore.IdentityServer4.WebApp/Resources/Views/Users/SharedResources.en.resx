@@ -117,7 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RequiredErrorMessageX" xml:space="preserve">
-    <value>Pole {0} musí být vyplněné.</value>
+  <data name="EmailPlaceholder" xml:space="preserve">
+    <value>e.g. novakj@domain.com</value>
+  </data>
+  <data name="EntityName" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="UsernamePlaceholder" xml:space="preserve">
+    <value>e.g. novakj</value>
+  </data>
+  <data name="UserRole" xml:space="preserve">
+    <value>User role</value>
   </data>
 </root>

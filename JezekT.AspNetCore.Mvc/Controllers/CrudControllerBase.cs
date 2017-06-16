@@ -14,12 +14,16 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         where T : class,  IWithId<TId>
         where TViewModel : class
     {
+        private readonly ILogger _logger;
         protected ICrudService<T, TId> Service { get; }
         protected IMapper Mapper { get; }
-        private readonly ILogger _logger;
 
 
-        protected virtual async Task<T> GetEntity(TId id)
+        protected virtual IActionResult CreateRedirect => RedirectToAction("Index");
+        protected virtual IActionResult EditRedirect => RedirectToAction("Index");
+        protected virtual IActionResult DeleteRedirect => RedirectToAction("Index");
+
+        protected virtual async Task<T> GetEntityAsync(TId id)
         {
             return await Service.GetByIdAsync(id);
         }
@@ -38,7 +42,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
 
         public virtual async Task<IActionResult> Details(TId id)
         {
-            var obj = await GetEntity(id);
+            var obj = await GetEntityAsync(id);
             if (obj == null)
             {
                 return NotFound();
@@ -61,7 +65,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             if (ModelState.IsValid && await Service.CreateAsync(obj))
             {
                 _logger?.LogInformation($"{obj.GetType().Name} Id {obj.Id} created by {User?.Identity.Name}.");
-                return RedirectToAction("Index");
+                return CreateRedirect;
             }
             _logger?.LogInformation($"Failed to create {obj.GetType().Name} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
@@ -70,13 +74,14 @@ namespace JezekT.AspNetCore.Mvc.Controllers
 
         public virtual async Task<IActionResult> Edit(TId id)
         {
-            var obj = await GetEntity(id);
+            var obj = await GetEntityAsync(id);
             if (obj == null)
             {
                 return NotFound();
             }
             return View(GetViewModel(obj));
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -86,7 +91,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             if (ModelState.IsValid && await Service.UpdateAsync(obj))
             {
                 _logger?.LogInformation($"{obj.GetType().Name} Id {obj.Id} updated by {User?.Identity.Name}.");
-                return RedirectToAction("Index");
+                return EditRedirect;
             }
             _logger?.LogInformation($"Failed to update {obj.GetType().Name} Id {obj.Id} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
@@ -96,7 +101,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
 
         public virtual async Task<IActionResult> Delete(TId id)
         {
-            var obj = await GetEntity(id);
+            var obj = await GetEntityAsync(id);
             if (obj == null)
             {
                 return NotFound();
@@ -111,7 +116,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             if (await Service.DeleteByIdAsync(id))
             {
                 _logger?.LogInformation($"{typeof(T).Name} Id {id} removed by {User?.Identity.Name}.");
-                return RedirectToAction("Index");
+                return DeleteRedirect;
             }
             _logger?.LogInformation($"Failed to remove {typeof(T).Name} Id {id} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);

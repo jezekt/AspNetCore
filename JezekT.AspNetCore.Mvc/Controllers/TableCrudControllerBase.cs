@@ -11,9 +11,12 @@ using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.Mvc.Controllers
 {
-    public abstract class TableCrudControllerBase<T, TViewModel, TId, TPaginationItem> : CrudControllerBase<T, TViewModel, TId>
+    public abstract class TableCrudControllerBase<T, TCreateVM, TDetailsVM, TEditVM, TDeleteVM, TId, TPaginationItem> : CrudControllerBase<T, TCreateVM, TDetailsVM, TEditVM, TDeleteVM, TId>
         where T : class, IWithId<TId>
-        where TViewModel : class
+        where TCreateVM : class
+        where TDetailsVM : class
+        where TEditVM : class
+        where TDeleteVM : class
         where TPaginationItem : class
     {
         protected IPaginationService<T, TId, TPaginationItem> PaginationService { get; }

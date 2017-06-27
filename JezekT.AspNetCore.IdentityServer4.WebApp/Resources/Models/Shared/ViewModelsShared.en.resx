@@ -118,6 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="RequiredErrorMessageX" xml:space="preserve">
-    <value>Pole {0} musí být vyplněné.</value>
+    <value>The field {0} must not be empty.</value>
   </data>
 </root>

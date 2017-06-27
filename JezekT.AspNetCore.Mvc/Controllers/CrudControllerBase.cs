@@ -10,24 +10,42 @@ using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.Mvc.Controllers
 {
-    public abstract class CrudControllerBase<T, TViewModel, TId> : Controller
+    public abstract class CrudControllerBase<T, TCreateVM, TDetailsVM, TEditVM, TDeleteVM, TId> : Controller
         where T : class,  IWithId<TId>
-        where TViewModel : class
+        where TCreateVM : class
+        where TDetailsVM : class
+        where TEditVM : class
+        where TDeleteVM : class
     {
+        private readonly ILogger _logger;
         protected ICrudService<T, TId> Service { get; }
         protected IMapper Mapper { get; }
-        private readonly ILogger _logger;
 
 
-        protected virtual async Task<T> GetEntity(TId id)
+        protected virtual IActionResult CreateRedirect => RedirectToAction("Index");
+        protected virtual IActionResult EditRedirect => RedirectToAction("Index");
+        protected virtual IActionResult DeleteRedirect => RedirectToAction("Index");
+
+        protected virtual async Task<T> GetEntityAsync(TId id)
         {
             return await Service.GetByIdAsync(id);
         }
 
-        protected virtual TViewModel GetViewModel(T obj)
+        protected virtual TDetailsVM GetDetailsViewModel(T obj)
         {
-            return Mapper.Map<T, TViewModel>(obj);
+            return Mapper.Map<T, TDetailsVM>(obj);
         }
+
+        protected virtual TEditVM GetEditViewModel(T obj)
+        {
+            return Mapper.Map<T, TEditVM>(obj);
+        }
+
+        protected virtual TDeleteVM GetDeleteViewModel(T obj)
+        {
+            return Mapper.Map<T, TDeleteVM>(obj);
+        }
+
 
 
         public virtual ActionResult Index()
@@ -38,13 +56,13 @@ namespace JezekT.AspNetCore.Mvc.Controllers
 
         public virtual async Task<IActionResult> Details(TId id)
         {
-            var obj = await GetEntity(id);
+            var obj = await GetEntityAsync(id);
             if (obj == null)
             {
                 return NotFound();
             }
 
-            return View(GetViewModel(obj));
+            return View(GetDetailsViewModel(obj));
         }
 
 
@@ -55,13 +73,17 @@ namespace JezekT.AspNetCore.Mvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<IActionResult> Create(TViewModel objVm)
+        public virtual async Task<IActionResult> Create(TCreateVM objVm, string redirectUrl = null)
         {
-            var obj = Mapper.Map<TViewModel, T>(objVm);
+            var obj = Mapper.Map<TCreateVM, T>(objVm);
             if (ModelState.IsValid && await Service.CreateAsync(obj))
             {
                 _logger?.LogInformation($"{obj.GetType().Name} Id {obj.Id} created by {User?.Identity.Name}.");
-                return RedirectToAction("Index");
+                if (string.IsNullOrEmpty(redirectUrl))
+                {
+                    return CreateRedirect;
+                }
+                return Redirect(redirectUrl);
             }
             _logger?.LogInformation($"Failed to create {obj.GetType().Name} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
@@ -70,23 +92,28 @@ namespace JezekT.AspNetCore.Mvc.Controllers
 
         public virtual async Task<IActionResult> Edit(TId id)
         {
-            var obj = await GetEntity(id);
+            var obj = await GetEntityAsync(id);
             if (obj == null)
             {
                 return NotFound();
             }
-            return View(GetViewModel(obj));
+            return View(GetEditViewModel(obj));
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public virtual async Task<IActionResult> Edit(TViewModel objVm)
+        public virtual async Task<IActionResult> Edit(TEditVM objVm, string redirectUrl = null)
         {
-            var obj = Mapper.Map<TViewModel, T>(objVm);
+            var obj = Mapper.Map<TEditVM, T>(objVm);
             if (ModelState.IsValid && await Service.UpdateAsync(obj))
             {
                 _logger?.LogInformation($"{obj.GetType().Name} Id {obj.Id} updated by {User?.Identity.Name}.");
-                return RedirectToAction("Index");
+                if (string.IsNullOrEmpty(redirectUrl))
+                {
+                    return EditRedirect;
+                }
+                return Redirect(redirectUrl);
             }
             _logger?.LogInformation($"Failed to update {obj.GetType().Name} Id {obj.Id} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
@@ -96,26 +123,30 @@ namespace JezekT.AspNetCore.Mvc.Controllers
 
         public virtual async Task<IActionResult> Delete(TId id)
         {
-            var obj = await GetEntity(id);
+            var obj = await GetEntityAsync(id);
             if (obj == null)
             {
                 return NotFound();
             }
-            return View(GetViewModel(obj));
+            return View(GetDeleteViewModel(obj));
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public virtual async Task<IActionResult> DeleteConfirmed(TId id)
+        public virtual async Task<IActionResult> DeleteConfirmed(TId id, string redirectUrl = null)
         {
             if (await Service.DeleteByIdAsync(id))
             {
                 _logger?.LogInformation($"{typeof(T).Name} Id {id} removed by {User?.Identity.Name}.");
-                return RedirectToAction("Index");
+                if (string.IsNullOrEmpty(redirectUrl))
+                {
+                    return DeleteRedirect;
+                }
+                return Redirect(redirectUrl);
             }
             _logger?.LogInformation($"Failed to remove {typeof(T).Name} Id {id} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
-            return View(GetViewModel(await Service.GetByIdAsync(id)));
+            return View(GetDeleteViewModel(await Service.GetByIdAsync(id)));
         }
 
         

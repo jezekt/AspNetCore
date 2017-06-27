@@ -117,7 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RequiredErrorMessageX" xml:space="preserve">
-    <value>Pole {0} musí být vyplněné.</value>
+  <data name="NewEmail" xml:space="preserve">
+    <value>New email</value>
+  </data>
+  <data name="EmailValidationErrorMessage" xml:space="preserve">
+    <value>Not valid email address.</value>
   </data>
 </root>

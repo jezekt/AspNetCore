@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <Version>1.0.0-beta</Version>
+    <Version>1.0.1-beta</Version>
     <Authors>Tomas Jezek</Authors>
     <Company>JezekT</Company>
     <Description>Common types and interfaces for MVC</Description>

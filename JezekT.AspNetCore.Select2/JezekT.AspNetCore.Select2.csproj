@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <Version>1.0.1-beta</Version>
+    <Version>1.0.1.1-beta</Version>
     <Authors>Tomas Jezek</Authors>
     <Company>JezekT</Company>
     <Description>Select2 Selectbox Tag Helper for ASP .NET Core (based on https://github.com/select2/select2)</Description>

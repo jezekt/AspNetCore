@@ -181,7 +181,7 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
 
                 if (SelectedIdProperty?.Model != null && !HasDefaultValue(SelectedIdProperty.Model))
                 {
-                    sb.AppendLine("var option = $('<option selected>" + loading + "</option>').val(" + SelectedIdProperty.Model + ");");
+                    sb.AppendLine("var option = $('<option selected>" + loading + "</option>').val('" + SelectedIdProperty.Model + "');");
                     sb.AppendLine("select.append(option).trigger('change');");
                     sb.AppendLine("$.ajax({ type: 'GET', url: '" + SingleDataUrl + "/" + SelectedIdProperty.Model +
                                     "', dataType: 'json'}).then(function (data) { option.text(data.text).val(data.id); option.removeData();select.trigger('change');});");

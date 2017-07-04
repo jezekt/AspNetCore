@@ -31,6 +31,8 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             return await Service.GetByIdAsync(id);
         }
 
+        protected virtual TCreateVM GetCreateViewModel() => null;
+
         protected virtual TDetailsVM GetDetailsViewModel(T obj)
         {
             return Mapper.Map<T, TDetailsVM>(obj);
@@ -68,7 +70,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
 
         public virtual ActionResult Create()
         {
-            return View();
+            return View(GetCreateViewModel());
         }
 
         [HttpPost]

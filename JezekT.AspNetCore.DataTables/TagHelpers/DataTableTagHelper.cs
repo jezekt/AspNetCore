@@ -256,9 +256,9 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
                         sb.Append("{ action = action + '");
                     }
 
-                    if (actionData.ActionUrl.Contains("id"))
+                    if (actionData.ActionUrl.Contains("@id"))
                     {
-                        var url = actionData.ActionUrl.Replace("id", "' + row['id'] + '");
+                        var url = actionData.ActionUrl.Replace("@id", "' + row['id'] + '");
                         sb.Append($"<a href={url}>{actionData.ActionTitle}</a>");
                     }
                     else

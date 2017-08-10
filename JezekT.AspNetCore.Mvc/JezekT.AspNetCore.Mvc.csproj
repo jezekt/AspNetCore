@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <Version>1.0.2-beta</Version>
+    <Version>1.0.2.1-beta</Version>
     <Authors>Tomas Jezek</Authors>
     <Company>JezekT</Company>
     <Description>Common types and interfaces for MVC</Description>
@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
-    <PackageReference Include="JezekT.NetStandard.Services" Version="1.0.1-beta" />
+    <PackageReference Include="JezekT.NetStandard.Services" Version="1.0.1.1-beta" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
   </ItemGroup>

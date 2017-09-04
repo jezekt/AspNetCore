@@ -19,7 +19,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         private readonly ILogger _logger;
 
 
-        public virtual ActionResult Index()
+        public virtual IActionResult Index()
         {
             return View();
         }
@@ -37,7 +37,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         }
 
 
-        public virtual ActionResult Create()
+        public virtual IActionResult Create()
         {
             return View();
         }

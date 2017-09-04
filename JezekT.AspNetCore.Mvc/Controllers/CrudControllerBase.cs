@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace JezekT.AspNetCore.Mvc.Controllers
 {
     public abstract class CrudControllerBase<T, TCreateVM, TDetailsVM, TEditVM, TDeleteVM, TId> : Controller
-        where T : class,  IWithId<TId>
+        where T : class, IWithId<TId>
         where TCreateVM : class
         where TDetailsVM : class
         where TEditVM : class
@@ -31,30 +31,34 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             return await Service.GetByIdAsync(id);
         }
 
-        protected virtual TCreateVM GetCreateViewModel() => null;
-
-        protected virtual TDetailsVM GetDetailsViewModel(T obj)
+        protected virtual async Task<TCreateVM> GetCreateViewModelAsync()
         {
+            await Task.CompletedTask;
+            return null;
+        }
+
+        protected virtual async Task<TDetailsVM> GetDetailsViewModelAsync(T obj)
+        {
+            await Task.CompletedTask;
             return Mapper.Map<T, TDetailsVM>(obj);
         }
 
-        protected virtual TEditVM GetEditViewModel(T obj)
+        protected virtual async Task<TEditVM> GetEditViewModelAsync(T obj)
         {
+            await Task.CompletedTask;
             return Mapper.Map<T, TEditVM>(obj);
         }
 
-        protected virtual TDeleteVM GetDeleteViewModel(T obj)
+        protected virtual async Task<TDeleteVM> GetDeleteViewModelAsync(T obj)
         {
+            await Task.CompletedTask;
             return Mapper.Map<T, TDeleteVM>(obj);
         }
 
-
-
-        public virtual ActionResult Index()
+        public virtual IActionResult Index()
         {
             return View();
         }
-
 
         public virtual async Task<IActionResult> Details(TId id)
         {
@@ -64,13 +68,13 @@ namespace JezekT.AspNetCore.Mvc.Controllers
                 return NotFound();
             }
 
-            return View(GetDetailsViewModel(obj));
+            return View(await GetDetailsViewModelAsync(obj));
         }
 
 
-        public virtual ActionResult Create()
+        public virtual async Task<IActionResult> Create()
         {
-            return View(GetCreateViewModel());
+            return View(await GetCreateViewModelAsync());
         }
 
         [HttpPost]
@@ -92,6 +96,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             return View(objVm);
         }
 
+
         public virtual async Task<IActionResult> Edit(TId id)
         {
             var obj = await GetEntityAsync(id);
@@ -99,9 +104,8 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             {
                 return NotFound();
             }
-            return View(GetEditViewModel(obj));
+            return View(await GetEditViewModelAsync(obj));
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -130,7 +134,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             {
                 return NotFound();
             }
-            return View(GetDeleteViewModel(obj));
+            return View(await GetDeleteViewModelAsync(obj));
         }
 
         [HttpPost, ActionName("Delete")]
@@ -148,10 +152,10 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             }
             _logger?.LogInformation($"Failed to remove {typeof(T).Name} Id {id} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
-            return View(GetDeleteViewModel(await Service.GetByIdAsync(id)));
+            return View(await GetDeleteViewModelAsync(await Service.GetByIdAsync(id)));
         }
 
-        
+
         protected CrudControllerBase(ICrudService<T, TId> service, IMapper mapper, ILogger logger = null)
         {
             if (service == null || mapper == null) throw new ArgumentNullException();

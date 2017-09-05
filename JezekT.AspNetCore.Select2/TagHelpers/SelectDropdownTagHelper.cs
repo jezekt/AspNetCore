@@ -78,8 +78,7 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
             if (selectBuilder != null)
             {
                 var classes = className;
-                TagHelperAttribute classTag;
-                if (context.AllAttributes.TryGetAttribute("class", out classTag))
+                if (context.AllAttributes.TryGetAttribute("class", out var classTag))
                 {
                     classes = $"{classes} {classTag.Value}";
                 }

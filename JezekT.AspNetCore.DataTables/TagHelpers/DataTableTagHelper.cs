@@ -23,6 +23,8 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
         private const string ModelTypeName = "model-type";
         private const string TableIdName = "table-id";
         private const string JsonDataName = "json-data";
+        private const string OrderFieldIndexName = "order-field-index";
+        private const string OrderDirectionAscName = "order-direction-asc";
 
         private readonly IModelMetadataProvider _modelMetadataProvider;
         private readonly IStringLocalizer _localizer;
@@ -50,6 +52,12 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
 
         [HtmlAttributeName(JsonDataName)]
         public string JsonData { get; set; }
+
+        [HtmlAttributeName(OrderFieldIndexName)]
+        public int? OrderFieldIndex { get; set; }
+
+        [HtmlAttributeName(OrderDirectionAscName)]
+        public bool OrderDirectionAsc { get; set; }
 
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -84,6 +92,12 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
             if (!string.IsNullOrEmpty(localizationUrl))
             {
                 sb.AppendLine($"language: {{url: \"{localizationUrl}\"}},");
+            }
+
+            if (OrderFieldIndex != null)
+            {
+                var direction = OrderDirectionAsc ? "asc" : "desc";
+                sb.AppendLine($"order: [[ {OrderFieldIndex}, \"{direction}\" ]],");
             }
 
             if (ServerSide)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
@@ -26,6 +27,7 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
         private const string InputLengthMinName = "input-length-min";
         private const string InputLengthMaxName = "input-length-max";
         private const string FilterIdsName = "filter-ids";
+        private const string OptionDataSetName = "option-data-set";
 
         private readonly IHtmlGenerator _generator;
         private readonly IStringLocalizer _localizer;
@@ -52,7 +54,8 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
         public int InputLengthMax { get; set; } = 20;
         [HtmlAttributeName(FilterIdsName)]
         public string FilterIds { get; set; }
-
+        [HtmlAttributeName(OptionDataSetName)]
+        public ICollection<OptionData> OptionDataSet { get; set; }
 
         [HtmlAttributeNotBound]
         [ViewContext]
@@ -104,19 +107,27 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
             var initializeFunctionName = "initializeFunction";
             sb.AppendLine("<script type=\"text/javascript\">");
 
-                if (SelectedValueProperty != null)
+            if (SelectedValueProperty != null)
+            {
+                if (OptionDataSet != null)
                 {
-                    AppendInitializeSelectEnumFunction(sb, selectDropdownContext, initializeFunctionName, className);
+                    AppendInitializeSelectDataSetFunction(sb, OptionDataSet, initializeFunctionName, className);
                 }
-                else if (SelectedIdProperty != null)
+                else if (selectDropdownContext.OptionDataSet != null)
                 {
-                    AppendInitializeSelectAjaxFunction(sb, initializeFunctionName, className);
+                    AppendInitializeSelectDataSetFunction(sb, selectDropdownContext.OptionDataSet, initializeFunctionName, className);
                 }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-                sb.AppendLine(initializeFunctionName + "();");
+
+            }
+            else if (SelectedIdProperty != null)
+            {
+                AppendInitializeSelectAjaxFunction(sb, initializeFunctionName, className);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            sb.AppendLine(initializeFunctionName + "();");
             sb.AppendLine("</script>");
 
             output.Content.AppendHtml(sb.ToString());
@@ -138,70 +149,65 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
             Contract.Requires(sb != null);
 
             sb.AppendLine("function " + functionName + "(){");
-                sb.AppendLine("var select = $(\"." + className + "\").select2({");
-                    sb.Append("width:\"100%\",");
-                    sb.AppendLine("ajax: {");
-                        sb.AppendLine("url: \"" + AllDataUrl + "\",");
-                        sb.AppendLine("dataType: 'json',");
-                        sb.AppendLine("delay: " + Delay + ",");
-                        sb.AppendLine("cache: " + Cache.ToString().ToLower() + ",");
-                        sb.AppendLine("data: function(params) { return {");
-                        sb.AppendLine("term: params.term || \"\",");
-                        sb.AppendLine("page: params.page || 1,");
-                        if (!string.IsNullOrEmpty(FilterIds))
-                        {
-                            sb.AppendLine("filterIds: '" + FilterIds + "',");
-                        }
-                        sb.AppendLine("pageSize:" + PageSize);
-                    sb.AppendLine("};},");
-                    sb.AppendLine("processResults: function(data, params) {");
-                        sb.AppendLine("params.page = params.page || 1;");
-                        sb.AppendLine("return {");
-                            sb.AppendLine("results: data.items,");
-                            sb.AppendLine("pagination: { more: data.more }");
-                    sb.AppendLine("};},},");
-                    sb.AppendLine("minimumInputLength: " + InputLengthMin + ",");
-                    sb.AppendLine("maximumInputLength: " + InputLengthMax + ",");
-                    var languageCode = _localizer["LanguageCode"];
-                    if (!string.IsNullOrEmpty(languageCode))
-                    {
-                        sb.AppendLine("language: '" + languageCode + "',");
-                    }
+            sb.AppendLine("var select = $(\"." + className + "\").select2({");
 
-                    if (!string.IsNullOrEmpty(Theme))
-                    {
-                        sb.AppendLine("theme: \"" + Theme + "\",");
-                    }
-                    sb.AppendLine("templateResult: formatResult, templateSelection: formatSelection");
-                sb.AppendLine("});");
-                var loading = _localizer["Loading"] ?? "Loading...";
-                sb.AppendLine("function formatResult(item) { if (item.loading) return \"" + loading + "\"; return item.text; }");
-                sb.AppendLine("function formatSelection(item) { return item.text; }");
+            AppendCommonAppearance(sb);
 
-                if (SelectedIdProperty?.Model != null && !HasDefaultValue(SelectedIdProperty.Model))
-                {
-                    sb.AppendLine("var option = $('<option selected>" + loading + "</option>').val('" + SelectedIdProperty.Model + "');");
-                    sb.AppendLine("select.append(option).trigger('change');");
-                    sb.AppendLine("$.ajax({ type: 'GET', url: '" + SingleDataUrl + "/" + SelectedIdProperty.Model +
-                                    "', dataType: 'json'}).then(function (data) { option.text(data.text).val(data.id); option.removeData();select.trigger('change');});");
-                }
+            sb.AppendLine("minimumInputLength: " + InputLengthMin + ",");
+            sb.AppendLine("maximumInputLength: " + InputLengthMax + ",");
+            sb.AppendLine("ajax: {");
+            sb.AppendLine("url: \"" + AllDataUrl + "\",");
+            sb.AppendLine("dataType: 'json',");
+            sb.AppendLine("delay: " + Delay + ",");
+            sb.AppendLine("cache: " + Cache.ToString().ToLower() + ",");
+            sb.AppendLine("data: function(params) { return {");
+            sb.AppendLine("term: params.term || \"\",");
+            sb.AppendLine("page: params.page || 1,");
+            if (!string.IsNullOrEmpty(FilterIds))
+            {
+                sb.AppendLine("filterIds: '" + FilterIds + "',");
+            }
+            sb.AppendLine("pageSize:" + PageSize);
+            sb.AppendLine("};},");
+            sb.AppendLine("processResults: function(data, params) {");
+            sb.AppendLine("params.page = params.page || 1;");
+            sb.AppendLine("return {");
+            sb.AppendLine("results: data.items,");
+            sb.AppendLine("pagination: { more: data.more }");
+            sb.AppendLine("};},},");
+            sb.AppendLine("templateResult: formatResult, templateSelection: formatSelection");
+            sb.AppendLine("});");
+            var loading = _localizer["Loading"] ?? "Loading...";
+            sb.AppendLine("function formatResult(item) { if (item.loading) return \"" + loading + "\"; return item.text; }");
+            sb.AppendLine("function formatSelection(item) { return item.text; }");
+
+            if (SelectedIdProperty?.Model != null && !HasDefaultValue(SelectedIdProperty.Model))
+            {
+                sb.AppendLine("var option = $('<option selected>" + loading + "</option>').val('" + SelectedIdProperty.Model + "');");
+                sb.AppendLine("select.append(option).trigger('change');");
+                sb.AppendLine("$.ajax({ type: 'GET', url: '" + SingleDataUrl + "/" + SelectedIdProperty.Model +
+                                "', dataType: 'json'}).then(function (data) { option.text(data.text).val(data.id); option.removeData();select.trigger('change');});");
+            }
             sb.AppendLine("}");
         }
 
-        private void AppendInitializeSelectEnumFunction(StringBuilder sb, SelectDropdownContext selectDropdownContext, string functionName, string className)
+        private void AppendInitializeSelectDataSetFunction(StringBuilder sb, ICollection<OptionData> optionData, string functionName, string className)
         {
-            Contract.Requires(sb != null && selectDropdownContext != null);
+            Contract.Requires(sb != null);
 
             string dataString = null;
-            if (selectDropdownContext.OptionDataSet != null)
+            if (optionData != null)
             {
-                var elements = selectDropdownContext.OptionDataSet.Select(x => $"{{id:'{x.Value}', text:'{x.Text}'}}").ToArray();
+                var elements = optionData.Select(x => $"{{id:'{x.Value}', text:'{x.Text}'}}").ToArray();
                 dataString = string.Join(",", elements);
             }
             sb.AppendLine("function " + functionName + "(){");
-                sb.AppendLine("var select = $(\"." + className + "\").select2({");
-                sb.AppendLine("data: [" + dataString + "]");
-                sb.AppendLine("});");
+            sb.AppendLine("var select = $(\"." + className + "\").select2({");
+
+            AppendCommonAppearance(sb);
+
+            sb.AppendLine("data: [" + dataString + "]");
+            sb.AppendLine("});");
             sb.AppendLine("}");
         }
 
@@ -216,6 +222,21 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
             }
         }
 
+        private void AppendCommonAppearance(StringBuilder sb)
+        {
+            sb.Append("width:\"100%\",");
+            var languageCode = _localizer["LanguageCode"];
+            if (!string.IsNullOrEmpty(languageCode))
+            {
+                sb.AppendLine("language: '" + languageCode + "',");
+            }
+
+            if (!string.IsNullOrEmpty(Theme))
+            {
+                sb.AppendLine("theme: \"" + Theme + "\",");
+            }
+        }
+
         private bool HasDefaultValue(object model)
         {
             var type = model.GetType();
@@ -224,7 +245,7 @@ namespace JezekT.AspNetCore.Select2.TagHelpers
             {
                 return model.Equals(Activator.CreateInstance(type));
             }
-            return true;
+            return false;
         }
     }
 }

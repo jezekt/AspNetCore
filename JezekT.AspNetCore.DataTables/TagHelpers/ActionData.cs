@@ -4,6 +4,6 @@
     {
         public string ActionUrl { get; set; }
         public string ActionTitle { get; set; }
-        public string CanExecuteProperty { get; set; }
+        public string CanExecutePropertyName { get; set; }
     }
 }

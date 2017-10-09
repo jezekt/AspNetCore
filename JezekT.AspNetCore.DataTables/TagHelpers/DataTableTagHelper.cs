@@ -261,9 +261,9 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
             {
                 if (actionData != null)
                 {
-                    if (!string.IsNullOrEmpty(actionData.CanExecuteProperty))
+                    if (!string.IsNullOrEmpty(actionData.CanExecutePropertyName))
                     {
-                        sb.Append($"if(row['{actionData.CanExecuteProperty}'] == true){{ action = action + '");
+                        sb.Append($"if(row['{actionData.CanExecutePropertyName}'] == true){{ action = action + '");
                     }
                     else
                     {

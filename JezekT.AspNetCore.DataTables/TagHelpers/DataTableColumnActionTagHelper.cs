@@ -24,7 +24,7 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
         private const string ControllerAttributeName = "asp-controller";
         private const string RouteValuesDictionaryName = "asp-all-route-data";
         private const string VisibleName = "visible";
-        private const string CanExecutePropertyName = "can-execute-asp-for";
+        private const string CanExecutePropertyNameName = "can-execute-property-name";
 
 
         private readonly IHtmlGenerator _htmlGenerator;
@@ -37,8 +37,8 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
 
         [HtmlAttributeName(VisibleName)]
         public bool Visible { get; set; } = true;
-        [HtmlAttributeName(CanExecutePropertyName)]
-        public ModelExpression CanExecuteProperty { get; set; }
+        [HtmlAttributeName(CanExecutePropertyNameName)]
+        public string CanExecutePropertyName { get; set; }
 
         [HtmlAttributeName(ActionAttributeName)]
         public string Action { get; set; }
@@ -101,7 +101,23 @@ namespace JezekT.AspNetCore.DataTables.TagHelpers
                     }
                 }
 
-                dataTableContext.ActionDataSet.Add(new ActionData { ActionTitle = ActionTitle, ActionUrl = ActionUrl, CanExecuteProperty = CanExecuteProperty?.Name?.ToLower()});
+                var actionData = new ActionData
+                {
+                    ActionTitle = ActionTitle,
+                    ActionUrl = ActionUrl
+                };
+                if (!string.IsNullOrEmpty(CanExecutePropertyName))
+                {
+                    if (CanExecutePropertyName.Length >= 2)
+                    {
+                        actionData.CanExecutePropertyName = Char.ToLowerInvariant(CanExecutePropertyName[0]) + CanExecutePropertyName.Substring(1);
+                    }
+                    else
+                    {
+                        actionData.CanExecutePropertyName = CanExecutePropertyName.ToLower();
+                    }
+                }
+                dataTableContext.ActionDataSet.Add(actionData);
                 output.SuppressOutput();
             }
         }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <Version>2.0.0-beta</Version>
+    <Version>2.0.1-beta</Version>
     <Authors>Tomas Jezek</Authors>
     <Company>JezekT</Company>
     <Description>Datatables Tag Helper for ASP .NET Core (based on https://datatables.net/)</Description>

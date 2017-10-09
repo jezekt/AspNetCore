@@ -17,7 +17,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         where TEditVM : class
         where TDeleteVM : class
     {
-        private readonly ILogger _logger;
+        protected readonly ILogger Logger;
         protected ICrudService<T, TId> Service { get; }
         protected IMapper Mapper { get; }
 
@@ -25,6 +25,11 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         protected virtual IActionResult CreateRedirect => RedirectToAction("Index");
         protected virtual IActionResult EditRedirect => RedirectToAction("Index");
         protected virtual IActionResult DeleteRedirect => RedirectToAction("Index");
+
+        protected virtual IActionResult GetCreateErrorActionResult(TCreateVM vm) => null;
+        protected virtual IActionResult GetEditErrorActionResult(TEditVM vm) => null;
+        protected virtual IActionResult GetDeleteErrorActionResult(TDeleteVM vm) => null;
+
 
         protected virtual async Task<T> GetEntityAsync(TId id)
         {
@@ -84,15 +89,18 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             var obj = Mapper.Map<TCreateVM, T>(objVm);
             if (ModelState.IsValid && await Service.CreateAsync(obj))
             {
-                _logger?.LogInformation($"{obj.GetType().Name} Id {obj.Id} created by {User?.Identity.Name}.");
+                Logger?.LogInformation($"{obj.GetType().Name} Id {obj.Id} created by {User?.Identity.Name}.");
                 if (string.IsNullOrEmpty(redirectUrl))
                 {
                     return CreateRedirect;
                 }
                 return Redirect(redirectUrl);
             }
-            _logger?.LogInformation($"Failed to create {obj.GetType().Name} by {User?.Identity.Name}.");
+            Logger?.LogInformation($"Failed to create {obj.GetType().Name} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
+
+            var errorActionResult = GetCreateErrorActionResult(objVm);
+            if (errorActionResult != null) return errorActionResult;
             return View(objVm);
         }
 
@@ -114,16 +122,19 @@ namespace JezekT.AspNetCore.Mvc.Controllers
             var obj = Mapper.Map<TEditVM, T>(objVm);
             if (ModelState.IsValid && await Service.UpdateAsync(obj))
             {
-                _logger?.LogInformation($"{obj.GetType().Name} Id {obj.Id} updated by {User?.Identity.Name}.");
+                Logger?.LogInformation($"{obj.GetType().Name} Id {obj.Id} updated by {User?.Identity.Name}.");
                 if (string.IsNullOrEmpty(redirectUrl))
                 {
                     return EditRedirect;
                 }
                 return Redirect(redirectUrl);
             }
-            _logger?.LogInformation($"Failed to update {obj.GetType().Name} Id {obj.Id} by {User?.Identity.Name}.");
+            Logger?.LogInformation($"Failed to update {obj.GetType().Name} Id {obj.Id} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
-            return View(objVm);
+
+            var errorActionResult = GetEditErrorActionResult(objVm);
+            if (errorActionResult != null) return errorActionResult;
+            return View("",objVm);
         }
 
 
@@ -143,16 +154,20 @@ namespace JezekT.AspNetCore.Mvc.Controllers
         {
             if (await Service.DeleteByIdAsync(id))
             {
-                _logger?.LogInformation($"{typeof(T).Name} Id {id} removed by {User?.Identity.Name}.");
+                Logger?.LogInformation($"{typeof(T).Name} Id {id} removed by {User?.Identity.Name}.");
                 if (string.IsNullOrEmpty(redirectUrl))
                 {
                     return DeleteRedirect;
                 }
                 return Redirect(redirectUrl);
             }
-            _logger?.LogInformation($"Failed to remove {typeof(T).Name} Id {id} by {User?.Identity.Name}.");
+            Logger?.LogInformation($"Failed to remove {typeof(T).Name} Id {id} by {User?.Identity.Name}.");
             Service.ResolveErrors(ModelState);
-            return View(await GetDeleteViewModelAsync(await Service.GetByIdAsync(id)));
+
+            var objVm = await GetDeleteViewModelAsync(await GetEntityAsync(id));
+            var errorActionResult = GetDeleteErrorActionResult(objVm);
+            if (errorActionResult != null) return errorActionResult;
+            return View(objVm);
         }
 
 
@@ -163,7 +178,7 @@ namespace JezekT.AspNetCore.Mvc.Controllers
 
             Service = service;
             Mapper = mapper;
-            _logger = logger;
+            Logger = logger;
         }
 
     }

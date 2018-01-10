@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using JezekT.NetStandard.Pagination.DataProviders;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.RoleServices
 {

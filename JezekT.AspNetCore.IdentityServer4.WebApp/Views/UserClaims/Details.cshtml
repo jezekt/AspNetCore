@@ -1,12 +1,14 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
+﻿@using JezekT.AspNetCore.IdentityServer4.WebApp.Views.Shared
+@using JezekT.AspNetCore.IdentityServer4.WebApp.Views.UserClaims
+@using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Localization
 @model JezekT.AspNetCore.IdentityServer4.WebApp.Models.UserClaimViewModels.UserClaimViewModel
 
 @inject IStringLocalizerFactory StringLocalizerFactory
 @inject IViewLocalizer Localizer
 @{
-    var sharedLocalizer = StringLocalizerFactory.Create("Views.Shared.SharedResources", null);
-    var stringLocalizer = StringLocalizerFactory.Create("Views.UserClaims.SharedResources", null);
+    var sharedLocalizer = StringLocalizerFactory.Create(typeof(SharedResources));
+    var stringLocalizer = StringLocalizerFactory.Create(typeof(UserClaimResources));
     ViewData["Title"] = sharedLocalizer["DetailsTitle"];
 }
 

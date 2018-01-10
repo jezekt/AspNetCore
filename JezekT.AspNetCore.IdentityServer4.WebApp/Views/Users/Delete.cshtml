@@ -1,6 +1,7 @@
-﻿@using System.Threading.Tasks
-@using JezekT.AspNetCore.IdentityServer4.WebApp.Models.RoleViewModels
+﻿@using JezekT.AspNetCore.IdentityServer4.WebApp.Models.RoleViewModels
 @using JezekT.AspNetCore.IdentityServer4.WebApp.Models.UserClaimViewModels
+@using JezekT.AspNetCore.IdentityServer4.WebApp.Views.Shared
+@using JezekT.AspNetCore.IdentityServer4.WebApp.Views.Users
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Localization
 @model JezekT.AspNetCore.IdentityServer4.WebApp.Models.UserViewModels.UserViewModel
@@ -8,8 +9,8 @@
 @inject IViewLocalizer Localizer
 @inject IStringLocalizerFactory StringLocalizerFactory
 @{
-    var sharedLocalizer = StringLocalizerFactory.Create("Views.Shared.SharedResources", null);
-    var stringLocalizer = StringLocalizerFactory.Create("Views.Users.SharedResources", null);
+    var sharedLocalizer = StringLocalizerFactory.Create(typeof(SharedResources));
+    var stringLocalizer = StringLocalizerFactory.Create(typeof(UserResources));
     ViewData["Title"] = sharedLocalizer["DeleteTitle"];
 }
 

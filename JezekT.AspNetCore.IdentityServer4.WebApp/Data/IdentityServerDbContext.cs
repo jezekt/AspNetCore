@@ -11,6 +11,24 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Data
             base.OnModelCreating(builder);
 
             builder.Entity<User>().HasIndex(u => u.UserName).IsUnique();
+            builder.Entity<User>()
+                .HasMany(e => e.Claims)
+                .WithOne()
+                .HasForeignKey(e => e.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<User>()
+                .HasMany(e => e.Logins)
+                .WithOne()
+                .HasForeignKey(e => e.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<User>()
+                .HasMany(e => e.Roles)
+                .WithOne()
+                .HasForeignKey(e => e.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public IdentityServerDbContext(DbContextOptions<IdentityServerDbContext> options)

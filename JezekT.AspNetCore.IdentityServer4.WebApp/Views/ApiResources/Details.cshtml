@@ -1,6 +1,8 @@
 ﻿@using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiResourceClaimViewModels
 @using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiScopeViewModels
 @using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiSecretViewModels
+@using JezekT.AspNetCore.IdentityServer4.WebApp.Views.ApiResources
+@using JezekT.AspNetCore.IdentityServer4.WebApp.Views.Shared
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Localization
 @model JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiResourceViewModels.ApiResourceViewModel
@@ -8,8 +10,8 @@
 @inject IStringLocalizerFactory StringLocalizerFactory
 @inject IViewLocalizer Localizer
 @{
-    var sharedLocalizer = StringLocalizerFactory.Create("Views.Shared.SharedResources", null);
-    var stringLocalizer = StringLocalizerFactory.Create("Views.ApiResources.SharedResources", null);
+    var sharedLocalizer = StringLocalizerFactory.Create(typeof(SharedResources));
+    var stringLocalizer = StringLocalizerFactory.Create(typeof(ApiResourceResources));
     ViewData["Title"] = sharedLocalizer["DetailsTitle"];
 }
 
@@ -70,6 +72,9 @@
                     <data-table-columns>
                         <data-table-column property-name="Name" />
                         <data-table-column property-name="DisplayName" />
+                        <data-table-column>
+                            <data-table-column-action action-title="@sharedLocalizer["Details"]" action-url="@Url.Action("Details", "ApiScopes")" />
+                        </data-table-column>
                     </data-table-columns>
                 </data-table>
             </div>

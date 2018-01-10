@@ -21,22 +21,6 @@
                 <dd>@claim.Value</dd>
             }
         </dl>
-
-        var authScheme = "Identity.Application";
-        if (!String.IsNullOrWhiteSpace(authScheme))
-        {
-            <h1>Cookies Properties</h1>
-            <dl>
-                @{
-                    var props = (await Context.Authentication.GetAuthenticateInfoAsync(authScheme)).Properties;
-                }
-                @foreach (var item in props.Items)
-                {
-                    <dt>@item.Key</dt>
-                    <dd>@item.Value</dd>
-                }
-            </dl>
-        }
     }
 
 </div>

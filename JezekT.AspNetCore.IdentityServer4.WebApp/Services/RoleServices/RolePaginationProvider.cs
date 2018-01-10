@@ -2,7 +2,7 @@
 using JezekT.AspNetCore.IdentityServer4.WebApp.Data;
 using JezekT.NetStandard.Pagination.DataProviders;
 using JezekT.NetStandard.Pagination.EntityFrameworkCore.DataProviders;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.RoleServices

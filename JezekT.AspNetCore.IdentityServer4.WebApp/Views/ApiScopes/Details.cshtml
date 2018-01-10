@@ -1,4 +1,6 @@
 ﻿@using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiScopeClaimViewModels
+@using JezekT.AspNetCore.IdentityServer4.WebApp.Views.ApiScopes
+@using JezekT.AspNetCore.IdentityServer4.WebApp.Views.Shared
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Localization
 @model JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiScopeViewModels.ApiScopeViewModel
@@ -6,8 +8,8 @@
 @inject IStringLocalizerFactory StringLocalizerFactory
 @inject IViewLocalizer Localizer
 @{
-    var sharedLocalizer = StringLocalizerFactory.Create("Views.Shared.SharedResources", null);
-    var stringLocalizer = StringLocalizerFactory.Create("Views.ApiScopes.SharedResources", null);
+    var sharedLocalizer = StringLocalizerFactory.Create(typeof(SharedResources));
+    var stringLocalizer = StringLocalizerFactory.Create(typeof(ApiScopeResources));
     ViewData["Title"] = sharedLocalizer["DetailsTitle"];
 }
 

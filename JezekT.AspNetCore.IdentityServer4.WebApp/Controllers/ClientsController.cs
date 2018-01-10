@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientClaimViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientGrantTypeViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientPostLogoutRedirectUriViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientRedirectUriViewModels;
@@ -201,6 +202,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                 .Include(x => x.RedirectUris).ThenInclude(x => x.Client)
                 .Include(x => x.PostLogoutRedirectUris).ThenInclude(x => x.Client)
                 .Include(x => x.ClientSecrets).ThenInclude(x => x.Client)
+                .Include(x => x.Claims)
                 .FirstOrDefaultAsync(x => x.Id == id);
             if (client != null)
             {
@@ -218,7 +220,8 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Controllers
                     AllowedGrantTypes = client.AllowedGrantTypes.Select(x => new ClientGrantTypeViewModel{Id = x.Id, ClientId = x.Client.Id, GrantType = x.GrantType}).ToList(),
                     RedirectUris = client.RedirectUris.Select(x => new ClientRedirectUriViewModel { Id = x.Id, ClientId = x.Client.Id, RedirectUri = x.RedirectUri }).ToList(),
                     PostLogoutRedirectUris = client.PostLogoutRedirectUris.Select(x => new ClientPostLogoutRedirectUriViewModel { Id = x.Id, ClientId = x.Client.Id, PostLogoutRedirectUri = x.PostLogoutRedirectUri }).ToList(),
-                    ClientSecrets = client.ClientSecrets.Select(x => new ClientSecretViewModel{Id = x.Id, ClientId = x.Client.Id, Type = x.Type, Description = x.Description, Expiration = x.Expiration}).ToList()
+                    ClientSecrets = client.ClientSecrets.Select(x => new ClientSecretViewModel{Id = x.Id, ClientId = x.Client.Id, Type = x.Type, Description = x.Description, Expiration = x.Expiration}).ToList(),
+                    ClientClaims = client.Claims.Select(x => new ClientClaimViewModel { Id = x.Id, ClaimType = x.Type, ClaimValue = x.Value }).ToList()
                 };
             }
             return null;

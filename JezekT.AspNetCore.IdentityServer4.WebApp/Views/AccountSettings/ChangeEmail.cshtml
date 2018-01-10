@@ -1,11 +1,12 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
+﻿@using JezekT.AspNetCore.IdentityServer4.WebApp.Views.Shared
+@using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Localization
 @model JezekT.AspNetCore.IdentityServer4.WebApp.Models.AccountSettingsViewModels.ChangeEmailViewModel
 
 @inject IViewLocalizer Localizer
 @inject IStringLocalizerFactory StringLocalizerFactory
 @{
-    var sharedLocalizer = StringLocalizerFactory.Create("Views.Shared.SharedResources", null);
+    var sharedLocalizer = StringLocalizerFactory.Create(typeof(SharedResources));
     ViewData["Title"] = Localizer["ViewTitle"];
 }
 
@@ -17,13 +18,13 @@
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
         <label asp-for="NewEmail" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
+        <div class="col-md-4">
             <input asp-for="NewEmail" class="form-control" />
             <span asp-validation-for="NewEmail" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
+        <div class="col-md-offset-2 col-md-4">
             <button type="submit" class="btn btn-default">@sharedLocalizer["Save"]</button>
         </div>
     </div>

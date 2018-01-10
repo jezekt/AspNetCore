@@ -23,7 +23,6 @@ using JezekT.AspNetCore.IdentityServer4.WebApp.Services.UserClaimServices;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Services.UserServices;
 using JezekT.NetStandard.Pagination.DataProviders;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -41,37 +40,9 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
         {
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<IdentityServerDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddIdentity<User, IdentityRole>(option =>
-                {
-                    option.SecurityStampValidationInterval = TimeSpan.FromSeconds(_configuration.GetValue<int>("SecurityStampValidationInterval"));
-                    //option.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromSeconds(30);
-                })
+            services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<IdentityServerDbContext>()
                 .AddDefaultTokenProviders();
-
-            services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                .AddDataAnnotationsLocalization();
-
-            var signingCert = new X509Certificate2(_configuration.GetValue<string>("SigningCertificate:Path"), _configuration.GetValue<string>("SigningCertificate:Password"));
-            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-
-            services.AddIdentityServer()
-                .AddSigningCredential(signingCert)
-                .AddConfigurationStore(builder => builder.UseSqlServer(connectionString, options => options.MigrationsAssembly(migrationsAssembly)))
-                .AddOperationalStore(builder => builder.UseSqlServer(connectionString, options => options.MigrationsAssembly(migrationsAssembly)))
-                .AddAspNetIdentity<User>();
-
-            services.AddTransient<IPaginationDataProvider<User, object>, UserPaginationProvider>();
-            services.AddTransient<IPaginationDataProvider<IdentityUserClaim<string>, object>, UserClaimPaginationProvider>();
-            services.AddTransient<IPaginationDataProvider<IdentityRole, object>, RolePaginationProvider>();
-            services.AddTransient<IPaginationDataProvider<Client, object>, ClientPaginationProvider>();
-            services.AddTransient<IPaginationDataProvider<IdentityResource, object>, IdentityResourcePaginationProvider>();
-            services.AddTransient<IPaginationDataProvider<ApiResource, object>, ApiResourcePaginationProvider>();
-
-            services.AddTransient<IPasswordResetSender, AccountEmailTools>();
-            services.AddTransient<IEmailConfirmationSender, AccountEmailTools>();
-            services.AddEmailSender(_configuration);
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.Configure<RequestLocalizationOptions>(options =>
@@ -86,6 +57,45 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
                 options.SupportedCultures = supportedCultures;
                 options.SupportedUICultures = supportedCultures;
             });
+
+            services.AddMvc(options => options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
+                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                .AddDataAnnotationsLocalization();
+
+            services.AddTransient<IPaginationDataProvider<User, object>, UserPaginationProvider>();
+            services.AddTransient<IPaginationDataProvider<IdentityUserClaim<string>, object>, UserClaimPaginationProvider>();
+            services.AddTransient<IPaginationDataProvider<IdentityRole, object>, RolePaginationProvider>();
+            services.AddTransient<IPaginationDataProvider<Client, object>, ClientPaginationProvider>();
+            services.AddTransient<IPaginationDataProvider<IdentityResource, object>, IdentityResourcePaginationProvider>();
+            services.AddTransient<IPaginationDataProvider<ApiResource, object>, ApiResourcePaginationProvider>();
+            services.AddTransient<IPasswordResetSender, AccountEmailTools>();
+            services.AddTransient<IEmailConfirmationSender, AccountEmailTools>();
+            services.AddEmailSender(_configuration);
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromSeconds(_configuration.GetValue<int>("SecurityStampValidationInterval"));
+            });
+
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            var identityServerBuilder = services.AddIdentityServer()
+                .AddConfigurationStore(options =>
+                    options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString,
+                        sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
+                .AddOperationalStore(options =>
+                    options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString,
+                        sqlOptions => sqlOptions.MigrationsAssembly(migrationsAssembly)))
+                .AddAspNetIdentity<User>();
+
+            if (_configuration.GetValue<bool>("SigningCertificate:UseDeveloperSigningCredentials"))
+            {
+                identityServerBuilder.AddDeveloperSigningCredential();
+            }
+            else
+            {
+                var signingCert = new X509Certificate2(_configuration.GetValue<string>("SigningCertificate:Path"), _configuration.GetValue<string>("SigningCertificate:Password"));
+                identityServerBuilder.AddSigningCredential(signingCert);
+            }
 
             services.AddAuthorization(options =>
             {
@@ -102,10 +112,12 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
             {
                 loggerFactory.AddConsole(_configuration.GetSection("Logging"));
                 loggerFactory.AddDebug();
+                loggerFactory.AddSerilog(new LoggerConfiguration().ReadFrom.Configuration(_configuration)
+                    .WriteTo.Async(a => new LoggerConfiguration().ReadFrom.Configuration(_configuration), 500)
+                    .CreateLogger(), true);
 
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-                app.UseBrowserLink();
             }
             else
             {
@@ -117,9 +129,8 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseRequestLocalization(app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value);
             app.UseStaticFiles();
-            app.UseIdentity();
+            app.UseRequestLocalization(app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>().Value);
             app.UseIdentityServer();
 
             app.UseMvc(routes =>

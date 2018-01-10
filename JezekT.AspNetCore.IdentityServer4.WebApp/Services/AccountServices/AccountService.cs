@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
-using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.AccountViewModels;
 using Microsoft.AspNetCore.Http;
@@ -29,8 +28,8 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.AccountServices
         {
             var vm = new LogoutViewModel { LogoutId = logoutId, ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt };
 
-            var user = await _httpContextAccessor.HttpContext.GetIdentityServerUserAsync();
-            if (user == null || user.Identity.IsAuthenticated == false)
+            //var user = await _httpContextAccessor.HttpContext.GetIdentityServerUserAsync();
+            if (_httpContextAccessor.HttpContext.User == null || _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated == false)
             {
                 vm.ShowLogoutPrompt = false;
                 return vm;

@@ -118,9 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ClaimType" xml:space="preserve">
-    <value>Type</value>
+    <value>např. Age</value>
   </data>
   <data name="ClaimValue" xml:space="preserve">
-    <value>Value</value>
+    <value>např. 21</value>
+  </data>
+  <data name="EntityName" xml:space="preserve">
+    <value>Claim</value>
   </data>
 </root>

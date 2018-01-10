@@ -117,37 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ClientIdPlaceholder" xml:space="preserve">
-    <value>e.g. mvc</value>
+  <data name="ClaimType" xml:space="preserve">
+    <value>e.g. Age</value>
+  </data>
+  <data name="ClaimValue" xml:space="preserve">
+    <value>e.g. 21</value>
   </data>
   <data name="EntityName" xml:space="preserve">
-    <value>Client</value>
-  </data>
-  <data name="ClientNamePlaceholder" xml:space="preserve">
-    <value>e.g.. MVC Client</value>
-  </data>
-  <data name="AllowedScopes" xml:space="preserve">
-    <value>Allowed Scopes</value>
-  </data>
-  <data name="ClientSecrets" xml:space="preserve">
-    <value>Client Secrets</value>
-  </data>
-  <data name="GrantTypes" xml:space="preserve">
-    <value>Grant Types</value>
-  </data>
-  <data name="PostRedirectUris" xml:space="preserve">
-    <value>Post Logout Redirect URIs</value>
-  </data>
-  <data name="RedirectUris" xml:space="preserve">
-    <value>Redirect URIs</value>
-  </data>
-  <data name="AccessTokenLifetimePlaceholder" xml:space="preserve">
-    <value>e.g. 3600</value>
-  </data>
-  <data name="IdentityTokenLifetimePlaceholder" xml:space="preserve">
-    <value>e.g. 300</value>
-  </data>
-  <data name="Seconds" xml:space="preserve">
-    <value>s</value>
+    <value>Claim</value>
   </data>
 </root>

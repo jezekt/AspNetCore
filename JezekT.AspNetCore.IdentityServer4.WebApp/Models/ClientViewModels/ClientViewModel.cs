@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientClaimViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientGrantTypeViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientPostLogoutRedirectUriViewModels;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientRedirectUriViewModels;
@@ -29,6 +30,8 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientViewModels
         [Display(Name = "AccessTokenLifetime", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
         public int? AccessTokenLifetime { get; set; }
 
+        [Display(Name = "ClientClaims", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
+        public List<ClientClaimViewModel> ClientClaims { get; set; } = new List<ClientClaimViewModel>();
         [Display(Name = "AllowedScopes", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
         public List<ClientScopeViewModel> AllowedScopes { get; set; } = new List<ClientScopeViewModel>();
         [Display(Name = "AllowedGrantTypes", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
@@ -40,6 +43,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Models.ClientViewModels
         [Display(Name = "ClientSecrets", ResourceType = typeof(Resources.Models.ClientViewModels.ClientViewModel))]
         public List<ClientSecretViewModel> ClientSecrets { get; set; } = new List<ClientSecretViewModel>();
 
+        public string ClientClaimsJson => GetJson(ClientClaims);
         public string AllowedScopesJson => GetJson(AllowedScopes);
         public string AllowedGrantTypesJson => GetJson(AllowedGrantTypes);
         public string RedirectUrisJson => GetJson(RedirectUris);

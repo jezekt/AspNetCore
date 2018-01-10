@@ -10,7 +10,6 @@
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.Shared {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -20,10 +19,10 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.Shared {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ViewModelsShared {
+    public class ViewModelsShared {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -37,11 +36,11 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.Shared {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.Shared.ViewModelsShared" +
-                            "", typeof(ViewModelsShared).GetTypeInfo().Assembly);
+                            "", typeof(ViewModelsShared).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -53,7 +52,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.Shared {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -65,7 +64,25 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.Shared {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        internal static string RequiredErrorMessageX {
+        public static string ClaimType {
+            get {
+                return ResourceManager.GetString("ClaimType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string ClaimValue {
+            get {
+                return ResourceManager.GetString("ClaimValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string RequiredErrorMessageX {
             get {
                 return ResourceManager.GetString("RequiredErrorMessageX", resourceCulture);
             }

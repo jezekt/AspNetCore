@@ -1,7 +1,8 @@
-﻿@using System.Threading.Tasks
-@using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiResourceClaimViewModels
+﻿@using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiResourceClaimViewModels
 @using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiScopeViewModels
 @using JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiSecretViewModels
+@using JezekT.AspNetCore.IdentityServer4.WebApp.Views.ApiResources
+@using JezekT.AspNetCore.IdentityServer4.WebApp.Views.Shared
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Localization
 @model JezekT.AspNetCore.IdentityServer4.WebApp.Models.ApiResourceViewModels.ApiResourceViewModel
@@ -9,8 +10,8 @@
 @inject IViewLocalizer Localizer
 @inject IStringLocalizerFactory StringLocalizerFactory
 @{
-    var sharedLocalizer = StringLocalizerFactory.Create("Views.Shared.SharedResources", null);
-    var stringLocalizer = StringLocalizerFactory.Create("Views.ApiResources.SharedResources", null);
+    var sharedLocalizer = StringLocalizerFactory.Create(typeof(SharedResources));
+    var stringLocalizer = StringLocalizerFactory.Create(typeof(ApiResourceResources));
     ViewData["Title"] = sharedLocalizer["DeleteTitle"];
 }
 

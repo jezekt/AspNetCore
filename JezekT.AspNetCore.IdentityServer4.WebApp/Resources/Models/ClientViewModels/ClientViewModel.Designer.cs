@@ -10,7 +10,6 @@
 
 namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewModels {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -20,7 +19,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewMo
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class ClientViewModel {
@@ -41,7 +40,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewMo
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewModels.Client" +
-                            "ViewModel", typeof(ClientViewModel).GetTypeInfo().Assembly);
+                            "ViewModel", typeof(ClientViewModel).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -104,6 +103,15 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Resources.Models.ClientViewMo
         public static string AlwaysSendClientClaims {
             get {
                 return ResourceManager.GetString("AlwaysSendClientClaims", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string ClientClaims {
+            get {
+                return ResourceManager.GetString("ClientClaims", resourceCulture);
             }
         }
         

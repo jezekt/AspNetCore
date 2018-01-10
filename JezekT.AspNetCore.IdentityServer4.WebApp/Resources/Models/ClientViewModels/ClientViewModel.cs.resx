@@ -153,4 +153,7 @@
   <data name="Enabled" xml:space="preserve">
     <value>Povolen</value>
   </data>
+  <data name="ClientClaims" xml:space="preserve">
+    <value>Claims</value>
+  </data>
 </root>

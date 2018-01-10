@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Data;
 using JezekT.AspNetCore.IdentityServer4.WebApp.Models.UserClaimViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

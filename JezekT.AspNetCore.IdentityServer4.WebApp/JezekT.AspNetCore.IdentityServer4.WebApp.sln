@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JezekT.AspNetCore.IdentityServer4.WebApp", "JezekT.AspNetCore.IdentityServer4.WebApp.csproj", "{F3370270-A7B3-4FAF-86B6-9A1BA6158583}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JezekT.AspNetCore.Select2", "..\JezekT.AspNetCore.Select2\JezekT.AspNetCore.Select2.csproj", "{C1121CA8-A81A-4F8B-A384-42B6E7250985}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JezekT.AspNetCore.DataTables", "..\JezekT.AspNetCore.DataTables\JezekT.AspNetCore.DataTables.csproj", "{E91287BF-3430-4008-BCC5-123FC6C180B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +19,19 @@ Global
 		{F3370270-A7B3-4FAF-86B6-9A1BA6158583}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3370270-A7B3-4FAF-86B6-9A1BA6158583}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3370270-A7B3-4FAF-86B6-9A1BA6158583}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1121CA8-A81A-4F8B-A384-42B6E7250985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1121CA8-A81A-4F8B-A384-42B6E7250985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1121CA8-A81A-4F8B-A384-42B6E7250985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1121CA8-A81A-4F8B-A384-42B6E7250985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E91287BF-3430-4008-BCC5-123FC6C180B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E91287BF-3430-4008-BCC5-123FC6C180B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E91287BF-3430-4008-BCC5-123FC6C180B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E91287BF-3430-4008-BCC5-123FC6C180B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0E0D226A-B4B5-4393-9B52-643834DC11D5}
 	EndGlobalSection
 EndGlobal

@@ -14,9 +14,12 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="JezekT.NetStandard.Services" Version="2.0.0-beta" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\NetStandard\JezekT.NetStandard.Services\JezekT.NetStandard.Services.csproj" />
   </ItemGroup>
 
 </Project>

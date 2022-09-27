@@ -39,7 +39,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.ConsentServices
                     grantedConsent = new ConsentResponse
                     {
                         RememberConsent = model.RememberConsent,
-                        ScopesConsented = scopes.ToArray()
+                        ScopesValuesConsented = scopes.ToArray()
                     };
                 }
                 else
@@ -76,7 +76,7 @@ namespace JezekT.AspNetCore.IdentityServer4.WebApp.Services.ConsentServices
             var request = await _interaction.GetAuthorizationContextAsync(returnUrl);
             if (request != null)
             {
-                var client = await _clientStore.FindEnabledClientByIdAsync(request.ClientId);
+                var client = await _clientStore.FindEnabledClientByIdAsync(request.Client.ClientId);
                 if (client != null)
                 {
                     var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);

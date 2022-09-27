@@ -10,7 +10,6 @@ using JezekT.AspNetCore.IdentityServer4.WebApp.Services.RoleServices;
 using JezekT.NetStandard.Pagination.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
